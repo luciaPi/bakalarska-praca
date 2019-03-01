@@ -8,31 +8,41 @@ class FCMcounter
 {
 private:
 	struct Flower {
-		vector<float> values;
+		vector<double> values;
 		string name;
 		int count;
 
-		Flower(char pname[] = " ") : name(pname), count(0) {	};
+		Flower(const char pname[] = " ") : name(pname), count(0) {	};
 
-		void setValues(vector<float> pvalues) {
+		//nastavi vektor suradnic
+		void setValues(vector<double> pvalues) {
 			values = pvalues;
 			count = values.size();
 		}
 
-		vector<float> getValues() {
+		//nastavi novu hodnotu na urcenom mieste
+		void setValue(int which, double newValue) {
+			values[which] = newValue;
+		}
+
+		//vrati vektor suradnic
+		vector<double> getValues() {
 			return values;
 		}
 
-		float getValue(int poradie) {
+		//vrati konkretnu suradnicu
+		double getValue(int poradie) {
 			if (poradie >= 0 && poradie < count) {
 				return values[poradie];
 			}
 		}
 
-		void setName(char pname[]) {
+		//nastavi  nazov zhluku
+		void setName(const char pname[]) {
 			name = pname;
 		}
 
+		//vrati nazov zhluku
 		string getName() {
 			return name;
 		}
@@ -45,11 +55,11 @@ private:
 	int numberOfClusters;
 	int numberOfObjects;
 	vector<Flower*> all;
-	float** mu;
+	double** mu;
 	Flower** centers;
 	Flower** oldCenters;
-	float** d;
-	float minChange;
+	double** d;
+	double minChange;
 
 	bool readDataFromFile(const char* name);
 	void flowersPrint();
@@ -75,5 +85,6 @@ public:
 	FCMcounter();
 	~FCMcounter();	
 	void count(const char* name);
+	void saveOutputToArff(const char* filename, char* title, char* creator, char* donor, char* relation);
 };
 
