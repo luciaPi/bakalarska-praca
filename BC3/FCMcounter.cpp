@@ -2,23 +2,30 @@
 #include <iostream>
 #include <time.h>
 #include <ctime>
+#include "Attribute.h"
 
-FCMcounter::FCMcounter()
+FCMcounter::FCMcounter(const Dataset &pdata)
+{	
+	data = &pdata;
+	init();
+}
+
+void FCMcounter::init() 
 {
 	m = 2;
 	numberOfClusters = 3;
-	minChange = 0.1;	
-}
+	numberOfCoordinates = 0;
+	minChange = 0.1;
+	data = nullptr;
+	centers = nullptr;
+	mu = nullptr;
+	oldCenters = nullptr;
+	d = nullptr;
 
+}
 
 FCMcounter::~FCMcounter()
 {
-	while (all.size() > 0) {
-		Flower* last = all.back();
-		delete last;
-		all.pop_back();
-	}
-
 	for (int j = 0; j < numberOfClusters; j++) {
 		delete centers[j];
 		centers[j] = nullptr;
@@ -49,105 +56,42 @@ FCMcounter::~FCMcounter()
 }
 
 //kroky algoritmu
-void FCMcounter::count(const char* name)
+void FCMcounter::count(const Dataset* pdata)
 {
-	if (readDataFromFile(name)) {
-		numberOfObjects = all.size();
-		flowersPrint();
-		muInit();
-		muPrint();
-		dInit();
-		centersInit();
-
-		computeCenters();
-		centersPrint();
-
-		int i = 0;
-		do {
-			cout << "Round" << i << endl;
-			computeD();
-			dPrint();
-
-			computeMu();
+	if (pdata) {
+		data = pdata;
+	}
+	if (data) {
+		if ((numberOfObjects = data->getSize()) > 0) {
+			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();
+ 			muInit();
 			muPrint();
+			dInit();
+			centersInit();
 
 			computeCenters();
 			centersPrint();
 
-			i++;
-		} while (isSignificantChange());
-		dPrint();
-		flowersPrintWithType();
-		centersPrint();
-		//muPrint();
+			int i = 0;
+			do {
+				cout << "Round" << i << endl;
+				computeD();
+				dPrint();
 
-	}
-}
+				computeMu();
+				muPrint();
 
-//nacitanie vstupnych dat
-bool FCMcounter::readDataFromFile(const char* fileName)
-{
-	FILE* datafile;
-	if ((datafile = fopen(fileName, "r")) == NULL) {
- 		cout << "CHYBA" << endl;
-		return false;
-	}
-	else {
-		vector<double> values;
-		float value;
-		int returnVal;
-		Flower *flower = new Flower();
-		int lastPosition;
-		char name[100];
-		int counChars = 0;
+				computeCenters();
+				centersPrint();
 
-		do {
-			//lastPosition = ftell(datafile);
-			if ((returnVal = fscanf(datafile, "%f", &value)) == EOF) {
-				break;
-			}			
-			if (returnVal == 0) {
-				//fseek(datafile, lastPosition, SEEK_SET);				
-				/*fscanf(datafile, "%s", &name);
-				flower->setName(name);
-				flower->setValues(values);
-				numberOfCoordinates = values.size();
-				all.push_back(flower);
-				flower = new Flower();
-				values.clear();*/
-				fscanf(datafile, "%c", &name);
-				counChars++;				
-			}
-			else {
-				//fscanf(datafile, "%c",&name);
-				if (counChars > 2) {
-					flower->setValues(values);
-					all.push_back(flower);
-					flower = new Flower();
-					values.clear();
-				}
-				values.push_back(value);
-				counChars = 0;
-			}
-		} while (true);
-		flower->setValues(values);
-		numberOfCoordinates = values.size();
-		all.push_back(flower);
+				i++;
+			} while (isSignificantChange());
+			dPrint();
+			objectsPrintWithType();
+			centersPrint();
+			//muPrint();
 
-		fclose(datafile);
-	}
-	return true;
-}
-
-//vypis vstupnych dat
-void FCMcounter::flowersPrint()
-{
-	cout << "Data:" << endl;
-	for (Flower *flower : all) {		
-		for (int k = 0; k < numberOfCoordinates;k++) {
-			cout << flower->getValue(k) << (k < numberOfCoordinates-1 ? "," : " ");
 		}
-		cout << flower->getName() << endl;
 	}
 }
 
@@ -180,7 +124,7 @@ void FCMcounter::muInit()
 }
 
 //vypis matice mu
-void FCMcounter::muPrint()
+void FCMcounter::muPrint() const
 {
 	cout << "Matica prislusnosti mu:" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -188,18 +132,6 @@ void FCMcounter::muPrint()
 			cout << mu[i][j] << " ";
 		}
 		cout << endl;
-	}
-}
-
-//vypis dat spolu s priradenym zhlukom
-void FCMcounter::flowersPrintWithType()
-{
-	cout << "Vysledok:" << endl;
-	for (Flower *flower : all) {
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			cout << flower->getValue(k) << (k == numberOfCoordinates - 1 ? " Zhluk: " : ",");
-		}
-		cout << whichCenter(*flower) << endl;
 	}
 }
 
@@ -222,18 +154,18 @@ void FCMcounter::computeMu()
 //inicializacia centier
 void FCMcounter::centersInit()
 {
-	centers = new Flower*[numberOfClusters];
-	oldCenters = new Flower*[numberOfClusters];
+	centers = new Object*[numberOfClusters];
+	oldCenters = new Object*[numberOfClusters];
 	for (int j = 0; j < numberOfClusters; j++) {		
-		Flower *flower = new Flower();
+		Object *flower = new Object();
 		centers[j] = flower;
-		flower = new Flower();
+		flower = new Object();
 		oldCenters[j] = flower;
 	}
 }
 
 //vypis centier
-void FCMcounter::centersPrint()
+void FCMcounter::centersPrint() const
 {
 	cout << "Centra:" << endl;
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -259,7 +191,7 @@ void FCMcounter::computeCenters()
 				for (int l = 0; l < m; l++) {
 					product2 *= mu[i][j];
 				}
-				double product1 = product2 * all[i]->getValue(k);
+				double product1 = product2 * (*data)[i].getValue(k);
 				sum1 += product1;
 				sum2 += product2;
 			}
@@ -270,8 +202,8 @@ void FCMcounter::computeCenters()
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int k = 0; k < numberOfCoordinates; k++) {
 				double a1 = centers[j]->getValue(k);
-				double a2 = all[i]->getValue(k);
-				if (abs(centers[j]->getValue(k) - all[i]->getValue(k)) < 0.00000001) {
+				double a2 = (*data)[i].getValue(k);
+				if (abs(centers[j]->getValue(k) - (*data)[i].getValue(k)) < 0.00000001) {
 					centers[j]->setValue(k, centers[j]->getValue(k)+0.1*minChange);
 				}
 			}
@@ -287,7 +219,7 @@ void FCMcounter::computeD()
 		for (int j = 0; j < numberOfClusters; j++) {
 			double sum = 0;
 			for (int k = 0; k < numberOfCoordinates; k++) {
-				double coordinate1 = all[i]->getValue(k);
+				double coordinate1 = (*data)[i].getValue(k);
 				double coordinate2 = centers[j]->getValue(k);
 				sum += pow(coordinate1 - coordinate2, 2);
 			}
@@ -297,7 +229,7 @@ void FCMcounter::computeD()
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna
-bool FCMcounter::isSignificantChange()
+bool FCMcounter::isSignificantChange() const
 {
 	for (int j = 0; j < numberOfClusters; j++) {
 		for (int k = 0; k < numberOfCoordinates;k++) {
@@ -310,7 +242,7 @@ bool FCMcounter::isSignificantChange()
 }
 
 //ku ktoremu centru ma objekt najvyssiu prislusnost
-int FCMcounter::whichCenter(Flower &flower)
+int FCMcounter::whichCenter(const Object &flower) const
 {
 	int whichObject = whichNumberOfObject(flower);
 
@@ -328,91 +260,9 @@ int FCMcounter::whichCenter(Flower &flower)
 }
 
 //zisti poradie daneho objektu v ramci vsetkych objektov
-int FCMcounter::whichNumberOfObject(Flower & flower)
+int FCMcounter::whichNumberOfObject(const Object & flower) const
 {
-	int which = 0;
-	for (Flower *actual : all) {
-		if (actual == &flower) {
-			return which;
-		}
-		which++;
-	}
-}
-
-void FCMcounter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation)
-{
-	FILE* datafile;
-	if ((datafile = fopen(filename, "w")) == NULL) {
-		cout << "CHYBA" << endl;
-	}
-	else {
-		char* titles[] = {
-		"1. Title",
-		"2. Sources",
-		"(a) Creator",
-		"(b) Donor",
-		"(c) Date",
-		"@RELATION",
-		"@ATTRIBUTE",
-		"@DATA"
-		};
-		char shape = '%';
-		time_t now = time(0);
-		tm* date = localtime(&now);
-
-		int which = 0;
-		fprintf(datafile, "%c %s: ", shape,titles[which++]);
-		fprintf(datafile, "%s\n%c\n", title, shape);
-		fprintf(datafile, "%c %s:\n", shape, titles[which++]);
-		fprintf(datafile, "%c\t%s: %s\n", shape, titles[which++], creator);
-		fprintf(datafile, "%c\t%s: %s\n", shape, titles[which++],donor);
-		fprintf(datafile, "%c\t%s: %d\-%d-%d\n", shape, titles[which++],date->tm_mday,date->tm_mon,date->tm_year);
-		fprintf(datafile, "%c\n\n", shape);
-		fprintf(datafile, "%s %s\n", titles[which++],relation);
-
-		/*vector<double> values;
-		float value;
-		int returnVal;
-		Flower *flower = new Flower();
-		int lastPosition;
-		char name[100];
-		int counChars = 0;
-
-		do {
-			//lastPosition = ftell(datafile);
-			if ((returnVal = fscanf(datafile, "%f", &value)) == EOF) {
-				break;
-			}
-			if (returnVal == 0) {
-				//fseek(datafile, lastPosition, SEEK_SET);				
-				/*fscanf(datafile, "%s", &name);
-				flower->setName(name);
-				flower->setValues(values);
-				numberOfCoordinates = values.size();
-				all.push_back(flower);
-				flower = new Flower();
-				values.clear();*//*
-				fscanf(datafile, "%c", &name);
-				counChars++;
-			}
-			else {
-				//fscanf(datafile, "%c",&name);
-				if (counChars > 2) {
-					flower->setValues(values);
-					all.push_back(flower);
-					flower = new Flower();
-					values.clear();
-				}
-				values.push_back(value);
-				counChars = 0;
-			}
-		} while (true);/*
-		flower->setValues(values);
-		numberOfCoordinates = values.size();
-		all.push_back(flower);*/
-
-		fclose(datafile);
-	}
+	return data->whichNumberOfObject(flower);
 }
 
 //inicializacia matice euklidovskych vzdialenosti
@@ -425,7 +275,7 @@ void FCMcounter::dInit()
 }
 
 //vypis matice euklidovskej vzdialenosti
-void FCMcounter::dPrint()
+void FCMcounter::dPrint() const
 {
 	cout << "Matica euklidovskej vzdialenosti:" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -433,5 +283,17 @@ void FCMcounter::dPrint()
 			cout << d[i][j] << " ";
 		}
 		cout << endl;
+	}
+}
+
+//vypis dat spolu s priradenym zhlukom
+void FCMcounter::objectsPrintWithType() const
+{
+	cout << "Vysledok:" << endl;
+	for (int i = 0; i < data->getSize();i++) {
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			cout << (*data)[i].getValue(k) << (k == numberOfCoordinates - 1 ? " Zhluk: " : ",");
+		}
+		cout << whichCenter((*data)[i]) << endl;
 	}
 }

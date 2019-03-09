@@ -1,90 +1,51 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "Object.h"
+#include "Dataset.h"
 
 using namespace std;
 
 class FCMcounter
 {
 private:
-	struct Flower {
-		vector<double> values;
-		string name;
-		int count;
-
-		Flower(const char pname[] = " ") : name(pname), count(0) {	};
-
-		//nastavi vektor suradnic
-		void setValues(vector<double> pvalues) {
-			values = pvalues;
-			count = values.size();
-		}
-
-		//nastavi novu hodnotu na urcenom mieste
-		void setValue(int which, double newValue) {
-			values[which] = newValue;
-		}
-
-		//vrati vektor suradnic
-		vector<double> getValues() {
-			return values;
-		}
-
-		//vrati konkretnu suradnicu
-		double getValue(int poradie) {
-			if (poradie >= 0 && poradie < count) {
-				return values[poradie];
-			}
-		}
-
-		//nastavi  nazov zhluku
-		void setName(const char pname[]) {
-			name = pname;
-		}
-
-		//vrati nazov zhluku
-		string getName() {
-			return name;
-		}
-
-		~Flower() {
-		};
-	};
 	int m;
+	const Dataset *data;
+	
+	int numberOfObjects;
 	int numberOfCoordinates;
 	int numberOfClusters;
-	int numberOfObjects;
-	vector<Flower*> all;
 	double** mu;
-	Flower** centers;
-	Flower** oldCenters;
+	Object** centers;
+	Object** oldCenters;
 	double** d;
 	double minChange;
-
-	bool readDataFromFile(const char* name);
-	void flowersPrint();
-	void flowersPrintWithType();
+	
+	void objectsPrintWithType() const;
 
 	void muInit();
-	void muPrint();
+	void muPrint() const;
 	void computeMu();
 
 	void centersInit();
-	void centersPrint();
+	void centersPrint() const;
 	void computeCenters();	
 
 	void dInit();
-	void dPrint();
+	void dPrint() const;
 	void computeD();
 
-	bool isSignificantChange();
-	int whichCenter(Flower &flower);
-	int whichNumberOfObject(Flower &flower);
+	bool isSignificantChange() const;
+	int whichCenter(const Object &object) const;
+	int whichNumberOfObject(const Object &object) const;
+
+	void init();
 
 public:
-	FCMcounter();
+	FCMcounter()
+	{
+		init();
+	};
+	FCMcounter(const Dataset &pdata);
 	~FCMcounter();	
-	void count(const char* name);
-	void saveOutputToArff(const char* filename, char* title, char* creator, char* donor, char* relation);
+	void count(const Dataset* pdata = nullptr);
 };
 

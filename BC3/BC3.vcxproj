@@ -135,11 +135,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Counter.cpp" />
+    <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="FCMcounter.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="PSOcounter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attribute.h" />
+    <ClInclude Include="Counter.h" />
+    <ClInclude Include="Dataset.h" />
     <ClInclude Include="FCMcounter.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="PSOcounter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

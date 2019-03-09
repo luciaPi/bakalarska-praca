@@ -1,5 +1,17 @@
-%s: ÔøÏ
+% 1. Title: Iris Plants Database
+%
+% 2. Sources:
+%	(a) Creator: Lucia Piatrikova
+%	(b) Donor:  
+%	(c) Date: 9-2-2019
+%
 
-%s: ðøÏ
-tô÷Ï: 
-tøÏ: D
+@RELATION iris
+
+@ATTRIBUTE sepallength {numeric}
+@ATTRIBUTE sepalwidth {numeric}
+@ATTRIBUTE petallength {numeric}
+@ATTRIBUTE petalwidth {numeric}
+@ATTRIBUTE class {Iris - setosa,Iris - versicolor,Iris - virginica}
+
+@DATA
