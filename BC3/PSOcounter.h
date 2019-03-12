@@ -17,20 +17,20 @@ private:
 	int numberOfCoordinates;
 	int maxIterationNumber;
 	double minChange;
+	int P;
 
 	const Dataset* data;
 
-	double** X;
-	double** V;
-	double** pbest;
+	Particle* X;
+	double*** pbest;
 	double* fitnessPbest;
-	double* gbest;
+	double** gbest;
 	double fitnessGbest;
-	double** d;
-	Object** centers;
-	Object** oldCenters;
+	double*** d;
+	Object*** centers;
+	Object*** oldCenters;
 
-	void init(const Dataset& pdata);
+	void init(const Dataset* pdata = nullptr);
 
 	void dInit();
 	void dPrint() const;
@@ -51,7 +51,7 @@ private:
 
 	void fitnessInit();
 	void checkFitness();
-	double getOnesFitness(const int which) const;
+	double getOnesFitness(const double** current) const;
 
 	void pbestInit();
 	

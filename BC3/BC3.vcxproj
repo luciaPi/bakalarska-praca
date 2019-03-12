@@ -140,6 +140,7 @@
     <ClCompile Include="FCMcounter.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PSOcounter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FCMcounter.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="PSOcounter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

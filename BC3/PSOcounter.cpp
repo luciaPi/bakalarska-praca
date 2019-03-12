@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void PSOcounter::init(const Dataset& pdata)
+void PSOcounter::init(const Dataset* pdata)
 {
 	srand(time(NULL));
 
@@ -19,14 +19,17 @@ void PSOcounter::init(const Dataset& pdata)
 	numberOfObjects = 0;
 	numberOfClusters = 3;
 	maxIterationNumber = 1;
-	data = &pdata;
+	if (pdata) {
+		data = pdata;
+	}
 	minChange = 0.1;
-
+	P = 3;
 	
 }
 
 PSOcounter::PSOcounter()
 {
+	init();
 }
 
 PSOcounter::~PSOcounter()
@@ -76,15 +79,15 @@ PSOcounter::~PSOcounter()
 	oldCenters = nullptr;
 }
 
-PSOcounter::PSOcounter(const Dataset & pdata)
+PSOcounter::PSOcounter(const Dataset& pdata)
 {
-	init(pdata);
+	init(&pdata);
 }
 
 void PSOcounter::count(const Dataset * pdata)
 {
 	if (pdata) {
-		init(*pdata);
+		init(pdata);
 	}
 	if (data) {
 		if ((numberOfObjects = data->getSize()) > 0) {
@@ -93,10 +96,14 @@ void PSOcounter::count(const Dataset * pdata)
 			int numberOfIterations = 0;
 
 			XInit();
-			printMatrix(X,"Matica pozicii X: ");
+			for (int l = 0; l < P; l++) {
+				printMatrix(X[l], "Matica pozicii X: "+l);
+			}
 
 			pbestInit();
-			printMatrix(pbest,"Matica pbest: ");
+			for (int l = 0; l < P; l++) {
+				printMatrix(pbest[l], "Matica pbest: "+l);
+			}
 
 			gbestInit();
 			gbestPrint();
@@ -138,17 +145,20 @@ void PSOcounter::count(const Dataset * pdata)
 void PSOcounter::XInit()
 {
 	int which = 0;
-	X = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		X[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (which%numberOfClusters == 0)
-				X[i][j] = 1;
-			else
-				X[i][j] = 0;
+	X = new double**[P];
+	for (int l = 0; l < P; l++) {
+		X[l] = new double*[numberOfObjects];
+		for (int i = 0; i < numberOfObjects; i++) {
+			X[l][i] = new double[numberOfClusters];
+			for (int j = 0; j < numberOfClusters; j++) {
+				if (which%numberOfClusters == 0)
+					X[l][i][j] = 1;
+				else
+					X[l][i][j] = 0;
+				which++;
+			}
 			which++;
-		}
-		which++;
+		}		
 	}
 }
 
@@ -191,27 +201,27 @@ void PSOcounter::normalizeX()
 void PSOcounter::pbestInit()
 {
 	int which = 0;
-	pbest = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		pbest[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (which%numberOfClusters == 0)
-				pbest[i][j] = 1;
-			else
-				pbest[i][j] = 0;
+	pbest = new double**[P];
+	for (int l = 0; l < P; l++) {
+		pbest[l] = new double*[numberOfObjects];
+		for (int i = 0; i < numberOfObjects; i++) {
+			pbest[l][i] = new double[numberOfClusters];
+			for (int j = 0; j < numberOfClusters; j++) {
+				pbest[l][i][j] = X[l][i][j];
+				which++;
+			}
 			which++;
 		}
-		which++;
 	}
 }
 
 void PSOcounter::fitnessInit()
 {
-	fitnessPbest = new double[numberOfClusters];		
-	for (int j = 0; j < numberOfClusters; j++) {
-		fitnessPbest[j] = 0.00001;
+	fitnessPbest = new double[P];		
+	for (int l = 0; l < P; l++) {
+		fitnessPbest[l] = getOnesFitness(X[l]);
 	}
-	fitnessGbest = 0.00001;
+	fitnessGbest = getOnesFitness(gbest);
 }
 
 void PSOcounter::VInit()
@@ -308,17 +318,18 @@ void PSOcounter::computeCenters()
 
 void PSOcounter::gbestInit()
 {
-	//gbest = (double)rand() / RAND_MAX;
-	gbest = new double[numberOfClusters];
-	for (int j = 0; j < numberOfClusters; j++) {
-		gbest[j] = 0.000001;
+	gbest = new double*[numberOfObjects];
+	for (int i = 0; i < numberOfObjects; i++) {
+		gbest[i] = new double[numberOfClusters];
+		for (int j = 0; j < numberOfClusters; j++) {
+			gbest[i][j] = X[0][i][j];
+		}
 	}
 }
 
 void PSOcounter::gbestPrint() const
 {
-	cout << "Gbest: ";
-	cout << *gbest << endl;
+	printMatrix(gbest, "Gbest: ");
 }
 
 void PSOcounter::fitnessGbestPrint() const
@@ -327,11 +338,13 @@ void PSOcounter::fitnessGbestPrint() const
 	cout << fitnessGbest << endl;
 }
 
-double PSOcounter::getOnesFitness(const int which) const
+double PSOcounter::getOnesFitness(const double** current) const
 {
 	double Jm = 0;
-	for (int j = 0; j < numberOfClusters; j++) {
-		Jm += pow(X[which][j],m) * d[which][j];
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			Jm += pow(current[i][j], m) * d[i][j];
+		}
 	}
 
 	return K / Jm;
@@ -371,9 +384,12 @@ void PSOcounter::computeD()
 //inicializacia matice euklidovskych vzdialenosti
 void PSOcounter::dInit()
 {
-	d = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		d[i] = new double[numberOfClusters];
+	d = new double**[P];
+	for (int l = 0; l < P; l++) {
+		d[l] = new double*[numberOfObjects];
+		for (int i = 0; i < numberOfObjects; i++) {
+			d[l][i] = new double[numberOfClusters];
+		}
 	}
 }
 
