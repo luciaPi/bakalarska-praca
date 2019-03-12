@@ -6,11 +6,10 @@
 
 FCMcounter::FCMcounter(const Dataset &pdata)
 {	
-	data = &pdata;
-	init();
+	init(pdata);
 }
 
-void FCMcounter::init() 
+void FCMcounter::init(const Dataset& pdata)
 {
 	m = 2;
 	numberOfClusters = 3;
@@ -21,7 +20,7 @@ void FCMcounter::init()
 	mu = nullptr;
 	oldCenters = nullptr;
 	d = nullptr;
-
+	data = &pdata;
 }
 
 FCMcounter::~FCMcounter()
@@ -59,30 +58,30 @@ FCMcounter::~FCMcounter()
 void FCMcounter::count(const Dataset* pdata)
 {
 	if (pdata) {
-		data = pdata;
+		init(*pdata);
 	}
 	if (data) {
 		if ((numberOfObjects = data->getSize()) > 0) {
 			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();
  			muInit();
-			muPrint();
+			//muPrint();
 			dInit();
 			centersInit();
 
 			computeCenters();
-			centersPrint();
+			//centersPrint();
 
 			int i = 0;
 			do {
 				cout << "Round" << i << endl;
 				computeD();
-				dPrint();
+				//dPrint();
 
 				computeMu();
-				muPrint();
+				//muPrint();
 
 				computeCenters();
-				centersPrint();
+				//centersPrint();
 
 				i++;
 			} while (isSignificantChange());

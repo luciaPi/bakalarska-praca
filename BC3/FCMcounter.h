@@ -37,13 +37,10 @@ private:
 	int whichCenter(const Object &object) const;
 	int whichNumberOfObject(const Object &object) const;
 
-	void init();
+	void init(const Dataset& pdata);
 
 public:
-	FCMcounter()
-	{
-		init();
-	};
+	FCMcounter() {};
 	FCMcounter(const Dataset &pdata);
 	~FCMcounter();	
 	void count(const Dataset* pdata = nullptr);

@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "Attribute.h"
 #include "FCMcounter.h"
+#include "PSOcounter.h"
 
 using namespace std;
 
@@ -19,8 +20,10 @@ Counter::~Counter()
 void Counter::count(Algorithm alg, const char * name)
 {
 	readDataFromFile(name);
-	FCMcounter fcmCounter;
-	fcmCounter.count(data);
+	//FCMcounter fcmCounter;
+	//fcmCounter.count(data);
+	PSOcounter psoCounter;
+	psoCounter.count(data);
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const
