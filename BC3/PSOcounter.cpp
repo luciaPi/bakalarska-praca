@@ -343,10 +343,10 @@ void PSOcounter::checkFitness()
 		double newFitness = getOnesFitness(i);
 		if (newFitness > fitnessPbest[i]) {
 			fitnessPbest[i] = newFitness;
-			*pbest[i] = *centers;
+			*pbest[i] = *X[i];
 			if (newFitness > fitnessGbest) {
 				fitnessGbest = newFitness;
-				*gbest = *centers;
+				*gbest = *X[i];
 			}
 		}
 	}
