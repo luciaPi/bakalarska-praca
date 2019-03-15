@@ -8,6 +8,7 @@
 #include "Attribute.h"
 #include "FCMcounter.h"
 #include "PSOcounter.h"
+#include "FCMPSOcounter.h"
 
 using namespace std;
 
@@ -22,10 +23,14 @@ void Counter::count(Algorithm alg, const char * name)
 	readDataFromFile(name);
 	FCMcounter fcmCounter;
 	fcmCounter.count(data);
-	fcmCounter.printJm();
+	//fcmCounter.printJm();
 	PSOcounter psoCounter;
 	psoCounter.count(data);
 	//psoCounter.printbestCentre();
+	cout << "FCM-PSO" << endl;
+	FCMPSOcounter fcmpso;
+	fcmpso.count(data);
+	
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const
@@ -104,12 +109,14 @@ bool Counter::readDataFromFile(const char* fileName)
 				all.push_back(flower);
 				flower = new Object();
 				values.clear();*/
-				fscanf(datafile, "%c", &name);
-				counChars++;
+				do {
+					fscanf(datafile, "%c", &name);
+					counChars++;
+				} while (*name != ',' && *name != '\n');
 			}
 			else {
 				//fscanf(datafile, "%c",&name);
-				if (counChars > 2) {
+				if (counChars > 2 && values.size() > 0) {
 					flower->setValues(values);
 					data->add(flower);
 					flower = new Object();

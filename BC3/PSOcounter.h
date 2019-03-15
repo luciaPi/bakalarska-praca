@@ -63,5 +63,7 @@ public:
 	void count(const Dataset* pdata = nullptr);
 	void printbestCentre() const;
 	void printJm() const;
+
+	const double** getBestX() const;
 };
 

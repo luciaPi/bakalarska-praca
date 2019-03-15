@@ -17,9 +17,9 @@ void PSOcounter::init(const Dataset* pdata)
 	//r1 = 0.5;
 	r2 = (double) rand() / RAND_MAX;
 	//r2 = 0.5;
-	w = 0.9;
+	w = 0.5;
 	
-	maxIterationNumber = 1000;
+	maxIterationNumber = 100;
 	if (pdata) {
 		data = pdata;
 	}
@@ -27,6 +27,7 @@ void PSOcounter::init(const Dataset* pdata)
 	P = 10;
 	numberOfClusters = 3;
 	particles = nullptr;
+	gbestX = nullptr;
 }
 
 PSOcounter::PSOcounter()
@@ -98,11 +99,11 @@ void PSOcounter::count(const Dataset * pdata)
 				//centersPrint();
 			} while (numberOfIterations++ < maxIterationNumber);
 		}
-		centersPrint();
-		gbestPrint();
+		//centersPrint();
+		//gbestPrint();
 		printbestCentre();
 		printJm();
-		Xprint();
+		//Xprint();
 	}
 }
 
@@ -285,4 +286,9 @@ void PSOcounter::printJm() const
 {
 	cout << "Jm PSO = ";
 	cout << 1/(gbestFitness / K) << endl;
+}
+
+const double ** PSOcounter::getBestX() const
+{
+	return (const double**)gbestX;
 }

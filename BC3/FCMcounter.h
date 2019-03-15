@@ -39,11 +39,13 @@ private:
 
 	void init(const Dataset& pdata);
 
+	void setMu(double const **parmu);
+
 public:
 	FCMcounter() {};
 	FCMcounter(const Dataset &pdata);
-	~FCMcounter();	
-	void count(const Dataset* pdata = nullptr);
+	~FCMcounter();
+	void count(const Dataset* pdata, const double** parmu = nullptr);
 	double getFitness() const;
 	void printJm() const;
 };

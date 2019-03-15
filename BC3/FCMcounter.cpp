@@ -23,6 +23,15 @@ void FCMcounter::init(const Dataset& pdata)
 	data = &pdata;
 }
 
+void FCMcounter::setMu(double const ** parmu)
+{
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			mu[i][j] = parmu[i][j];
+		}
+	}
+}
+
 FCMcounter::~FCMcounter()
 {
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -55,15 +64,18 @@ FCMcounter::~FCMcounter()
 }
 
 //kroky algoritmu
-void FCMcounter::count(const Dataset* pdata)
+void FCMcounter::count(const Dataset* pdata, const double** parmu)
 {
 	if (pdata) {
 		init(*pdata);
 	}
 	if (data) {
 		if ((numberOfObjects = data->getSize()) > 0) {
-			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();
+			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();			
  			muInit();
+			if (parmu) {
+				setMu(parmu);
+			}
 			//muPrint();
 			dInit();
 			centersInit();
@@ -73,7 +85,7 @@ void FCMcounter::count(const Dataset* pdata)
 
 			int i = 0;
 			do {
-				cout << "Round" << i << endl;
+				//cout << "Round" << i << endl;
 				computeD();
 				//dPrint();
 
@@ -83,13 +95,14 @@ void FCMcounter::count(const Dataset* pdata)
 				computeCenters();
 				//centersPrint();
 				//computeD();
-				printJm();
+				//printJm();
 				i++;
 			} while (isSignificantChange());
 			//dPrint();
 			//objectsPrintWithType();
+			printJm();
 			centersPrint();
-			muPrint();
+			//muPrint();
 
 		}
 	}
