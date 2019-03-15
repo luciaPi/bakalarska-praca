@@ -1,4 +1,7 @@
 #include "Object.h"
+#include <iostream>
+
+using namespace std;
 
 //nastavi vektor suradnic
 void Object::setValues(vector<double> pvalues) {
@@ -36,6 +39,14 @@ string Object::getName() {
 int Object::getNumberOfCoordinates() const
 {
 	return numberOfCoordinates;
+}
+
+void Object::printValues() const
+{
+	for (double cur : values) {
+		cout << cur << " ";
+	}
+	cout << endl;
 }
 
 Object::~Object() {

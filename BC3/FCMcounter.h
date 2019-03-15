@@ -44,5 +44,7 @@ public:
 	FCMcounter(const Dataset &pdata);
 	~FCMcounter();	
 	void count(const Dataset* pdata = nullptr);
+	double getFitness() const;
+	void printJm() const;
 };
 

@@ -6,8 +6,8 @@
 using namespace std;
 
 int main() {		
-	const char* fileName = "vysky.txt";
-	//const char* fileName = "iris.data";
+	//const char* fileName = "vysky.txt";
+	const char* fileName = "iris.data";
 	//const char* fileName = "som.data";
 	Counter counter;
 	counter.count(Counter::Algorithm::fcm,fileName);

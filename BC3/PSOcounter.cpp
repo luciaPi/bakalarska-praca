@@ -14,17 +14,19 @@ void PSOcounter::init(const Dataset* pdata)
 	c1 = 2;
 	c2 = 2;
 	r1 = (double) rand() / RAND_MAX;
+	//r1 = 0.5;
 	r2 = (double) rand() / RAND_MAX;
-	w = 0.5;
-	numberOfObjects = 0;
-	numberOfClusters = 3;
-	maxIterationNumber = 1;
+	//r2 = 0.5;
+	w = 0.9;
+	
+	maxIterationNumber = 1000;
 	if (pdata) {
 		data = pdata;
 	}
 	minChange = 0.1;
-	P = 3;
-	
+	P = 10;
+	numberOfClusters = 3;
+	particles = nullptr;
 }
 
 PSOcounter::PSOcounter()
@@ -34,49 +36,15 @@ PSOcounter::PSOcounter()
 
 PSOcounter::~PSOcounter()
 {
+	removeParticles();	
+
+	int numberOfObjects = data->getSize();
 	for (int i = 0; i < numberOfObjects; i++) {
-		delete[] X[i];
-		X[i] = nullptr;
+		delete[] gbestX[i];
+		gbestX[i] = nullptr;
 	}
-	delete[] X;
-	X = nullptr;
-
-	for (int i = 0; i < numberOfObjects; i++) {
- 		delete[] V[i];
-		V[i] = nullptr;
-	}
-	delete[] V;
-	V = nullptr;
-
-	for (int i = 0; i < numberOfObjects; i++) {
- 		delete[] pbest[i];
-		pbest[i] = nullptr;
-	}
-	delete[] pbest;
-	pbest = nullptr;
-
-	for (int i = 0; i < numberOfObjects; i++) {
-		delete[] d[i];
-		d[i] = nullptr;
-	}
-	delete[] d;
-	d = nullptr;
-
-	delete[] gbest;
-
-	for (int j = 0; j < numberOfClusters; j++) {
-		delete centers[j];
-		centers[j] = nullptr;
-	}
-	delete[] centers;
-	centers = nullptr;
-
-	for (int j = 0; j < numberOfClusters; j++) {
-		delete oldCenters[j];
-		oldCenters[j] = nullptr;
-	}
-	delete[] oldCenters;
-	oldCenters = nullptr;
+	delete[] gbestX;
+	gbestX = nullptr;	
 }
 
 PSOcounter::PSOcounter(const Dataset& pdata)
@@ -90,306 +58,170 @@ void PSOcounter::count(const Dataset * pdata)
 		init(pdata);
 	}
 	if (data) {
-		if ((numberOfObjects = data->getSize()) > 0) {
-			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();
-
+		if (data->getSize() > 0) {
 			int numberOfIterations = 0;
 
-			XInit();
-			for (int l = 0; l < P; l++) {
-				printMatrix(X[l], "Matica pozicii X: "+l);
-			}
-
-			pbestInit();
-			for (int l = 0; l < P; l++) {
-				printMatrix(pbest[l], "Matica pbest: "+l);
-			}
-
+			removeParticles();
+			particlesInit();
+			//setV();
+			/*dPrint();
+			Vprint();
+			Xprint();
+			bestsPrint();*/
+			
 			gbestInit();
-			gbestPrint();
+			//gbestPrint();
 
-			dInit();
-			fitnessInit();
-
-			VInit();
-			printMatrix(V,"Matica rychlosti V: ");
-
-			centersInit();
 			computeCenters();
-			centersPrint();
+			//centersPrint();
+			//fitnessPrint();
 
 			int i = 1;
 			do {	
-				cout << "Round" << i++ << endl;
+				//cout << "Round" << i++ << endl;
 				computeD();
-				dPrint();
+				//dPrint();
 
-				checkFitness();
-				printMatrix(pbest, "Pbest: ");
+				checkFitness();	
+				/*bestsPrint();
 				gbestPrint();
+				fitnessPrint();*/
 
 				computeV();
 				computeX();
-				printMatrix(V, "Matica rychlosti V: ");
-				printMatrix(X, "Matica pozicii X: ");
 				normalizeX();
-				printMatrix(X, "Matica pozicii X: ");
+
+				/*Vprint();
+				Xprint();*/
 
 				computeCenters();
-				centersPrint();
+				//centersPrint();
 			} while (numberOfIterations++ < maxIterationNumber);
 		}
+		centersPrint();
+		gbestPrint();
+		printbestCentre();
+		printJm();
+		Xprint();
 	}
 }
 
-void PSOcounter::XInit()
+void PSOcounter::particlesInit()
 {
-	int which = 0;
-	X = new double**[P];
+	particles = new Particle*[P];
 	for (int l = 0; l < P; l++) {
-		X[l] = new double*[numberOfObjects];
-		for (int i = 0; i < numberOfObjects; i++) {
-			X[l][i] = new double[numberOfClusters];
-			for (int j = 0; j < numberOfClusters; j++) {
-				if (which%numberOfClusters == 0)
-					X[l][i][j] = 1;
-				else
-					X[l][i][j] = 0;
-				which++;
-			}
-			which++;
-		}		
+		particles[l] = new Particle(*data, m, K,minChange,c1,c2,r1,r2,w,numberOfClusters);
 	}
+	
 }
 
-void PSOcounter::computeX()
+void PSOcounter::gbestInit()
 {
+	int numberOfObjects = data->getSize();
+	gbestX = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			X[i][j] = X[i][j] + V[i][j];
-		}
+		gbestX[i] = new double[numberOfClusters];
 	}
-}
-
-//nie nula!!!
-void PSOcounter::normalizeX()
-{
-	for (int i = 0; i < numberOfObjects; i++) {
-		int count = 0;
-		double rowSum = 0;
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (X[i][j] < 0) {
-				X[i][j] = 0.001;
-				count++;
-			}
-			rowSum += X[i][j];
-		}
-		if (count == numberOfClusters) {
-			for (int j = 0; j < numberOfClusters; j++) {
-				if (X[i][j] < 0) {
-					X[i][j] = rand() / RAND_MAX;
-					count++;
-				}
-			}
-		}
-		for (int j = 0; j < numberOfClusters; j++) {
-			X[i][j] = X[i][j] / rowSum;
-		}
-	}
-}
-
-void PSOcounter::pbestInit()
-{
-	int which = 0;
-	pbest = new double**[P];
-	for (int l = 0; l < P; l++) {
-		pbest[l] = new double*[numberOfObjects];
-		for (int i = 0; i < numberOfObjects; i++) {
-			pbest[l][i] = new double[numberOfClusters];
-			for (int j = 0; j < numberOfClusters; j++) {
-				pbest[l][i][j] = X[l][i][j];
-				which++;
-			}
-			which++;
-		}
-	}
-}
-
-void PSOcounter::fitnessInit()
-{
-	fitnessPbest = new double[P];		
-	for (int l = 0; l < P; l++) {
-		fitnessPbest[l] = getOnesFitness(X[l]);
-	}
-	fitnessGbest = getOnesFitness(gbest);
-}
-
-void PSOcounter::VInit()
-{
-	V = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		V[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			V[i][j] = (double)rand() / RAND_MAX * 2.0 - 1.0;
-		}
-	}
+	gbestFitness = -1;
+	checkFitness();
 }
 
 void PSOcounter::computeV()
 {
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			V[i][j] = w * V[i][j] + c1 * r1*(pbest[i][j] - X[i][j]) + c2 * r2*(gbest[j] - X[i][j]);
-		}
+	for (int l = 0; l < P; l++) {
+		particles[l]->computeV(gbestX);
 	}
 }
 
-void PSOcounter::printMatrix(double** matrix, const char* text) const
+void PSOcounter::Vprint() const
 {
-	cout << text << endl;
+	cout << "Rychlost V: " << endl;
+	for (int l = 0; l < P; l++) {
+		cout << "Rychlost V"<< l+1 << ": " << endl;
+		particles[l]->Vprint();
+	}
+}
+
+void PSOcounter::checkFitness()
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->checkFitness(gbestX, gbestFitness);
+	}
+}
+
+void PSOcounter::bestsPrint() const
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->bestPrint();
+	}
+}
+
+void PSOcounter::gbestPrint() const
+{
+	cout << "Gbest: " << endl;
+	int numberOfObjects = data->getSize();
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
-			cout << matrix[i][j] << " ";
+			cout << gbestX[i][j] << " ";
 		}
 		cout << endl;
 	}
 }
 
-//inicializacia centier
-void PSOcounter::centersInit()
+void PSOcounter::fitnessPrint() const
+{	
+	for (int l = 0; l < P; l++) {
+		cout << "Fitness "<< l+1 << ": " << endl;
+		particles[l]->fitnessPrint();
+	}
+
+	cout << "Fitness gbest " << gbestFitness << ": " << endl;
+	cout << "Jm: " << 1 / (gbestFitness / K) << endl;
+}
+
+void PSOcounter::computeX()
 {
-	centers = new Object*[numberOfClusters];
-	oldCenters = new Object*[numberOfClusters];
-	for (int j = 0; j < numberOfClusters; j++) {
-		Object *flower = new Object();
-		centers[j] = flower;
-		flower = new Object();
-		oldCenters[j] = flower;
+	for (int l = 0; l < P; l++) {
+		particles[l]->computeX();
 	}
 }
 
-//vypis centier
-void PSOcounter::centersPrint() const
+void PSOcounter::normalizeX()
 {
-	cout << "Centra:" << endl;
-	for (int j = 0; j < numberOfClusters; j++) {
-		cout << "Centrum" << j + 1 << ": ";
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			cout << centers[j]->getValue(k) << " ";
-		}
-		cout << endl;
+	for (int l = 0; l < P; l++) {
+		particles[l]->normalizeX();
+	}
+}
+
+void PSOcounter::Xprint() const
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->Xprint();
 	}
 }
 
 //vypocet centier
 void PSOcounter::computeCenters()
 {
-	vector<double> values;
-	for (int j = 0; j < numberOfClusters; j++) {
-		values.clear();
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			double sum1 = 0;
-			double sum2 = 0;
-			for (int i = 0; i < numberOfObjects; i++) {
-				double product2 = 1;
-				for (int l = 0; l < m; l++) {
-					product2 *= X[i][j];
-				}
-				double product1 = product2 * (*data)[i].getValue(k);
-				sum1 += product1;
-				sum2 += product2;
-			}
-			values.push_back(sum1 / sum2);
-		}
-		oldCenters[j]->setValues(centers[j]->getValues());
-		centers[j]->setValues(values);
-		for (int i = 0; i < numberOfObjects; i++) {
-			for (int k = 0; k < numberOfCoordinates; k++) {
-				double a1 = centers[j]->getValue(k);
-				double a2 = (*data)[i].getValue(k);
-				if (abs(centers[j]->getValue(k) - (*data)[i].getValue(k)) < 0.00000001) {
-					centers[j]->setValue(k, centers[j]->getValue(k) + 0.1*minChange);
-				}
-			}
-		}
-
+	for (int l = 0; l < P; l++) {
+		particles[l]->computeCenters();
 	}
 }
 
-void PSOcounter::gbestInit()
+void PSOcounter::centersPrint() const
 {
-	gbest = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		gbest[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			gbest[i][j] = X[0][i][j];
-		}
-	}
-}
-
-void PSOcounter::gbestPrint() const
-{
-	printMatrix(gbest, "Gbest: ");
-}
-
-void PSOcounter::fitnessGbestPrint() const
-{
-	cout << "Fitness gbest: ";
-	cout << fitnessGbest << endl;
-}
-
-double PSOcounter::getOnesFitness(const double** current) const
-{
-	double Jm = 0;
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			Jm += pow(current[i][j], m) * d[i][j];
-		}
-	}
-
-	return K / Jm;
-}
-
-void PSOcounter::checkFitness()
-{
-	for (int i = 0; i < numberOfObjects; i++) {
-		double newFitness = getOnesFitness(i);
-		if (newFitness > fitnessPbest[i]) {
-			fitnessPbest[i] = newFitness;
-			*pbest[i] = *X[i];
-			if (newFitness > fitnessGbest) {
-				fitnessGbest = newFitness;
-				*gbest = *X[i];
-			}
-		}
+	cout << "Centra:" << endl;
+	for (int l = 0; l < P; l++) {
+		cout << "centra " << l + 1 << ": " << endl;
+		particles[l]->centersPrint();
 	}
 }
 
 //vypocet matice euklidovskej vzdialenosti
 void PSOcounter::computeD()
 {
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			double sum = 0;
-			for (int k = 0; k < numberOfCoordinates; k++) {
-				double coordinate1 = (*data)[i].getValue(k);
-				double coordinate2 = centers[j]->getValue(k);
-				sum += pow(coordinate1 - coordinate2, 2);
-			}
-			d[i][j] = sqrt(sum);
-		}
-	}
-}
-
-//inicializacia matice euklidovskych vzdialenosti
-void PSOcounter::dInit()
-{
-	d = new double**[P];
 	for (int l = 0; l < P; l++) {
-		d[l] = new double*[numberOfObjects];
-		for (int i = 0; i < numberOfObjects; i++) {
-			d[l][i] = new double[numberOfClusters];
-		}
+		particles[l]->computeD();
 	}
 }
 
@@ -397,10 +229,60 @@ void PSOcounter::dInit()
 void PSOcounter::dPrint() const
 {
 	cout << "Matica euklidovskej vzdialenosti:" << endl;
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			cout << d[i][j] << " ";
+	for (int l = 0; l < P; l++) {
+		cout << "Matica " << l+1 << ": " << endl;
+		particles[l]->dPrint();
+	}
+}
+
+void PSOcounter::removeParticles()
+{
+	if (particles != nullptr) {
+		for (int l = 0; l < P; l++) {
+			delete particles[l];
+
+		}
+		delete[] particles;
+		particles = nullptr;
+	}
+}
+
+void PSOcounter::setV()
+{
+	double v1[] = {0.96,-0.4,-0.75,0.34,-0.19,-0.42,-0.42,-0.89,0.33,0.83,-0.79,0.47,0.28,0.61,-0.12};
+	particles[0]->setV(v1);
+	double v2[] = {0.93,-0.81,-0.22,-0.69,-0.2,-0.85,-0.61,0.6,-0.1,0.03,-0.05,-0.83,-0.27,0.81,-0.03};
+	particles[1]->setV(v2);
+}
+
+//vypocet centier
+void PSOcounter::printbestCentre() const
+{
+	cout << "Gbest centra:" << endl;
+	int numberOfCoordinates = (*data)[0].getNumberOfCoordinates();
+	int numberOfObjects = data->getSize();
+	for (int j = 0; j < numberOfClusters; j++) {
+		cout << "Centrum " << j + 1 << ":";
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			double sum1 = 0;
+			double sum2 = 0;
+			for (int i = 0; i < numberOfObjects; i++) {
+				double product2 = 1;
+				for (int l = 0; l < m; l++) {
+					product2 *= gbestX[i][j];
+				}
+				double product1 = product2 * (*data)[i].getValue(k);
+				sum1 += product1;
+				sum2 += product2;
+			}
+			cout <<  sum1 / sum2 << " ";
 		}
 		cout << endl;
 	}
+}
+
+void PSOcounter::printJm() const
+{
+	cout << "Jm PSO = ";
+	cout << 1/(gbestFitness / K) << endl;
 }

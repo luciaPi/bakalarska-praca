@@ -18,5 +18,6 @@ public:
 	void setName(const char pname[]);
 	string getName();
 	int getNumberOfCoordinates() const;
+	void printValues() const;
 	~Object();
 };

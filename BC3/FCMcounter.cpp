@@ -14,7 +14,7 @@ void FCMcounter::init(const Dataset& pdata)
 	m = 2;
 	numberOfClusters = 3;
 	numberOfCoordinates = 0;
-	minChange = 0.1;
+	minChange = 0.001;
 	data = nullptr;
 	centers = nullptr;
 	mu = nullptr;
@@ -82,16 +82,35 @@ void FCMcounter::count(const Dataset* pdata)
 
 				computeCenters();
 				//centersPrint();
-
+				//computeD();
+				printJm();
 				i++;
 			} while (isSignificantChange());
-			dPrint();
-			objectsPrintWithType();
+			//dPrint();
+			//objectsPrintWithType();
 			centersPrint();
-			//muPrint();
+			muPrint();
 
 		}
 	}
+}
+
+double FCMcounter::getFitness() const
+{
+	double Jm = 0;
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			Jm += pow(mu[i][j], m) * d[i][j];
+		}
+	}
+
+	return Jm;
+}
+
+void FCMcounter::printJm() const
+{
+	cout << "Jm FCM = ";
+	cout << getFitness() << endl;
 }
 
 //inicializacia matice mu

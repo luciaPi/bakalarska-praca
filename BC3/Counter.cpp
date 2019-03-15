@@ -20,10 +20,12 @@ Counter::~Counter()
 void Counter::count(Algorithm alg, const char * name)
 {
 	readDataFromFile(name);
-	//FCMcounter fcmCounter;
-	//fcmCounter.count(data);
+	FCMcounter fcmCounter;
+	fcmCounter.count(data);
+	fcmCounter.printJm();
 	PSOcounter psoCounter;
 	psoCounter.count(data);
+	//psoCounter.printbestCentre();
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const

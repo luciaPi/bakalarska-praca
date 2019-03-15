@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
+#include "Particle.h"
 
 class PSOcounter
 {
@@ -12,53 +13,47 @@ private:
 	double r1;
 	double r2;
 	double w;
-	int numberOfObjects;
-	int numberOfClusters;
-	int numberOfCoordinates;
+	
 	int maxIterationNumber;
 	double minChange;
 	int P;
+	int numberOfClusters;
 
 	const Dataset* data;
 
-	Particle* X;
-	double*** pbest;
-	double* fitnessPbest;
-	double** gbest;
-	double fitnessGbest;
-	double*** d;
-	Object*** centers;
-	Object*** oldCenters;
+	Particle** particles;
+	double** gbestX;
+	double gbestFitness;
 
 	void init(const Dataset* pdata = nullptr);
 
-	void dInit();
-	void dPrint() const;
-	void computeD();
-
-	void XInit();
-	void computeX();
-	void normalizeX();	
-
-	void VInit();
-	void computeV();
-
-	void printMatrix(double** matrix, const char* text) const;
-	
-	void centersInit();
-	void centersPrint() const;
-	void computeCenters();	
-
-	void fitnessInit();
-	void checkFitness();
-	double getOnesFitness(const double** current) const;
-
-	void pbestInit();
-	
+		
+	void particlesInit();
 	void gbestInit();
-	void gbestPrint() const;
-	void fitnessGbestPrint() const;
+	
+	void computeV();
+	void Vprint() const;
 
+	void checkFitness();
+	void bestsPrint() const;
+	
+	void gbestPrint() const;
+
+	void fitnessPrint() const;
+	
+	void computeX();
+	void normalizeX();
+	void Xprint() const;
+
+	void computeCenters();
+	void centersPrint() const;
+
+	void computeD();
+	void dPrint() const;
+
+	void removeParticles();
+
+	void setV();
 
 public:
 	PSOcounter();
@@ -66,5 +61,7 @@ public:
 	PSOcounter(const Dataset &pdata);
 
 	void count(const Dataset* pdata = nullptr);
+	void printbestCentre() const;
+	void printJm() const;
 };
 
