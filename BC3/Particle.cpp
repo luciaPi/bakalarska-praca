@@ -58,7 +58,7 @@ Particle::~Particle()
 	oldCenters = nullptr;
 }
 
-void Particle::init(int parm, int parK, double parminchange, double parc1, double parc2, double parr1, double parr2, double parw,int parnumberOfClusters,const Dataset* pdata = nullptr)
+void Particle::init(int parm, int parK, double parminchange, double parc1, double parc2, double parr1, double parr2, double parw,int parnumberOfClusters,const Dataset* pdata)
 {
 	numberOfClusters = parnumberOfClusters;
 	m = parm;
