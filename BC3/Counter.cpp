@@ -9,6 +9,7 @@
 #include "FCMcounter.h"
 #include "PSOcounter.h"
 #include "FCMPSOcounter.h"
+#include "FAcounter.h"
 
 using namespace std;
 
@@ -23,14 +24,16 @@ void Counter::count(Algorithm alg, const char * name)
 	readDataFromFile(name);
 	FCMcounter fcmCounter;
 	fcmCounter.count(data);
-	//fcmCounter.printJm();
-	PSOcounter psoCounter;
+	fcmCounter.printJm();
+	/*PSOcounter psoCounter;
 	psoCounter.count(data);
 	//psoCounter.printbestCentre();
 	cout << "FCM-PSO" << endl;
 	FCMPSOcounter fcmpso;
-	fcmpso.count(data);
-	
+	fcmpso.count(data);*/
+
+	FAcounter faCounter;
+	faCounter.count(data);	
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const

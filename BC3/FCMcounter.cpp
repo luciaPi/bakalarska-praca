@@ -14,7 +14,7 @@ void FCMcounter::init(const Dataset& pdata)
 	m = 2;
 	numberOfClusters = 3;
 	numberOfCoordinates = 0;
-	minChange = 0.001;
+	minChange = 0.0001;
 	data = nullptr;
 	centers = nullptr;
 	mu = nullptr;
@@ -72,7 +72,8 @@ void FCMcounter::count(const Dataset* pdata, const double** parmu)
 	if (data) {
 		if ((numberOfObjects = data->getSize()) > 0) {
 			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();			
- 			muInit();
+			//numberOfCoordinates = 1;
+			muInit();
 			if (parmu) {
 				setMu(parmu);
 			}
