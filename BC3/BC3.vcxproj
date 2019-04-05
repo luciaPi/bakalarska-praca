@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Counter.cpp" />
+    <ClCompile Include="CounterData.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="FAcounter.cpp" />
     <ClCompile Include="FCMcounter.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Counter.h" />
+    <ClInclude Include="CounterData.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FAcounter.h" />
     <ClInclude Include="FCMcounter.h" />

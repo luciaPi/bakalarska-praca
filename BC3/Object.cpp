@@ -3,6 +3,15 @@
 
 using namespace std;
 
+Object & Object::operator=(const Object & other)
+{
+	numberOfCoordinates = other.numberOfCoordinates;
+	for (double cur : other.values) {
+		values.push_back(cur);
+	}
+	return *this;
+}
+
 //nastavi vektor suradnic
 void Object::setValues(vector<double> pvalues) {
 	values = pvalues;
@@ -15,9 +24,9 @@ void Object::setValue(int which, double newValue) {
 }
 
 //vrati vektor suradnic
-vector<double> Object::getValues() {
+/*vector<double> Object::getValues() {
 	return values;
-}
+}*/
 
 //vrati konkretnu suradnicu
 double Object::getValue(int poradie) const {
@@ -27,14 +36,14 @@ double Object::getValue(int poradie) const {
 }
 
 //nastavi  nazov zhluku
-void Object::setName(const char pname[]) {
+/*void Object::setName(const char pname[]) {
 	name = pname;
-}
+}*/
 
 //vrati nazov zhluku
-string Object::getName() {
+/*string Object::getName() {
 	return name;
-}
+}*/
 
 int Object::getNumberOfCoordinates() const
 {
@@ -48,7 +57,3 @@ void Object::printValues() const
 	}
 	cout << endl;
 }
-
-Object::~Object() {
-};
-

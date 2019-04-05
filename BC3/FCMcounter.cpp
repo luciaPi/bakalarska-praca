@@ -4,276 +4,147 @@
 #include <ctime>
 #include "Attribute.h"
 
-FCMcounter::FCMcounter(const Dataset &pdata)
-{	
-	init(pdata);
+void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM)
+{
+	clear();
+	counterData = new CounterData(parData, parNumberOfClusters, parM);
+	counterData->setName("FCM");
 }
 
-void FCMcounter::init(const Dataset& pdata)
-{
-	m = 2;
-	numberOfClusters = 3;
-	numberOfCoordinates = 0;
-	minChange = 0.0001;
-	data = nullptr;
-	centers = nullptr;
-	mu = nullptr;
-	oldCenters = nullptr;
-	d = nullptr;
-	data = &pdata;
-}
-
-void FCMcounter::setMu(double const ** parmu)
-{
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = parmu[i][j];
-		}
-	}
-}
-
-FCMcounter::~FCMcounter()
-{
-	for (int j = 0; j < numberOfClusters; j++) {
-		delete centers[j];
-		centers[j] = nullptr;
-	}
-	delete[] centers;
-	centers = nullptr;
-
-	for (int j = 0; j < numberOfClusters; j++) {
-		delete oldCenters[j];
-		oldCenters[j] = nullptr;
-	}
-	delete[] oldCenters;
-	oldCenters = nullptr;
-
-	for (int i = 0; i < numberOfObjects; i++) {
-		delete[] mu[i];
-		mu[i] = nullptr;
-	}
-	delete[] mu;
-	mu = nullptr;
-
-	for (int i = 0; i < numberOfObjects; i++) {
-		delete[] d[i];
-		d[i] = nullptr;
-	}
-	delete[] d;
-	d = nullptr;
+FCMcounter::~FCMcounter() {
+	clear();
 }
 
 //kroky algoritmu
-void FCMcounter::count(const Dataset* pdata, const double** parmu)
-{
-	if (pdata) {
-		init(*pdata);
-	}
-	if (data) {
-		if ((numberOfObjects = data->getSize()) > 0) {
-			numberOfCoordinates = (*data)[0].getNumberOfCoordinates();			
-			//numberOfCoordinates = 1;
-			muInit();
-			if (parmu) {
-				setMu(parmu);
-			}
+void FCMcounter::count(const Dataset pardata, int parNumberOfClusters, int parM)
+{	
+	if (pardata.getSize() > 0) {
+		setCounter(pardata, parNumberOfClusters, parM);
+		
+		muPrint();		
+		centersPrint();
+		dPrint();
+
+		int i = 0;
+		do {
+			cout << "Round" << i << endl;			
+			computeMu();
+
 			//muPrint();
-			dInit();
-			centersInit();
-
-			computeCenters();
-			//centersPrint();
-
-			int i = 0;
-			do {
-				//cout << "Round" << i << endl;
-				computeD();
-				//dPrint();
-
-				computeMu();
-				//muPrint();
-
-				computeCenters();
-				//centersPrint();
-				//computeD();
-				//printJm();
-				i++;
-			} while (isSignificantChange());
-			//dPrint();
-			//objectsPrintWithType();
-			printJm();
 			centersPrint();
-			//muPrint();
-
-		}
-	}
+			//dPrint();
+			printJm();
+		} while (!isMetFinalCriterion(i++));
+	}	
 }
 
-double FCMcounter::getFitness() const
+void FCMcounter::setMaxIterations(int parmaxIteration)
 {
-	double Jm = 0;
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			Jm += pow(mu[i][j], m) * pow(d[i][j],1);
-		}
-	}
+	maxIteration = parmaxIteration;
+}
 
-	return Jm;
+void FCMcounter::setMinChange(double parminChange) {
+	minChange = parminChange;
+}
+
+void FCMcounter::setFinalCriterion(FinalCriterion fc)
+{
+	finalCriterion = fc;
+}
+
+void FCMcounter::clear()
+{
+	delete counterData;
+	counterData = nullptr;
+}
+
+double FCMcounter::getJm() const
+{
+	if (counterData) {
+		return counterData->getJm();
+	}
+	return -1;
 }
 
 void FCMcounter::printJm() const
 {
-	cout << "Jm FCM = ";
-	cout << getFitness() << endl;
-}
-
-//inicializacia matice mu
-void FCMcounter::muInit()
-{
-	int which = 0;
-	mu = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		mu[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (which%numberOfClusters == 0)
-				mu[i][j] = 1;
-			else
-				mu[i][j] = 0;
-			which++;
-		}
-		which++;
+	if (counterData) {
+		counterData->printJm();
 	}
-	/*double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
-	int which = 0;
-	mu = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		mu[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = values[which];
-			which++;
-		}
-	}*/
 }
 
 //vypis matice mu
 void FCMcounter::muPrint() const
 {
-	cout << "Matica prislusnosti mu:" << endl;
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			cout << mu[i][j] << " ";
-		}
-		cout << endl;
+	if (counterData) {
+		counterData->muPrint();
 	}
 }
 
 //vypocet matice mu
 void FCMcounter::computeMu()
 {
-	double index = 2 / (m - 1);
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			double sum = 0;
-			for (int k = 0; k < numberOfClusters; k++) {
-				double value = d[i][j] / d[i][k];
-				sum += pow(value,index);
-			}
-			mu[i][j] = 1 / sum;
-		}
-	}
-}
-
-//inicializacia centier
-void FCMcounter::centersInit()
-{
-	centers = new Object*[numberOfClusters];
-	oldCenters = new Object*[numberOfClusters];
-	for (int j = 0; j < numberOfClusters; j++) {		
-		Object *flower = new Object();
-		centers[j] = flower;
-		flower = new Object();
-		oldCenters[j] = flower;
+	if (counterData) {
+		counterData->computeMu();
 	}
 }
 
 //vypis centier
 void FCMcounter::centersPrint() const
 {
-	cout << "Centra:" << endl;
-	for (int j = 0; j < numberOfClusters; j++) {
-		cout << "Centrum" << j + 1 << ": ";
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			cout << centers[j]->getValue(k) << " ";
-		}
-		cout << endl;
+	if (counterData) {
+		counterData->centersPrint();
 	}
 }
 
-//vypocet centier
+/*//vypocet centier
 void FCMcounter::computeCenters()
 {
-	vector<double> values;
-	for (int j = 0; j < numberOfClusters; j++) {
-		values.clear();
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			double sum1 = 0;
-			double sum2 = 0;
-			for (int i = 0; i < numberOfObjects; i++) {
-				double product2 = 1;
-				for (int l = 0; l < m; l++) {
-					product2 *= mu[i][j];
-				}
-				double product1 = product2 * (*data)[i].getValue(k);
-				sum1 += product1;
-				sum2 += product2;
-			}
-			values.push_back(sum1 / sum2);
-		}
-		oldCenters[j]->setValues(centers[j]->getValues());
-		centers[j]->setValues(values);
-		for (int i = 0; i < numberOfObjects; i++) {
-			for (int k = 0; k < numberOfCoordinates; k++) {
-				double a1 = centers[j]->getValue(k);
-				double a2 = (*data)[i].getValue(k);
-				if (abs(centers[j]->getValue(k) - (*data)[i].getValue(k)) < 0.00000001) {
-					centers[j]->setValue(k, centers[j]->getValue(k)+0.1*minChange);
-				}
-			}
-		}
-		
+	if (counterData) {
+		counterData->computeCenters();
 	}
-}
+}*/
 
-//vypocet matice euklidovskej vzdialenosti
-void FCMcounter::computeD()
-{	
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			double sum = 0;
-			for (int k = 0; k < numberOfCoordinates; k++) {
-				double coordinate1 = (*data)[i].getValue(k);
-				double coordinate2 = centers[j]->getValue(k);
-				sum += pow(coordinate1 - coordinate2, 2);
-			}
-			d[i][j] = sqrt(sum);
-		}
-	}
-}
-
-//je zmena centier oproti centram v minulom kroku vyznamna
-bool FCMcounter::isSignificantChange() const
+//vypis matice euklidovskej vzdialenosti
+void FCMcounter::dPrint() const
 {
-	for (int j = 0; j < numberOfClusters; j++) {
-		for (int k = 0; k < numberOfCoordinates;k++) {
-			if ((abs(oldCenters[j]->getValue(k) - centers[j]->getValue(k))) > minChange) {
-				return true;
-			}
-		}
+	if (counterData) {
+		counterData->dPrint();
 	}
-	return false;
 }
 
-//ku ktoremu centru ma objekt najvyssiu prislusnost
+/*void FCMcounter::computeD()
+{
+	if (counterData) {
+		counterData->computeD();
+	}
+}*/
+
+bool FCMcounter::isMetFinalCriterion(int actualIterationNumber) const
+{
+	switch (finalCriterion) {
+		case FinalCriterion::maxIteration :
+			return actualIterationNumber > maxIteration;
+		case FinalCriterion::minChange:
+			return !counterData->wasSignificantChange();		
+	}
+	return (actualIterationNumber > maxIteration || !counterData->wasSignificantChange());
+}
+
+/*
+//vypis dat spolu s priradenym zhlukom
+void FCMcounter::objectsPrintWithType() const
+{
+	cout << "Vysledok:" << endl;
+	for (int i = 0; i < data->getSize();i++) {
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			cout << (*data)[i].getValue(k) << (k == numberOfCoordinates - 1 ? " Zhluk: " : ",");
+		}
+		cout << whichCenter((*data)[i]) << endl;
+	}
+}*/
+
+/*//ku ktoremu centru ma objekt najvyssiu prislusnost
 int FCMcounter::whichCenter(const Object &flower) const
 {
 	int whichObject = whichNumberOfObject(flower);
@@ -289,43 +160,10 @@ int FCMcounter::whichCenter(const Object &flower) const
 		}
 	}
 	return maxCoordinate;
-}
+}*/
 
-//zisti poradie daneho objektu v ramci vsetkych objektov
+/*//zisti poradie daneho objektu v ramci vsetkych objektov
 int FCMcounter::whichNumberOfObject(const Object & flower) const
 {
 	return data->whichNumberOfObject(flower);
-}
-
-//inicializacia matice euklidovskych vzdialenosti
-void FCMcounter::dInit()
-{
-	d = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		d[i] = new double[numberOfClusters];
-	}
-}
-
-//vypis matice euklidovskej vzdialenosti
-void FCMcounter::dPrint() const
-{
-	cout << "Matica euklidovskej vzdialenosti:" << endl;
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			cout << d[i][j] << " ";
-		}
-		cout << endl;
-	}
-}
-
-//vypis dat spolu s priradenym zhlukom
-void FCMcounter::objectsPrintWithType() const
-{
-	cout << "Vysledok:" << endl;
-	for (int i = 0; i < data->getSize();i++) {
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			cout << (*data)[i].getValue(k) << (k == numberOfCoordinates - 1 ? " Zhluk: " : ",");
-		}
-		cout << whichCenter((*data)[i]) << endl;
-	}
-}
+}*/

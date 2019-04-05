@@ -197,7 +197,7 @@ void Particle::computeCenters()
 			}
 			values.push_back(sum1 / sum2);
 		}
-		oldCenters[j]->setValues(centers[j]->getValues());
+		oldCenters[j] = centers[j];
 		centers[j]->setValues(values);
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int k = 0; k < numberOfCoordinates; k++) {

@@ -7,17 +7,21 @@ class Object {
 private:
 	int numberOfCoordinates;
 	vector<double> values;
-	string name;
+	//string name;
 
 public:
-	Object(const char pname[] = " ") : name(pname), numberOfCoordinates(0) {	};
+	Object() : numberOfCoordinates(0) {};
+	~Object() {};
+	Object& operator=(const Object& other);
+
 	void setValues(vector<double> pvalues);
 	void setValue(int which, double newValue);
-	vector<double> getValues();
+	//vector<double> getValues();
 	double getValue(int poradie) const;
-	void setName(const char pname[]);
-	string getName();
-	int getNumberOfCoordinates() const;
 	void printValues() const;
-	~Object();
+
+	int getNumberOfCoordinates() const;
+
+	//void setName(const char pname[]);
+	//string getName();	
 };

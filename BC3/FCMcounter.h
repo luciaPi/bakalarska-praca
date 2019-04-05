@@ -1,52 +1,49 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
+#include "CounterData.h"
 
 using namespace std;
+
+enum class FinalCriterion { minChange, maxIteration, both };
 
 class FCMcounter
 {
 private:
-	int m;
-	const Dataset *data;
-	
-	int numberOfObjects;
-	int numberOfCoordinates;
-	int numberOfClusters;
-	double** mu;
-	Object** centers;
-	Object** oldCenters;
-	double** d;
-	double minChange;
-	
-	void objectsPrintWithType() const;
+	CounterData* counterData = nullptr;
 
-	void muInit();
+	double minChange = 0.0001;
+	int maxIteration = 20;
+	FinalCriterion finalCriterion = FinalCriterion::both;
+
+	void setCounter(Dataset data, int numberOfClusters, int m);
+	void clear();
+
 	void muPrint() const;
 	void computeMu();
 
-	void centersInit();
 	void centersPrint() const;
-	void computeCenters();	
+	//void computeCenters();
 
-	void dInit();
 	void dPrint() const;
-	void computeD();
+	//void computeD();
 
-	bool isSignificantChange() const;
-	int whichCenter(const Object &object) const;
-	int whichNumberOfObject(const Object &object) const;
+	bool isMetFinalCriterion(int actualIterationNumber) const;
 
-	void init(const Dataset& pdata);
-
-	void setMu(double const **parmu);
+	//void objectsPrintWithType() const;	
+	//int whichCenter(const Object &object) const;
+	//int whichNumberOfObject(const Object &object) const;
 
 public:
 	FCMcounter() {};
-	FCMcounter(const Dataset &pdata);
 	~FCMcounter();
-	void count(const Dataset* pdata, const double** parmu = nullptr);
-	double getFitness() const;
-	void printJm() const;
+	
+	void count(const Dataset data, int numberOfClusters, int m);
+	void setMaxIterations(int parmaxIteration);
+	void setMinChange(double minChange);
+	void setFinalCriterion(FinalCriterion fc);
+
+	double getJm() const;
+	void printJm() const;	
 };
 

@@ -21,10 +21,13 @@ Counter::~Counter()
 
 void Counter::count(Algorithm alg, const char * name)
 {
+	int numberOfClusters = 3;
+	int m = 2;
 	readDataFromFile(name);
+	dataObjectsPrint();
 	FCMcounter fcmCounter;
-	fcmCounter.count(data);
-	fcmCounter.printJm();
+	fcmCounter.count(*data,numberOfClusters,m);
+	//fcmCounter.printJm();
 	/*PSOcounter psoCounter;
 	psoCounter.count(data);
 	psoCounter.printbestCentre();
@@ -32,8 +35,8 @@ void Counter::count(Algorithm alg, const char * name)
 	FCMPSOcounter fcmpso;
 	fcmpso.count(data);*/
 
-	FAcounter faCounter;
-	faCounter.count(data);	
+	//FAcounter faCounter;
+	//faCounter.count(data);	
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const
@@ -130,9 +133,9 @@ bool Counter::readDataFromFile(const char* fileName)
 					countNumbers = 0;
 					numAttributes = 0;
 				}
-				if (numAttributes > 0) {
+				//if (numAttributes > 0) {
 					values.push_back(value);
-				}
+				//}
 				numAttributes++;
 				countChars = 0;
 				countNumbers = 1;
@@ -147,18 +150,18 @@ bool Counter::readDataFromFile(const char* fileName)
 }
 
 //vypis vstupnych dat
-void Counter::flowersPrint() const
+void Counter::dataObjectsPrint() const
 {
-	cout << "Data:" << endl;
+	cout << "Data objects:" << endl;
 	int numberOfCoordiantes;
 	int numberOfObjects;
-	if (numberOfObjects = data->getSize() > 0) {
+	if ((numberOfObjects = data->getSize()) > 0) {
 		numberOfCoordiantes = (*data)[0].getNumberOfCoordinates();
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int k = 0; k < numberOfCoordiantes; k++) {
 				cout << (*data)[i].getValue(k) << (k < numberOfCoordiantes - 1 ? "," : " ");
 			}
-			cout << (*data)[i].getName() << endl;
+			cout << endl;
 		}
 	}
 }

@@ -45,6 +45,9 @@
     <ClCompile Include="FAcounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CounterData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FCMcounter.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FAcounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CounterData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

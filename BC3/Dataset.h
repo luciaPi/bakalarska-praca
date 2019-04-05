@@ -6,20 +6,21 @@ using namespace std;
 class Dataset
 {
 private:	
-	int numberOfObjects;
-
+	int numberOfObjects = 0;
 	vector<Object*> all;
 
 public:
 	Dataset() : numberOfObjects(0) {};
+	Dataset(const Dataset& other);
 	~Dataset();
+	Dataset& operator=(const Dataset& other);
+
 	void add(Object* object);
 	int getSize() const;
-	Object& operator[](const int index) {
-		Object* object = all[index];
-		return *object;
-	};
-	const Object& Dataset::operator[](const int index) const;
-	int whichNumberOfObject(const Object & object) const;
+
+	Object& operator[](const int index);
+	const Object Dataset::operator[](const int index) const;
+
+	//int whichNumberOfObject(const Object & object) const;
 };
 
