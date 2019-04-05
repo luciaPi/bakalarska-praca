@@ -71,11 +71,11 @@ void PSOcounter::count(const Dataset * pdata)
 			bestsPrint();*/
 			
 			gbestInit();
-			//gbestPrint();
+			gbestPrint();
 
 			computeCenters();
-			//centersPrint();
-			//fitnessPrint();
+			centersPrint();
+			fitnessPrint();
 
 			int i = 1;
 			do {	
@@ -84,26 +84,27 @@ void PSOcounter::count(const Dataset * pdata)
 				//dPrint();
 
 				checkFitness();	
-				/*bestsPrint();
-				gbestPrint();
-				fitnessPrint();*/
+				//bestsPrint();
+				//gbestPrint();
+				//fitnessPrint();
 
 				computeV();
 				computeX();
 				normalizeX();
 
-				/*Vprint();
-				Xprint();*/
+				//Vprint();
+				//Xprint();
 
 				computeCenters();
 				//centersPrint();
 			} while (numberOfIterations++ < maxIterationNumber);
 		}
-		//centersPrint();
-		//gbestPrint();
+		centersPrint();
+		gbestPrint();
 		printbestCentre();
 		printJm();
 		//Xprint();
+		//Vprint();
 	}
 }
 

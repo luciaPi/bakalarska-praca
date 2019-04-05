@@ -33,7 +33,7 @@ void FAcounter::init(const Dataset* pdata)
 		data = pdata;
 	}
 	minChange = 0.1;
-	P = 20;
+	P = 10;
 	numberOfClusters = 3;
 	fireflies = nullptr;
 	best = nullptr;
@@ -75,14 +75,14 @@ void FAcounter::count(const Dataset * pdata)
 					for (int second = 0; second < P; second++) {
 						double secondJm = fireflies[second]->getJm();
 						if (secondJm < firstJm) {
-							fireflies[first]->move(fireflies[second]->getCenters());
+							fireflies[first]->move(fireflies[second]->getCenters(), fireflies[second]->getJm());
 
 							//centersPrint();
 							fireflies[first]->computeD();
 							//dPrint();
 							fireflies[first]->computeMu();
 							//muPrint();
-							fireflies[first]->setJm();
+							//fireflies[first]->setJm();
 							//firefliesJmPrint();
 						}
 					}

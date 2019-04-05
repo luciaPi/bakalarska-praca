@@ -27,7 +27,7 @@ void Counter::count(Algorithm alg, const char * name)
 	fcmCounter.printJm();
 	/*PSOcounter psoCounter;
 	psoCounter.count(data);
-	//psoCounter.printbestCentre();
+	psoCounter.printbestCentre();
 	cout << "FCM-PSO" << endl;
 	FCMPSOcounter fcmpso;
 	fcmpso.count(data);*/
@@ -96,7 +96,9 @@ bool Counter::readDataFromFile(const char* fileName)
 		Object *flower = new Object();
 		int lastPosition;
 		char name[100];
-		int counChars = 0;
+		int countChars = 0;
+		int countNumbers = 0;
+		int numAttributes = 0;
 
 		do {
 			//lastPosition = ftell(datafile);
@@ -114,19 +116,26 @@ bool Counter::readDataFromFile(const char* fileName)
 				values.clear();*/
 				do {
 					fscanf(datafile, "%c", &name);
-					counChars++;
+					countChars++;
+					countNumbers = 0;
 				} while (*name != ',' && *name != '\n');
 			}
 			else {
 				//fscanf(datafile, "%c",&name);
-				if (counChars > 2 && values.size() > 0) {
+				if ((countChars > 2 && values.size() > 0) || countNumbers == 1) {
 					flower->setValues(values);
 					data->add(flower);
 					flower = new Object();
 					values.clear();
+					countNumbers = 0;
+					numAttributes = 0;
 				}
-				values.push_back(value);
-				counChars = 0;
+				if (numAttributes > 0) {
+					values.push_back(value);
+				}
+				numAttributes++;
+				countChars = 0;
+				countNumbers = 1;
 			}
 		} while (true);
 		flower->setValues(values);

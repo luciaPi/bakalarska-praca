@@ -205,17 +205,17 @@ double Firefly::computeDistanceOfAllCenters(vector<Object> otherCenters) const
 	return allSum;
 }
 
-void Firefly::move(vector<Object> otherCenters)
+void Firefly::move(vector<Object> otherCenters, double otherJm)
 {
 	double r = computeDistanceOfAllCenters(otherCenters);
-	double beta = atractiveness * exp(-LAC * pow(r, 2));
+	double beta = atractiveness * exp(-LAC * pow(r, 1));
 
 	for (int j = 0; j < numberOfClusters; j++) {
 		for (int k = 0; k < numberOfCoordinates; k++) {
 			double randNumber = (double)rand() / RAND_MAX;
 			double rCenter = computeDistanceOfCenters(*centers[j], otherCenters[j]);
-			
-			double newValue = centers[j]->getValue(k) + beta*r+alpha*(randNumber-0.5);
+			rCenter = centers[j]->getValue(k) - otherCenters[j].getValue(k);
+			double newValue = centers[j]->getValue(k) + beta*rCenter+alpha*(randNumber-0.5);
 			if (newValue < minCoordinate[k]) {
 				newValue = minCoordinate[k];
 			}

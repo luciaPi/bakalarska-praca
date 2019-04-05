@@ -114,7 +114,7 @@ double FCMcounter::getFitness() const
 	double Jm = 0;
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
-			Jm += pow(mu[i][j], m) * d[i][j];
+			Jm += pow(mu[i][j], m) * pow(d[i][j],1);
 		}
 	}
 

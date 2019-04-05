@@ -61,7 +61,7 @@ public:
 	void dPrint() const;
 	
 	vector<Object> getCenters();
-	void move(vector<Object> otherCenters);
+	void move(vector<Object> otherCenters,double otherJm);
 
 	void setCenters(vector<Object> newCenters);
 };
