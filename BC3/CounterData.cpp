@@ -60,6 +60,13 @@ void CounterData::setM(int parM)
 	}
 }
 
+void CounterData::setK(int parK)
+{
+	if (K > 0) {
+		K = parK;
+	}
+}
+
 void CounterData::setMinChange(double parminChange)
 {
 	if (parminChange > 0) {
@@ -209,6 +216,26 @@ void CounterData::recalculate()
 	computeD();
 }
 
+void CounterData::printMatrix(double ** matrix, const char * text) const
+{
+	cout << text << endl;
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			cout << matrix[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+
+void CounterData::setMatrix(double ** source, double ** dest)
+{
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			dest[i][j] = source[i][j];
+		}
+	}
+}
+
 void CounterData::setMu(const double ** parmu)
 {
 	if (parmu) {
@@ -332,6 +359,17 @@ void CounterData::printJm() const
 {
 	cout << "Jm " << name << " = ";
 	cout << getJm() << endl;
+}
+
+double CounterData::getFitness() const
+{
+	return K/getJm();
+}
+
+void CounterData::printFitness() const
+{
+	cout << "Fitness " << name << " = ";
+	cout << getFitness() << endl;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna

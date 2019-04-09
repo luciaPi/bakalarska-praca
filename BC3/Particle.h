@@ -1,73 +1,56 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
+#include "CounterData.h"
 
-class Particle
+class Particle : public CounterData
 {
 private:
-	int m;
-	int K;
-	double c1;
-	double c2;
-	double r1;
-	double r2;
-	double w;
-	double minChange;
-	double** X;
+	double c1 = 1;
+	double c2 = 1;
+	double r1 = -1;
+	double r2 = -1;
+	double w = 1;
+
+	const double maxV = 1;
+
 	double** V;
-	double** best;
-	double fitnessBest;
-	double** d;
-	Object** centers;
-	Object** oldCenters;
+	double** pbest;
+	double pbestFitness = 0;
 
-	int numberOfObjects = 0;
-	int numberOfClusters = 0;
-	int numberOfCoordinates = 0;
+	double** gbest;
+	double* gbestFitness;
 
-	const Dataset* data;
-
-	void init(int parm, int parK, double parminchange, double parc1, double parc2, double parr1, double parr2, double parw,int numberOfClusters,const Dataset* pdata);
-	void printMatrix(double** matrix, const char* text) const;
-
-	void dInit();
-	void XInit();
-	void bestInit();
+	void pbestInit();
 	void VInit();
-	void centersInit();
+	void initParticle();
 
-	double getFitness() const;
-	
-	double getJm() const;
+	void checkFitness();
+
+	void normalizeMu();
+
+	void clearParticle();
+
 public:
 	Particle();
-	Particle(const Dataset &pdata,int parm, int parK, double parminchange, double parc1,double parc2, double parr1, double parr2, double parw, int numberOfClusters);
+	Particle(int numberOfClusters);
+	Particle(Dataset data);
+	Particle(Dataset data, int numberOfClusters, int m);
+	Particle(Dataset pdata, int numberOfClusters, int m, double c1,double c2, double r1, double r2, double w);
 	~Particle();
 
-	void dPrint() const;
-	void computeD();
-
-	void Xprint();
-	void computeX();
-	void normalizeX();
-
-	void fitnessPrint() const;
-
-	void checkFitness(double ** gbest, double &gbestFitness);
-
 	void Vprint() const;
-	void computeV(double** gbest);
+	void computeV();
+	
+	void pbestPrint() const;
 
-	void centersPrint() const;
-	void computeCenters();
-
-	void bestPrint() const;
-
-	void setMatrix(double ** source, double **dest);
-	void setX(double** newX);
-	double getXValue(int i, int j) const;
-
-
-	void setV(double par[]);
+	void computeMu();
+	
+	void setc1c2(double c1, double c2);
+	void setr1r2(double r1, double r2);
+	void setw(double w);
+		
+	//double getXValue(int i, int j) const;
+	//void setV(double par[]);
 };
 

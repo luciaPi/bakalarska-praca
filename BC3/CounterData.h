@@ -8,14 +8,10 @@ class CounterData
 private:
 	Dataset data;
 	int m = 1;
+	int K = 1;
 	double minChange = 0.0001;
 	string name = "Data";
-
-	int numberOfObjects = 0;
-	int numberOfCoordinates = 0;
-	int numberOfClusters = 0;
-
-	double** mu = nullptr;
+	
 	Object** centers = nullptr;
 	Object** oldCenters = nullptr;
 	double** d = nullptr;
@@ -30,6 +26,17 @@ private:
 	void computeD();
 	void computeCenters();
 	void normalizeMu();
+	
+protected:
+	int numberOfObjects = 0;
+	int numberOfCoordinates = 0;
+	int numberOfClusters = 0;
+
+	double** mu = nullptr;
+
+	void printMatrix(double** matrix, const char* text) const;
+	void setMatrix(double ** source, double **dest);
+
 	void recalculate();
 
 public:
@@ -42,6 +49,7 @@ public:
 	void setNumberOfClusters(int number);
 	void setData(Dataset data);
 	void setM(int m);
+	void setK(int K);
 	void setMinChange(double minChange);
 	void setMu(const double ** mu);
 	void setName(string name);
@@ -55,6 +63,9 @@ public:
 
 	double getJm() const ;
 	void printJm() const;
+
+	double getFitness() const;
+	void printFitness() const;
 
 	bool wasSignificantChange() const;
 };

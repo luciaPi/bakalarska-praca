@@ -7,9 +7,9 @@ using namespace std;
 
 int main() {		
 	//const char* fileName = "vysky.txt";
-	//const char* fileName = "iris.data";
+	const char* fileName = "iris.data";
 	//const char* fileName = "parkinsons.data";
-	const char* fileName = "glass_csv.csv";
+	//const char* fileName = "glass_csv.csv";
 	//const char* fileName = "wine.data";
 	Counter counter;
 	counter.count(Counter::Algorithm::fcm,fileName);
