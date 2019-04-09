@@ -2,12 +2,11 @@
 #include "CounterData.h"
 #include "Particle.h"
 
-class ParticleCounterData : public CounterData, Particle
+class ParticleCounterData : public CounterData, public Particle
 {
 private:
 	void normalize() override;
-	bool setX() override;
-	
+	bool setX() override;	
 
 public:
 	ParticleCounterData() {};

@@ -11,6 +11,7 @@ void ParticleCounterData::Vprint() const
 void ParticleCounterData::pbestPrint() const
 {
 	printAsMatrix(pbest, "PBest: ");
+	pbestCentersPrint();
 }
 
 void ParticleCounterData::Xprint() const
@@ -40,9 +41,8 @@ void ParticleCounterData::pbestCentersPrint() const
 			double sum1 = 0;
 			double sum2 = 0;
 			for (int i = 0; i < numberOfObjects; i++) {
-				double product2 = pow(*(pbest+i*numberOfObjects+j),m));
-				}
-				double product1 = product2 * (*data)[i].getValue(k);
+				double product2 = pow(*(pbest+i*numberOfObjects+j),m);				
+				double product1 = product2 * data[i].getValue(k);
 				sum1 += product1;
 				sum2 += product2;
 			}

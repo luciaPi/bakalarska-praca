@@ -82,33 +82,29 @@ void Particle::Xinit()
 	X = new double[size];
 }
 
-void Particle::checkFitness()
+void Particle::checkFitness(const Particle* gbest)
 {
 	double newFitness = getFitness();
 	if (newFitness > pbestFitness) {
 		pbestFitness = newFitness;
 		setValues(X, pbest);
 		
-		if (gbestFitness == nullptr) {
-			throw new exception();
-		}
-
-		if (newFitness > *gbestFitness) {
-			*gbestFitness = newFitness;
-			if (!(setValues(X, gbest))) {
-				throw new exception();
-			}
+		if (newFitness > gbest->getFitness()) {
+			gbest = this;
 		}
 	}
 }
 
-void Particle::computeV()
+void Particle::computeV(const Particle* gbest)
 {
 	if (gbest == nullptr) {
 		throw new exception();
+	}	
+	if (gbest->getSize() != size) {
+		throw new exception();
 	}
 	for (int i = 0; i < size; i++) {
-		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - *(X + i)) + c2 * r2*(*(gbest + i) - *(X + i));
+		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - *(X + i)) + c2 * r2*(gbest->getXValue(i) - *(X + i));
 		if (*(V + i) > maxV) {
 			*(V + i) = maxV;
 		}
@@ -125,12 +121,12 @@ void Particle::computeX()
 	}
 }
 
-bool Particle::compute()
+bool Particle::compute(const Particle* gbest)
 {
 	try {
-		computeV();
+		computeV(gbest);
 		normalize();
-		checkFitness();
+		checkFitness(gbest);
 	}
 	catch (exception ex) {
 		return false;
@@ -227,18 +223,20 @@ bool Particle::setValues(double * source, double * dest)
 	return false;
 }
 
-/*
-double Particle::getXValue(int i, int j) const
+int Particle::getSize() const
 {
-	return X[i][j];
-}*/
-/*
+	return size;
+}
+
+
+double Particle::getXValue(int i) const
+{
+	return *(X+i);
+}
+
 void Particle::setV(double par[])
 {
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			int x = i * numberOfClusters + j;
-			V[i][j] = par[i*numberOfClusters + j];
-		}
+	for (int i = 0; i < size; i++) {
+		*(V+i) = par[i];
 	}
-}*/
+}

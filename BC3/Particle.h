@@ -13,21 +13,21 @@ private:
 	
 	double pbestFitness = 0;
 
-	double* gbest = nullptr;
-	double* gbestFitness = nullptr;
-
 	void pbestInit();
 	void VInit();
 	void Xinit();
 	void init();
 	
-	void computeV();
+	void computeV(const Particle* gbest);
 	void computeX();
-	void checkFitness();
+	void checkFitness(const Particle* gbest);
 	
 	void clearParticle();
 
+	double getXValue(int i) const;
 	bool setValues(double *source, double *dest);
+
+	int getSize() const;
 
 protected:
 	double* pbest = nullptr;
@@ -36,7 +36,7 @@ protected:
 	int size = 0;
 
 	virtual void normalize() = 0;
-	virtual double getFitness() = 0;
+	virtual double getFitness() const = 0;
 	virtual bool setX() = 0;
 
 public:
@@ -48,14 +48,13 @@ public:
 	void pbestPrint() const;
 	void Xprint() const;
 
-	bool compute();
+	bool compute(const Particle* gbest);
 	
 	void setc1c2(double c1, double c2);
 	void setr1r2(double r1, double r2);
 	void setw(double w);
 	void setSize(int size);
 		
-	//double getXValue(int i, int j) const;
-	//void setV(double par[]);
+	void setV(double par[]);	//dat prec
 };
 

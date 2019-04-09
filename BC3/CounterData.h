@@ -6,7 +6,6 @@
 class CounterData
 {
 private:
-	Dataset data;
 	int K = 1;
 	double minChange = 0.0001;
 	string name = "Data";
@@ -28,6 +27,7 @@ private:
 	
 protected:
 	int m = 1;
+	Dataset data;
 
 	int numberOfObjects = 0;
 	int numberOfCoordinates = 0;
