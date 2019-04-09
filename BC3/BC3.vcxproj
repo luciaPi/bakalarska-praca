@@ -143,8 +143,10 @@
     <ClCompile Include="FCMPSOcounter.cpp" />
     <ClCompile Include="Firefly.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainCounter.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleCounterData.cpp" />
     <ClCompile Include="PSOcounter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,8 +158,10 @@
     <ClInclude Include="FCMcounter.h" />
     <ClInclude Include="FCMPSOcounter.h" />
     <ClInclude Include="Firefly.h" />
+    <ClInclude Include="MainCounter.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleCounterData.h" />
     <ClInclude Include="PSOcounter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

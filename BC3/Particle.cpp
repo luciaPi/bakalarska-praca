@@ -8,35 +8,10 @@ Particle::Particle()
 {
 	srand(time(NULL));
 
-	initParticle();
+	init();
 }
 
-Particle::Particle(int pnumberOfClusters)
-	: CounterData(pnumberOfClusters)
-{
-	srand(time(NULL));
-
-	initParticle();
-}
-
-Particle::Particle(Dataset pdata)
-	: CounterData(pdata)
-{
-	srand(time(NULL));
-
-	initParticle();
-}
-
-Particle::Particle(Dataset pdata, int pnumberOfClusters, int pm)
-	: CounterData(pdata,pnumberOfClusters,pm)
-{
-	srand(time(NULL));
-
-	initParticle();
-}
-
-Particle::Particle(Dataset pdata, int parnumberOfClusters, int parm, double parc1, double parc2, double parr1, double parr2, double parw)
-	: CounterData(pdata,parnumberOfClusters, parm)
+Particle::Particle(double parc1, double parc2, double parr1, double parr2, double parw, int psize)	
 {
 	srand(time(NULL));
 
@@ -55,8 +30,10 @@ Particle::Particle(Dataset pdata, int parnumberOfClusters, int parm, double parc
 	if (parr2 <= 1) {
 		r2 = parr2;
 	}
-
-	initParticle();
+	if (psize > 0) {
+		size = psize;
+	}
+	init();
 }
 
 Particle::~Particle()
@@ -64,11 +41,12 @@ Particle::~Particle()
 	clearParticle();
 }
 
-void Particle::initParticle()
+void Particle::init()
 {
 	clearParticle();
 
 	VInit();
+	Xinit();
 	pbestInit();
 
 	if (r1 < 0) {
@@ -77,29 +55,31 @@ void Particle::initParticle()
 	if (r2 < 0) {
 		r2 = (double)rand() / RAND_MAX;
 	}	
+	if (size > 0) {
+		setX();
+	}
 }
 
 void Particle::pbestInit()
 {
-	pbest = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		pbest[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			pbest[i][j] = mu[i][j];
-		}
+	pbest = new double[size];
+	for (int i = 0; i < size; i++) {
+		*(pbest + i) = *(X + i);
 	}
-	pbestFitness = getJm();
+	pbestFitness = getFitness();
 }
 
 void Particle::VInit()
 {
-	V = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		V[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			V[i][j] = (double)rand() / RAND_MAX * 2.0 - 1.0;
-		}
+	V = new double[size];
+	for (int i = 0; i < size; i++) {
+		*(V+i) = (double)rand() / RAND_MAX * 2.0 - 1.0;
 	}
+}
+
+void Particle::Xinit()
+{
+	X = new double[size];
 }
 
 void Particle::checkFitness()
@@ -107,40 +87,56 @@ void Particle::checkFitness()
 	double newFitness = getFitness();
 	if (newFitness > pbestFitness) {
 		pbestFitness = newFitness;
-		setMatrix(mu, pbest);
+		setValues(X, pbest);
 		
+		if (gbestFitness == nullptr) {
+			throw new exception();
+		}
+
 		if (newFitness > *gbestFitness) {
 			*gbestFitness = newFitness;
-			setMatrix(mu, gbest);
+			if (!(setValues(X, gbest))) {
+				throw new exception();
+			}
 		}
 	}
 }
 
 void Particle::computeV()
 {
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			V[i][j] = w * V[i][j] + c1 * r1*(pbest[i][j] - mu[i][j]) + c2 * r2*(gbest[i][j] - mu[i][j]);
-			if (V[i][j] > maxV) {
-				V[i][j] = maxV;
-			}
-			else if (V[i][j] < -maxV) {
-				V[i][j] = -maxV;
-			}
+	if (gbest == nullptr) {
+		throw new exception();
+	}
+	for (int i = 0; i < size; i++) {
+		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - *(X + i)) + c2 * r2*(*(gbest + i) - *(X + i));
+		if (*(V + i) > maxV) {
+			*(V + i) = maxV;
+		}
+		else if (*(V + i) < -maxV) {
+			*(V + i) = -maxV;
 		}
 	}
 }
 
-void Particle::computeMu()
+void Particle::computeX()
 {
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = mu[i][j] + V[i][j];
-		}
+	for (int i = 0; i < size; i++) {
+		*(X + i) = *(X + i) + *(V + i);
 	}
-	normalizeMu();
-	recalculate();
-	checkFitness();
+}
+
+bool Particle::compute()
+{
+	try {
+		computeV();
+		normalize();
+		checkFitness();
+	}
+	catch (exception ex) {
+		return false;
+	}
+	computeX();
+	return true;
 }
 
 void Particle::setc1c2(double parc1, double parc2)
@@ -172,64 +168,63 @@ void Particle::setw(double parw)
 	}
 }
 
+void Particle::setSize(int psize)
+{
+	if (psize > 0) {
+		size = psize;
+		init();
+	}
+}
+
 void Particle::Vprint() const
 {
-	printMatrix(V, "V: ");
+	cout << "V: " << endl;
+	for (int i = 0; i < size; i++) {
+		cout << V[i] << " ";		
+	}
+	cout << endl;
 }
 
 void Particle::pbestPrint() const
 {
-	printMatrix(pbest, "PBest: ");
+	cout << "PBest: " << endl;
+	for (int i = 0; i < size; i++) {
+		cout << pbest[i] << " ";
+	}
+	cout << endl;
 }
 
-//nie nula!!!
-void Particle::normalizeMu()
+void Particle::Xprint() const
 {
-	for (int i = 0; i < numberOfObjects; i++) {
-		int count = 0;
-		double rowSum = 0;
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (mu[i][j] < 0) {
-				mu[i][j] = 0;
-				count++;
-			}
-			rowSum += mu[i][j];
-		}
-		if (count == numberOfClusters) {
-			for (int j = 0; j < numberOfClusters; j++) {
-				if (mu[i][j] < 0) {
-					mu[i][j] = rand() / RAND_MAX;
-					count++;
-				}
-			}
-		}
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = mu[i][j] / rowSum;
-		}
+	cout << "X: " << endl;
+	for (int i = 0; i < size; i++) {
+		cout << X[i] << " ";
 	}
+	cout << endl;
 }
 
 void Particle::clearParticle()
 {
-	if (V) {
-		for (int i = 0; i < numberOfObjects; i++) {
-			delete[] V[i];
-			V[i] = nullptr;
-		}
+	delete[] V;
+	V = nullptr;
 
-		delete[] V;
-		V = nullptr;
-	}
+	delete[] X;
+	X = nullptr;
 
-	if (pbest) {
-		for (int i = 0; i < numberOfObjects; i++) {
-			delete[] pbest[i];
-			pbest[i] = nullptr;
+	delete[] pbest;
+	pbest = nullptr;
+	pbestFitness = 0;
+}
+
+bool Particle::setValues(double * source, double * dest)
+{
+	if (dest != nullptr && source != nullptr) {
+		for (int i = 0; i < size; i++) {
+			*(dest + i) = *(source + i);
 		}
-		delete[] pbest;
-		pbest = nullptr;
-		pbestFitness = 0;
+		return true;
 	}
+	return false;
 }
 
 /*

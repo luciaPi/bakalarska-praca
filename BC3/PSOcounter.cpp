@@ -277,7 +277,7 @@ void PSOcounter::printbestCentre() const
 				sum1 += product1;
 				sum2 += product2;
 			}
-			cout <<  sum1 / sum2 << " ";
+			cout << sum1 / sum2 << " ";
 		}
 		cout << endl;
 	}
@@ -292,4 +292,14 @@ void PSOcounter::printJm() const
 const double ** PSOcounter::getBestX() const
 {
 	return (const double**)gbestX;
+}
+
+bool PSOcounter::wasSignificantChange() const
+{
+	return false;
+}
+
+double PSOcounter::getJm() const
+{
+	return 0.0;
 }

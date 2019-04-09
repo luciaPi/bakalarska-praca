@@ -7,7 +7,6 @@ class CounterData
 {
 private:
 	Dataset data;
-	int m = 1;
 	int K = 1;
 	double minChange = 0.0001;
 	string name = "Data";
@@ -28,13 +27,15 @@ private:
 	void normalizeMu();
 	
 protected:
+	int m = 1;
+
 	int numberOfObjects = 0;
 	int numberOfCoordinates = 0;
 	int numberOfClusters = 0;
 
 	double** mu = nullptr;
 
-	void printMatrix(double** matrix, const char* text) const;
+	void printAsMatrix(double* matrix, const char* text = "") const;
 	void setMatrix(double ** source, double **dest);
 
 	void recalculate();

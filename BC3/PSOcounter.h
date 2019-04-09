@@ -2,27 +2,16 @@
 #include "Object.h"
 #include "Dataset.h"
 #include "Particle.h"
+#include "ParticleCounterData.h"
+#include "MainCounter.h"
 
-class PSOcounter
+class PSOcounter : public MainCounter
 {
-private:
-	int m;
-	int K;
-	double c1;
-	double c2;
-	double r1;
-	double r2;
-	double w;
-	
-	int maxIterationNumber;
-	double minChange;
+private:	
 	int P;
-	int numberOfClusters;
 
-	const Dataset* data;
-
-	Particle** particles;
-	double** gbestX;
+	ParticleCounterData** particles;
+	double* gbest;
 	double gbestFitness;
 
 	void init(const Dataset* pdata = nullptr);
@@ -55,15 +44,20 @@ private:
 
 	void setV();
 
+	void printbestCentre() const;
+
+	bool wasSignificantChange() const override;
+
 public:
 	PSOcounter();
 	~PSOcounter();
-	PSOcounter(const Dataset &pdata);
 
-	void count(const Dataset* pdata = nullptr);
-	void printbestCentre() const;
-	void printJm() const;
+	void count(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w);
+	
 
-	const double** getBestX() const;
+	//const double** getBestX() const;
+		
+	double getJm() const override;
+	void printJm() const override;
 };
 

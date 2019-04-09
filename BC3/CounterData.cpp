@@ -77,7 +77,7 @@ void CounterData::setMinChange(double parminChange)
 void CounterData::init()
 {
 	clear();
-	numberOfObjects= data.getSize();
+	numberOfObjects = data.getSize();
 	if (numberOfObjects > 0) {
 		numberOfCoordinates = data[0].getNumberOfCoordinates();
 	}
@@ -216,12 +216,12 @@ void CounterData::recalculate()
 	computeD();
 }
 
-void CounterData::printMatrix(double ** matrix, const char * text) const
+void CounterData::printAsMatrix(double * matrix, const char * text) const
 {
 	cout << text << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
-			cout << matrix[i][j] << " ";
+			cout << matrix[i*numberOfClusters+j] << " ";
 		}
 		cout << endl;
 	}

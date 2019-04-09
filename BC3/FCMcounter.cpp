@@ -38,20 +38,6 @@ void FCMcounter::count(const Dataset pardata, int parNumberOfClusters, int parM)
 	}	
 }
 
-void FCMcounter::setMaxIterations(int parmaxIteration)
-{
-	maxIteration = parmaxIteration;
-}
-
-void FCMcounter::setMinChange(double parminChange) {
-	minChange = parminChange;
-}
-
-void FCMcounter::setFinalCriterion(FinalCriterion fc)
-{
-	finalCriterion = fc;
-}
-
 void FCMcounter::clear()
 {
 	delete counterData;
@@ -71,6 +57,11 @@ void FCMcounter::printJm() const
 	if (counterData) {
 		counterData->printJm();
 	}
+}
+
+bool FCMcounter::wasSignificantChange() const
+{
+	return counterData->wasSignificantChange();
 }
 
 //vypis matice mu
@@ -119,17 +110,6 @@ void FCMcounter::dPrint() const
 		counterData->computeD();
 	}
 }*/
-
-bool FCMcounter::isMetFinalCriterion(int actualIterationNumber) const
-{
-	switch (finalCriterion) {
-		case FinalCriterion::maxIteration :
-			return actualIterationNumber > maxIteration;
-		case FinalCriterion::minChange:
-			return !counterData->wasSignificantChange();		
-	}
-	return (actualIterationNumber > maxIteration || !counterData->wasSignificantChange());
-}
 
 /*
 //vypis dat spolu s priradenym zhlukom
