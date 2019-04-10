@@ -24,9 +24,10 @@ bool ParticleCounterData::setX()
 	if (numberOfClusters * numberOfObjects == size) {
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int j = 0; j < numberOfClusters; j++) {
-				*(X + i*numberOfClusters+j) = mu[i][j];
+				*(X + i*numberOfClusters+j) = *(&mu[i][j]);
 			}
 		}
+		recalculate();
 		return true;
 	}
 	return false;
@@ -51,6 +52,41 @@ void ParticleCounterData::pbestCentersPrint() const
 		cout << endl;
 	}
 	cout << endl;
+}
+
+double ParticleCounterData::getFitness() const
+{
+	return CounterData::getFitness();
+}
+
+void ParticleCounterData::setK(int parK)
+{
+	if (K > 0) {
+		CounterData::setK(K);
+		pbestFitness = pbestFitness * parK / K;
+	}
+}
+
+void ParticleCounterData::setM(int m)
+{
+	if (m > 0) {
+		CounterData::setM(m);
+		Particle::init();
+	}
+}
+
+void ParticleCounterData::setNumberOfClusters(int number)
+{
+	if (numberOfClusters > 0) {
+		CounterData::setNumberOfClusters(number);
+		setSize(number*numberOfObjects);
+	}
+}
+
+void ParticleCounterData::setData(Dataset data)
+{
+	CounterData::setData(data);
+	setSize(data.getSize()*numberOfObjects);
 }
 
 //nie nula!!!

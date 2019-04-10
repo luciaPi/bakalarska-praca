@@ -58,6 +58,7 @@ void CounterData::setM(int parM)
 	if (m > 0) {
 		m = parM;
 	}
+	init();
 }
 
 void CounterData::setK(int parK)

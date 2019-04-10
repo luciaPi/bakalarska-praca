@@ -22,8 +22,6 @@ FAcounter::~FAcounter()
 
 void FAcounter::init(const Dataset* pdata)
 {
-	srand(time(NULL));
-
 	m = 2;
 	atractiveness = 1;
 	LAC = 1;

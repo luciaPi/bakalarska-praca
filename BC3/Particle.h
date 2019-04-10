@@ -1,4 +1,5 @@
 #pragma once
+//#include "ParticleCounterData.h"
 
 class Particle 
 {
@@ -11,12 +12,9 @@ private:
 
 	const double maxV = 1;
 	
-	double pbestFitness = 0;
-
 	void pbestInit();
 	void VInit();
 	void Xinit();
-	void init();
 	
 	void computeV(const Particle* gbest);
 	void computeX();
@@ -31,6 +29,8 @@ private:
 
 protected:
 	double* pbest = nullptr;
+	double pbestFitness = 0;
+
 	double* X = nullptr;
 	double* V = nullptr;
 	int size = 0;
@@ -38,6 +38,10 @@ protected:
 	virtual void normalize() = 0;
 	virtual double getFitness() const = 0;
 	virtual bool setX() = 0;
+	
+	void init();
+
+	void setStartingX();
 
 public:
 	Particle();

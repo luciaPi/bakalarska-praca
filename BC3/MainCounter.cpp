@@ -10,7 +10,7 @@ bool MainCounter::isMetFinalCriterion(int actualIterationNumber) const
 	case FinalCriterion::minChange:
 		return !wasSignificantChange();
 	}
-	return (actualIterationNumber > maxIteration || !counterData->wasSignificantChange());
+	return (actualIterationNumber > maxIteration || !wasSignificantChange());
 }
 
 MainCounter::MainCounter()

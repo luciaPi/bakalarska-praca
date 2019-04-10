@@ -21,17 +21,28 @@ Counter::~Counter()
 
 void Counter::count(Algorithm alg, const char * name)
 {
+	srand(time(NULL));
+
 	int numberOfClusters = 3;
 	int m = 2;
+	double c1 = 2;
+	double c2 = 2;
+	double r1 = (double)rand() / RAND_MAX;
+	double r2 = (double)rand() / RAND_MAX;
+	int w = 2;
+	int P = 10;
+
 	readDataFromFile(name);
 	dataObjectsPrint();
-	FCMcounter fcmCounter;
-	fcmCounter.count(*data,numberOfClusters,m);
+	/*FCMcounter fcmCounter;
+	fcmCounter.count(*data,numberOfClusters,m);*/
 	//fcmCounter.printJm();
-	/*PSOcounter psoCounter;
-	psoCounter.count(data);
-	psoCounter.printbestCentre();
-	cout << "FCM-PSO" << endl;
+	PSOcounter psoCounter;
+	psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
+	psoCounter.count(*data,numberOfClusters,m,c1,c2,r1,r2,w,P);
+	//psoCounter.printbestCentre();
+	/*
+cout << "FCM-PSO" << endl;
 	FCMPSOcounter fcmpso;
 	fcmpso.count(data);*/
 

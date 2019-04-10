@@ -10,12 +10,12 @@ class PSOcounter : public MainCounter
 private:	
 	int P;
 
-	ParticleCounterData** particles;
-	ParticleCounterData* gbest;
+	ParticleCounterData** particles = nullptr;
+	ParticleCounterData* gbest = nullptr;
 
-	void setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w);
+	void setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);
 	void removeParticles();
-	void particlesInit();	
+	void particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w);
 	
 	void compute();
 	
@@ -31,14 +31,16 @@ private:
 	bool wasSignificantChange() const override;
 
 public:
-	PSOcounter();
+	PSOcounter() {};
 	~PSOcounter();
 
-	void count(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w);	
+	void count(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);	
 
 	const ParticleCounterData* getBest() const;
 		
 	double getJm() const override;
 	void printJm() const override;
+
+	void setK(int K);
 };
 

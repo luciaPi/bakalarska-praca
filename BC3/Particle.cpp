@@ -6,15 +6,11 @@ using namespace std;
 
 Particle::Particle()
 {
-	srand(time(NULL));
-
 	init();
 }
 
 Particle::Particle(double parc1, double parc2, double parr1, double parr2, double parw, int psize)	
 {
-	srand(time(NULL));
-
 	if (parw >= 0) {
 		w = parw;
 	}
@@ -47,7 +43,6 @@ void Particle::init()
 
 	VInit();
 	Xinit();
-	pbestInit();
 
 	if (r1 < 0) {
 		r1 = (double)rand() / RAND_MAX;
@@ -55,8 +50,15 @@ void Particle::init()
 	if (r2 < 0) {
 		r2 = (double)rand() / RAND_MAX;
 	}	
+	
+}
+
+void Particle::setStartingX()
+{
 	if (size > 0) {
 		setX();
+		pbestInit();
+		checkFitness(nullptr);
 	}
 }
 
@@ -89,15 +91,17 @@ void Particle::checkFitness(const Particle* gbest)
 		pbestFitness = newFitness;
 		setValues(X, pbest);
 		
-		if (newFitness > gbest->getFitness()) {
-			gbest = this;
+		if (gbest != nullptr) {
+			if (newFitness > gbest->getFitness()) {
+				gbest = this;
+			}
 		}
 	}
 }
 
 void Particle::computeV(const Particle* gbest)
 {
-	if (gbest == nullptr) {
+	if (gbest == nullptr || pbest == nullptr) {
 		throw new exception();
 	}	
 	if (gbest->getSize() != size) {
@@ -125,13 +129,13 @@ bool Particle::compute(const Particle* gbest)
 {
 	try {
 		computeV(gbest);
+		computeX();
 		normalize();
 		checkFitness(gbest);
 	}
 	catch (exception ex) {
 		return false;
 	}
-	computeX();
 	return true;
 }
 

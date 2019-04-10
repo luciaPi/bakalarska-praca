@@ -18,8 +18,9 @@ void FCMPSOcounter::count(const Dataset * pdata)
 	}
 	if (data) {
 		PSOcounter pso;
-		pso.count(data);
-		const double** mu = pso.getBestX();
+		//pso.count(*pdata);
+
+		//const double** mu = pso.getBestX();
 		FCMcounter fcm;
 		//fcm.count(data, mu);
 	}

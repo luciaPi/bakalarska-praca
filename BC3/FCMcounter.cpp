@@ -16,10 +16,10 @@ FCMcounter::~FCMcounter() {
 }
 
 //kroky algoritmu
-void FCMcounter::count(const Dataset pardata, int parNumberOfClusters, int parM)
+void FCMcounter::count(const Dataset data, int numberOfClusters, int m)
 {	
-	if (pardata.getSize() > 0) {
-		setCounter(pardata, parNumberOfClusters, parM);
+	if (data.getSize() > 0) {
+		setCounter(data, numberOfClusters, m);
 		
 		muPrint();		
 		centersPrint();

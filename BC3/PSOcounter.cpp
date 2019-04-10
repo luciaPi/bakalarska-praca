@@ -5,116 +5,49 @@
 
 using namespace std;
 
-void PSOcounter::init(const Dataset* pdata)
+void PSOcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int parP)
 {
-	srand(time(NULL));
+	removeParticles();
+	P = parP;
 
-	K = 2;
-	m = 2;
-	c1 = 2;
-	c2 = 2;
-	r1 = (double) rand() / RAND_MAX;
-	//r1 = 0.5;
-	r2 = (double) rand() / RAND_MAX;
-	//r2 = 0.5;
-	w = 0.5;
-	
-	maxIterationNumber = 100;
-	if (pdata) {
-		data = pdata;
+	particlesInit(pdata, numberOfClusters, m, c1, c2, r1, r2, w);
+	if (P > 0) {
+		gbest = particles[0];
 	}
-	minChange = 0.1;
-	P = 10;
-	numberOfClusters = 3;
-	particles = nullptr;
-	gbestX = nullptr;
-}
-
-PSOcounter::PSOcounter()
-{
-	init();
 }
 
 PSOcounter::~PSOcounter()
 {
 	removeParticles();	
-
-	int numberOfObjects = data->getSize();
-	for (int i = 0; i < numberOfObjects; i++) {
-		delete[] gbestX[i];
-		gbestX[i] = nullptr;
-	}
-	delete[] gbestX;
-	gbestX = nullptr;	
 }
 
-PSOcounter::PSOcounter(const Dataset& pdata)
+void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int parP)
 {
-	init(&pdata);
-}
+	if (data.getSize() > 0) {
+		setCounter(data, numberOfClusters, m, c1, c2, r1, r2, w, parP);
 
-void PSOcounter::count(const Dataset * pdata)
-{
-	if (pdata) {
-		init(pdata);
-	}
-	if (data) {
-		if (data->getSize() > 0) {
-			int numberOfIterations = 0;
+		//setV();
+		
+		int i = 1;
+		do {	
+			cout << "Round" << i++ << endl;	
+			compute();
 
-			removeParticles();
-			particlesInit();
-			//setV();
-			/*dPrint();
-			Vprint();
-			Xprint();
-			bestsPrint();*/
-			
-			gbestInit();
-			gbestPrint();
-
-			computeCenters();
 			centersPrint();
-			fitnessPrint();
-
-			int i = 1;
-			do {	
-				//cout << "Round" << i++ << endl;
-				computeD();
-				//dPrint();
-
-				checkFitness();	
-				//bestsPrint();
-				//gbestPrint();
-				//fitnessPrint();
-
-				computeV();
-				computeX();
-				normalizeX();
-
-				//Vprint();
-				//Xprint();
-
-				computeCenters();
-				//centersPrint();
-			} while (numberOfIterations++ < maxIterationNumber);
-		}
-		centersPrint();
-		gbestPrint();
-		printbestCentre();
-		printJm();
-		//Xprint();
-		//Vprint();
+			printJm();
+		} while (!isMetFinalCriterion(i++));		
 	}
 }
 
-void PSOcounter::particlesInit()
+void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w)
 {
 	particles = new ParticleCounterData*[P];
 	for (int l = 0; l < P; l++) {
-		particles[l] = new ParticleCounterData(data, m, K,minChange,c1,c2,r1,r2,w,numberOfClusters);
-	}
-	
+		particles[l] = new ParticleCounterData(data, numberOfClusters, m, c1, c2, r1, r2, w);
+		char name[8];
+		snprintf(name,sizeof(name),"PSO%d", (l + 1));
+		particles[l]->setName(name);
+	}	
 }
 
 void PSOcounter::compute()
@@ -176,6 +109,7 @@ void PSOcounter::removeParticles()
 		delete[] particles;
 		particles = nullptr;
 	}
+	gbest = nullptr;
 }
 
 void PSOcounter::setV()
@@ -189,6 +123,13 @@ void PSOcounter::setV()
 void PSOcounter::printJm() const
 {
 	gbest->printJm();
+}
+
+void PSOcounter::setK(int K)
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->setK(K);
+	}
 }
 
 bool PSOcounter::wasSignificantChange() const

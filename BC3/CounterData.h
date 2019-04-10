@@ -1,12 +1,11 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
-#include <string>;
+#include <string>
 
 class CounterData
 {
 private:
-	int K = 1;
 	double minChange = 0.0001;
 	string name = "Data";
 	
@@ -27,6 +26,7 @@ private:
 	
 protected:
 	int m = 1;
+	int K = 1;
 	Dataset data;
 
 	int numberOfObjects = 0;
