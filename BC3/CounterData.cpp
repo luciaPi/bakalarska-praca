@@ -85,8 +85,7 @@ void CounterData::init()
 	else {
 		numberOfCoordinates = 0;
 	}
-	minChange = 0.0001;
-
+	
 	muInit();
 	centersInit();
 	dInit();
@@ -173,13 +172,14 @@ void CounterData::muInit()
 
 void CounterData::muPrint() const
 {
-	cout << name << " - Matica prislusnosti mu:" << endl;
+	cout << nameAlg << " - Matica prislusnosti mu " << name << ":" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
 			cout << mu[i][j] << " ";
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 
 void CounterData::computeMu()
@@ -219,13 +219,14 @@ void CounterData::recalculate()
 
 void CounterData::printAsMatrix(double * matrix, const char * text) const
 {
-	cout << text << endl;
+	cout << nameAlg << " - " << text << " " << name << ":" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
 			cout << matrix[i*numberOfClusters+j] << " ";
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 
 void CounterData::setMatrix(double ** source, double ** dest)
@@ -253,6 +254,11 @@ void CounterData::setName(string pname)
 	name = pname;
 }
 
+void CounterData::setAlgorithmName(string pname)
+{
+	nameAlg = pname;
+}
+
 void CounterData::centersInit()
 {
 	centers = new Object*[numberOfClusters];
@@ -267,7 +273,7 @@ void CounterData::centersInit()
 
 void CounterData::centersPrint() const
 {
-	cout << name <<  " - Centra:" << endl;
+	cout << nameAlg <<  " - Centra " << name << ":" << endl;
 	for (int j = 0; j < numberOfClusters; j++) {
 		cout << "Centrum" << j + 1 << ": ";
 		for (int k = 0; k < numberOfCoordinates; k++) {
@@ -275,6 +281,7 @@ void CounterData::centersPrint() const
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 
 void CounterData::computeCenters()
@@ -286,10 +293,8 @@ void CounterData::computeCenters()
 			double sum1 = 0;
 			double sum2 = 0;
 			for (int i = 0; i < numberOfObjects; i++) {
-				double product2 = 1;
-				for (int l = 0; l < m; l++) {
-					product2 *= mu[i][j];
-				}
+				double product2 = 1;				
+				product2 *= pow(mu[i][j],m);
 				double product1 = product2 * data[i].getValue(k);
 				sum1 += product1;
 				sum2 += product2;
@@ -300,8 +305,6 @@ void CounterData::computeCenters()
 		centers[j]->setValues(values);
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int k = 0; k < numberOfCoordinates; k++) {
-				double a1 = centers[j]->getValue(k);
-				double a2 = data[i].getValue(k);
 				if (abs(centers[j]->getValue(k) - data[i].getValue(k)) < 0.00000001) {
 					centers[j]->setValue(k, centers[j]->getValue(k) + 0.1*minChange);
 				}
@@ -320,13 +323,14 @@ void CounterData::dInit()
 
 void CounterData::dPrint() const
 {
-	cout << name << " - Matica euklidovskej vzdialenosti:" << endl;
+	cout << nameAlg << " - Matica euklidovskej vzdialenosti " << name << ":" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
 			cout << d[i][j] << " ";
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 
 //vypocet matice euklidovskej vzdialenosti
@@ -358,8 +362,9 @@ double CounterData::getJm() const
 
 void CounterData::printJm() const
 {
-	cout << "Jm " << name << " = ";
+	cout << nameAlg << " - Jm " << name << " = ";
 	cout << getJm() << endl;
+	cout << endl;
 }
 
 double CounterData::getFitness() const
@@ -369,8 +374,9 @@ double CounterData::getFitness() const
 
 void CounterData::printFitness() const
 {
-	cout << "Fitness " << name << " = ";
+	cout << nameAlg << " - Fitness " << name << " = ";
 	cout << getFitness() << endl;
+	cout << endl;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna

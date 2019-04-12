@@ -17,7 +17,8 @@ public:
 	void setValues(vector<double> pvalues);
 	void setValue(int which, double newValue);
 	//vector<double> getValues();
-	double getValue(int poradie) const;
+	double getValue(int which) const;
+	double& getPointerValue(int which);
 	void printValues() const;
 
 	int getNumberOfCoordinates() const;

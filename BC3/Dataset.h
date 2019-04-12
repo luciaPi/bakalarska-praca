@@ -21,6 +21,9 @@ public:
 	Object& operator[](const int index);
 	const Object Dataset::operator[](const int index) const;
 
+	double getMinCoordinate(int which) const;
+	double getMaxCoordinate(int which) const;
+
 	//int whichNumberOfObject(const Object & object) const;
 };
 

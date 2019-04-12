@@ -30,7 +30,7 @@ void Counter::count(Algorithm alg, const char * name)
 	double r1 = (double)rand() / RAND_MAX;
 	double r2 = (double)rand() / RAND_MAX;
 	int w = 2;
-	int P = 10;
+	int P = 3;
 
 	readDataFromFile(name);
 	dataObjectsPrint();

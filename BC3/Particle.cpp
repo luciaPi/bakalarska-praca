@@ -20,10 +20,10 @@ Particle::Particle(double parc1, double parc2, double parr1, double parr2, doubl
 	if (parc2 >= 0) {
 		c2= parc2;
 	}
-	if (parr1 <= 1) {
+	if (parr1 <= 1 && parr1 >= 0) {
 		r1 = parr1;
 	}
-	if (parr2 <= 1) {
+	if (parr2 <= 1 && parr2 >= 0) {
 		r2 = parr2;
 	}
 	if (psize > 0) {
@@ -66,7 +66,7 @@ void Particle::pbestInit()
 {
 	pbest = new double[size];
 	for (int i = 0; i < size; i++) {
-		*(pbest + i) = *(X + i);
+		*(pbest + i) = **(X + i);
 	}
 	pbestFitness = getFitness();
 }
@@ -81,7 +81,7 @@ void Particle::VInit()
 
 void Particle::Xinit()
 {
-	X = new double[size];
+	X = new double*[size];
 }
 
 void Particle::checkFitness(const Particle* gbest)
@@ -91,24 +91,25 @@ void Particle::checkFitness(const Particle* gbest)
 		pbestFitness = newFitness;
 		setValues(X, pbest);
 		
-		if (gbest != nullptr) {
+		//if (gbest != nullptr) {
 			if (newFitness > gbest->getFitness()) {
 				gbest = this;
 			}
-		}
+		//}
 	}
 }
 
 void Particle::computeV(const Particle* gbest)
 {
-	if (gbest == nullptr || pbest == nullptr) {
+	/*if (gbest == nullptr || pbest == nullptr) {
 		throw new exception();
 	}	
 	if (gbest->getSize() != size) {
 		throw new exception();
-	}
+	}*/
 	for (int i = 0; i < size; i++) {
-		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - *(X + i)) + c2 * r2*(gbest->getXValue(i) - *(X + i));
+		cout << (*(V + i)) << " " << *(pbest + i) << " " << **(X + i) << " " << gbest->getXValue(i) << " " << **(X + i) << endl;
+		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - **(X + i)) + c2 * r2*(gbest->getXValue(i) - **(X + i));
 		if (*(V + i) > maxV) {
 			*(V + i) = maxV;
 		}
@@ -121,7 +122,7 @@ void Particle::computeV(const Particle* gbest)
 void Particle::computeX()
 {
 	for (int i = 0; i < size; i++) {
-		*(X + i) = *(X + i) + *(V + i);
+		**(X + i) = **(X + i) + *(V + i);
 	}
 }
 
@@ -178,28 +179,31 @@ void Particle::setSize(int psize)
 
 void Particle::Vprint() const
 {
-	cout << "V: " << endl;
+	cout << getName() << " - V " << getAlgorithmName() << ": " << endl;
 	for (int i = 0; i < size; i++) {
 		cout << V[i] << " ";		
 	}
+	cout << endl;
 	cout << endl;
 }
 
 void Particle::pbestPrint() const
 {
-	cout << "PBest: " << endl;
+	cout << getName() << " - PBest " << getAlgorithmName() << ": " << endl;
 	for (int i = 0; i < size; i++) {
 		cout << pbest[i] << " ";
 	}
+	cout << endl;
 	cout << endl;
 }
 
 void Particle::Xprint() const
 {
-	cout << "X: " << endl;
+	cout << getName() << " - X " << getAlgorithmName() << ": " << endl;
 	for (int i = 0; i < size; i++) {
 		cout << X[i] << " ";
 	}
+	cout << endl;
 	cout << endl;
 }
 
@@ -216,11 +220,11 @@ void Particle::clearParticle()
 	pbestFitness = 0;
 }
 
-bool Particle::setValues(double * source, double * dest)
+bool Particle::setValues(double ** source, double * dest)
 {
 	if (dest != nullptr && source != nullptr) {
 		for (int i = 0; i < size; i++) {
-			*(dest + i) = *(source + i);
+			*(dest + i) = **(source + i);
 		}
 		return true;
 	}
@@ -235,7 +239,7 @@ int Particle::getSize() const
 
 double Particle::getXValue(int i) const
 {
-	return *(X+i);
+	return **(X+i);
 }
 
 void Particle::setV(double par[])

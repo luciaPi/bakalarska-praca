@@ -5,64 +5,53 @@
 class Firefly
 {
 private:
-	const Dataset* data;
-	Object** centers;
-	Object** oldCenters;
-	double** d;
-	double** mu;
-	double alpha;
+	double alpha = -1;
+	double beta = 1;
+	double gamma = 1;
+	
+	double fitness = 0;
 
-	double LAC;
-	int m;
-	double atractiveness;
-	int numberOfClusters = 0;
-	int numberOfObjects = 0;
-	int numberOfCoordinates = 0;
-	double minChange;
-	double Jm;
+	double* minValues = 0;
+	double* maxValues = 0;
 
-	double* minCoordinate;
-	double* maxCoordinate;
+	void init();
 
-	void init(int parm, double parLAC, double paratractivenes, int parnumberOfClusters, double parminchange, const Dataset* pdata = nullptr);
+	void XInit();
+	void minmaxInit();
+	
+	double computeOverallDistance(const double** other) const;
 
-	void centersInit();
+	void clearFirefly();
 
-	void muInit();
+	int getSize() const;
 
-	void dInit();
+protected:
+	int size = 0;
+	double *X = nullptr;
 
-	void setMatrix(double** source, double **dest);
-	void printMatrix(double** matrix, const char* text) const;
+	virtual double getFitness() const = 0;
+	virtual bool setX() = 0;
+	virtual void setMinMaxCoordinates() = 0;
 
-	double getMinCoordinate(int which) const;
-	double getMaxCoordinate(int which) const;
-	void setMinMaxCoordinates();
-
-	double computeDistanceOfCenters(Object first, Object second) const;
-	double computeDistanceOfAllCenters(vector<Object> otherCenters) const;
+	void setStartingX();
 
 public:
 	Firefly();
-	Firefly(int parm, double parLAC, double paratractivenes, int parnumberOfClusters, double parminchange, const Dataset* pdata);
+	Firefly(double alpha, double beta, double gamma, int size);
 	~Firefly();
-	void JmPrint() const;
-	void setMu(double ** newMu);
-	double getJm() const;
-	double setJm();
 
-	void muPrint() const;
-	void normalizeMu();
-	void computeMu();
-
-	void centersPrint() const;
+	void Xprint() const;
 	
-	void computeD();
-	void dPrint() const;
-	
-	vector<Object> getCenters();
-	void move(vector<Object> otherCenters,double otherJm);
+	void move(const double** other);
 
-	void setCenters(vector<Object> newCenters);
+	void setAlpha(double alpha);
+	void setBeta(double beta);
+	void setGamma(double gamma);
+	void setSize(int size);
+
+	virtual std::string getName() const = 0;
+	virtual std::string getAlgorithmName() const = 0;
+
+	//void setCenters(vector<Object> newCenters);
 };
 

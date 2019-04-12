@@ -5,12 +5,12 @@ using namespace std;
 
 void ParticleCounterData::Vprint() const
 {
-	printAsMatrix(V, "V: ");
+	printAsMatrix(V, "V");
 }
 
 void ParticleCounterData::pbestPrint() const
 {
-	printAsMatrix(pbest, "PBest: ");
+	printAsMatrix(pbest, "PBest");
 	pbestCentersPrint();
 }
 
@@ -24,13 +24,23 @@ bool ParticleCounterData::setX()
 	if (numberOfClusters * numberOfObjects == size) {
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int j = 0; j < numberOfClusters; j++) {
-				*(X + i*numberOfClusters+j) = *(&mu[i][j]);
+				*(X + i*numberOfClusters+j) = &mu[i][j];
 			}
 		}
 		recalculate();
 		return true;
 	}
 	return false;
+}
+
+string ParticleCounterData::getName() const
+{
+	return name;
+}
+
+string ParticleCounterData::getAlgorithmName() const
+{
+	return nameAlg;
 }
 
 void ParticleCounterData::pbestCentersPrint() const
@@ -42,7 +52,7 @@ void ParticleCounterData::pbestCentersPrint() const
 			double sum1 = 0;
 			double sum2 = 0;
 			for (int i = 0; i < numberOfObjects; i++) {
-				double product2 = pow(*(pbest+i*numberOfObjects+j),m);				
+				double product2 = pow(*(pbest+i*numberOfClusters+j),m);				
 				double product1 = product2 * data[i].getValue(k);
 				sum1 += product1;
 				sum2 += product2;

@@ -28,11 +28,24 @@ void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, dou
 
 		//setV();
 		
+		Vprint();
+		Xprint();
+		dPrint();
+		pbestsPrint();
+		gbestPrint();
+		centersPrint();
+		printJm();
+
 		int i = 1;
 		do {	
 			cout << "Round" << i++ << endl;	
 			compute();
 
+			Vprint();
+			Xprint();
+			dPrint();
+			pbestsPrint();
+			gbestPrint();
 			centersPrint();
 			printJm();
 		} while (!isMetFinalCriterion(i++));		
@@ -73,7 +86,7 @@ void PSOcounter::pbestsPrint() const
 
 void PSOcounter::gbestPrint() const
 {
-	cout << "Gbest: " << endl;
+	cout << gbest->getAlgorithmName() << " - Gbest " << gbest->getName() << ":" << endl;
 	gbest->Xprint();
 }
 

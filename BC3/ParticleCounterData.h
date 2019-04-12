@@ -6,7 +6,7 @@ class ParticleCounterData : public CounterData, public Particle
 {
 protected:
 	void normalize() override;
-	virtual bool setX() override;
+	bool setX() override;
 
 public:
 	ParticleCounterData() {};
@@ -32,6 +32,8 @@ public:
 	void setM(int m);
 	void setNumberOfClusters(int number);
 	void setData(Dataset pardata);
-
+	   
+	string getName() const override;
+	string getAlgorithmName() const override;
 };
 

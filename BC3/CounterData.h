@@ -7,9 +7,7 @@ class CounterData
 {
 private:
 	double minChange = 0.0001;
-	string name = "Data";
 	
-	Object** centers = nullptr;
 	Object** oldCenters = nullptr;
 	double** d = nullptr;
 
@@ -28,12 +26,15 @@ protected:
 	int m = 1;
 	int K = 1;
 	Dataset data;
+	string name = "Data";
+	string nameAlg = "Algorithm";
 
 	int numberOfObjects = 0;
 	int numberOfCoordinates = 0;
 	int numberOfClusters = 0;
 
 	double** mu = nullptr;
+	Object** centers = nullptr;
 
 	void printAsMatrix(double* matrix, const char* text = "") const;
 	void setMatrix(double ** source, double **dest);
@@ -54,6 +55,7 @@ public:
 	void setMinChange(double minChange);
 	void setMu(const double ** mu);
 	void setName(string name);
+	void setAlgorithmName(string name);
 
 	void muPrint() const;
 	void computeMu();

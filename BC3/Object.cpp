@@ -29,9 +29,16 @@ void Object::setValue(int which, double newValue) {
 }*/
 
 //vrati konkretnu suradnicu
-double Object::getValue(int poradie) const {
-	if (poradie >= 0 && poradie < numberOfCoordinates) {
-		return values[poradie];
+double Object::getValue(int which) const {
+	if (which >= 0 && which < numberOfCoordinates) {
+		return values[which];
+	}
+}
+
+double &Object::getPointerValue(int which)
+{
+	if (which >= 0 && which < numberOfCoordinates) {
+		return  values.at(which);			
 	}
 }
 

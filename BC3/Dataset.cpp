@@ -43,6 +43,32 @@ const Object Dataset::operator[](const int index) const
 	return *object;
 }
 
+double Dataset::getMinCoordinate(int which) const
+{
+	double min = LONG_MAX;
+	for (int i = 0; i < numberOfObjects; i++) {
+		Object current = *(all[i]);
+		double value = current.getValue(which);
+		if (value < min) {
+			min = value;
+		}
+	}
+	return min - 0.01;
+}
+
+double Dataset::getMaxCoordinate(int which) const
+{
+	double max = LONG_MIN;
+	for (int i = 0; i < numberOfObjects; i++) {
+		Object current = *(all[i]);
+		double value = current.getValue(which);
+		if (value > max) {
+			max = value;
+		}
+	}
+	return max + 0.01;
+}
+
 Object& Dataset::operator[](const int index)
 {
 	Object* object = all[index];

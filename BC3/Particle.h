@@ -1,5 +1,6 @@
 #pragma once
 //#include "ParticleCounterData.h"
+#include <string>
 
 class Particle 
 {
@@ -23,7 +24,7 @@ private:
 	void clearParticle();
 
 	double getXValue(int i) const;
-	bool setValues(double *source, double *dest);
+	bool setValues(double **source, double *dest);
 
 	int getSize() const;
 
@@ -31,7 +32,7 @@ protected:
 	double* pbest = nullptr;
 	double pbestFitness = 0;
 
-	double* X = nullptr;
+	double** X = nullptr;
 	double* V = nullptr;
 	int size = 0;
 
@@ -60,5 +61,8 @@ public:
 	void setSize(int size);
 		
 	void setV(double par[]);	//dat prec
+
+	virtual std::string getName() const = 0;
+	virtual std::string getAlgorithmName() const = 0;
 };
 
