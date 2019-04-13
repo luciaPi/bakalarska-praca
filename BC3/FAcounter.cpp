@@ -87,7 +87,7 @@ void FAcounter::count(const Dataset * pdata)
 				}
 				/*computeD();
 				computeMu();*/
-				setJm();
+/			setJm();
 
 				rankFireflies();
 				//centersPrint();
@@ -110,13 +110,27 @@ void FAcounter::bestPrint() const
 	best->muPrint();
 }
 
+bool FAcounter::wasSignificantChange() const
+{
+	return false;
+}
+
+double FAcounter::getJm() const
+{
+	return 0.0;
+}
+
+void FAcounter::printJm() const
+{
+}
+
 void FAcounter::firefliesInit()
 {
 	fireflies = new Firefly*[P];
 	for (int l = 0; l < P; l++) {
 		fireflies[l] = new Firefly(m, LAC, atractiveness, numberOfClusters,minChange,data);
 	}
-	best = new Firefly(m, LAC, atractiveness, numberOfClusters, minChange, data);
+	gbest = new Firefly(m, LAC, atractiveness, numberOfClusters, minChange, data);
 }
 
 void FAcounter::firefliesJmPrint() const
@@ -125,7 +139,7 @@ void FAcounter::firefliesJmPrint() const
 		//cout << "Jm " << l + 1 << ": " << endl;
 		fireflies[l]->JmPrint();
 	}
-	best->JmPrint();
+	gbest->JmPrint();
 }
 
 void FAcounter::rankFireflies()
@@ -139,7 +153,7 @@ void FAcounter::rankFireflies()
 			}
 		}
 	}
-	best->setCenters(fireflies[0]->getCenters());
+	gbest->setCenters(fireflies[0]->getCenters());
 }
 
 void FAcounter::computeMu()
@@ -200,9 +214,9 @@ void FAcounter::removeFireflies()
 		delete[] fireflies;
 		fireflies = nullptr;
 	}
-	if (best != nullptr) {
-		delete best;
-		best = nullptr;
+	if (gbest != nullptr) {
+		delete gbest;
+		gbest = nullptr;
 	}
 }
 

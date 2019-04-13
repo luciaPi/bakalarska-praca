@@ -18,6 +18,7 @@ private:
 	void centersInit();
 	void dInit();
 	
+	void computeMu();
 	void computeD();
 	void computeCenters();
 	void normalizeMu();
@@ -39,7 +40,8 @@ protected:
 	void printAsMatrix(double* matrix, const char* text = "") const;
 	void setMatrix(double ** source, double **dest);
 
-	void recalculate();
+	void recalculateFromMu();
+	void recalculateFromCenters();
 
 public:
 	CounterData();
@@ -58,7 +60,8 @@ public:
 	void setAlgorithmName(string name);
 
 	void muPrint() const;
-	void computeMu();
+	void computeFromMu();
+	void computeFromCenters();
 
 	void centersPrint() const;
 

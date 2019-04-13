@@ -7,12 +7,19 @@ using namespace std;
 
 void Firefly::init()
 {
+	bool first = true;
+	if (X != nullptr) {
+		first = false;
+	}
 	clearFirefly();
 	XInit();
 	minmaxInit();
 
 	if (alpha < 0) {
 		alpha = (double)rand() / RAND_MAX;
+	}
+	if (!first) {
+		setStartingX();
 	}
 }
 
@@ -71,23 +78,31 @@ double Firefly::computeOverallDistance(const double** other) const
 	return sum;
 }
 
-void Firefly::move(const double** other)
+bool Firefly::move(const double** other)
 {
-	double r = computeOverallDistance(other);
-	double beta = beta * exp(-gamma * pow(r, 2));
+	try {
+		double r = computeOverallDistance(other);
+		double beta = beta * exp(-gamma * pow(r, 2));
 
-	for (int i = 0; i < size; i++) {
-		double randNumber = (double)rand() / RAND_MAX;
-		double coordinateDistance = **(other+i) - *(X+i);
-		double newValue = *(X + i) + beta*coordinateDistance+alpha*(randNumber-0.5);
-		if (newValue < minValues[i]) {
-			newValue = minValues[i];
+		for (int i = 0; i < size; i++) {
+			double randNumber = (double)rand() / RAND_MAX;
+			double coordinateDistance = **(other + i) - *(X + i);
+			double newValue = *(X + i) + beta * coordinateDistance + alpha * (randNumber - 0.5);
+			if (newValue < minValues[i]) {
+				newValue = minValues[i];
+			}
+			if (newValue > maxValues[i]) {
+				newValue = maxValues[i];
+			}
+			*(X + i) = newValue;
 		}
-		if (newValue > maxValues[i]) {
-			newValue = maxValues[i];
-		}			
-		*(X + i) = newValue;
+		normalize();
+		fitness = getFitness();
 	}
+	catch (exception ex) {
+		return false;
+	}
+	return true;
 }
 
 void Firefly::setAlpha(double palpha)

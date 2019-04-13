@@ -90,6 +90,13 @@ void PSOcounter::gbestPrint() const
 	gbest->Xprint();
 }
 
+void PSOcounter::particlesJmPrint() const
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->printJm();
+	}
+}
+
 void PSOcounter::Xprint() const
 {
 	for (int l = 0; l < P; l++) {

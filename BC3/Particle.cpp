@@ -39,6 +39,10 @@ Particle::~Particle()
 
 void Particle::init()
 {
+	bool first = true;
+	if (X != nullptr) {
+		first = false;
+	}
 	clearParticle();
 
 	VInit();
@@ -50,7 +54,9 @@ void Particle::init()
 	if (r2 < 0) {
 		r2 = (double)rand() / RAND_MAX;
 	}	
-	
+	if (!first) {
+		setStartingX();
+	}
 }
 
 void Particle::setStartingX()

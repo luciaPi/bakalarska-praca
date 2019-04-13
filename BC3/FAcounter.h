@@ -1,50 +1,40 @@
 #pragma once
 #include "Dataset.h"
-#include "Firefly.h"
+#include "FireflyConterData.h"
+#include "MainCounter.h"
 
-class FAcounter
+class FAcounter : public MainCounter
 {
 private:
-	const Dataset *data;
-	Firefly** fireflies;
-	Firefly* best;
-
-	double LAC;
-	int m;
-	double atractiveness;
-	int maxIterationNumber;
-	double minChange;
 	int P;
-	int numberOfClusters;
 
-	void init(const Dataset* pdata = nullptr);
-
-	void firefliesInit();
+	FireflyConterData** fireflies;
+	FireflyConterData* gbest;
+	
+	void setCounter();
 	void removeFireflies();
+	void firefliesInit();
+
+	void compute();
 
 	void centersPrint() const;
-
-	void muPrint() const;
-	void normalizeMu();
-	void computeMu();
-
-	void computeD();
+	void XPrint() const;
 	void dPrint() const;
-	
-	void setJm();
-
 	void firefliesJmPrint() const;
+	void gbestPrint() const;
 
 	void rankFireflies();
+	bool wasSignificantChange() const override;
 
 public:
 	FAcounter();
-	FAcounter(const Dataset&pdata);
 	~FAcounter();
 
-	void count(const Dataset* pdata = nullptr);
-	void bestPrint() const;
+	void count(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 
-	void printJmBest() const;
+	const FireflyConterData* getBest() const;
+
+	double getJm() const override;
+	void printJm() const override;
 };
 

@@ -27,7 +27,7 @@ bool ParticleCounterData::setX()
 				*(X + i*numberOfClusters+j) = &mu[i][j];
 			}
 		}
-		recalculate();
+		recalculateFromMu();
 		return true;
 	}
 	return false;
@@ -71,16 +71,16 @@ double ParticleCounterData::getFitness() const
 
 void ParticleCounterData::setK(int parK)
 {
-	if (K > 0) {
-		CounterData::setK(K);
+	if (parK > 0) {
 		pbestFitness = pbestFitness * parK / K;
+		CounterData::setK(parK);
 	}
 }
 
-void ParticleCounterData::setM(int m)
+void ParticleCounterData::setM(int parm)
 {
-	if (m > 0) {
-		CounterData::setM(m);
+	if (parm > 0) {
+		CounterData::setM(parm);
 		Particle::init();
 	}
 }
@@ -89,13 +89,13 @@ void ParticleCounterData::setNumberOfClusters(int number)
 {
 	if (numberOfClusters > 0) {
 		CounterData::setNumberOfClusters(number);
-		setSize(number*numberOfObjects);
+		setSize(data.getSize()*numberOfObjects);
 	}
 }
 
-void ParticleCounterData::setData(Dataset data)
+void ParticleCounterData::setData(Dataset pardata)
 {
-	CounterData::setData(data);
+	CounterData::setData(pardata);
 	setSize(data.getSize()*numberOfObjects);
 }
 
@@ -124,6 +124,6 @@ void ParticleCounterData::normalize()
 			mu[i][j] = mu[i][j] / rowSum;
 		}
 	}
-	recalculate();
+	recalculateFromMu();
 }
 

@@ -8,14 +8,7 @@ private:
 	double alpha = -1;
 	double beta = 1;
 	double gamma = 1;
-	
-	double fitness = 0;
-
-	double* minValues = 0;
-	double* maxValues = 0;
-
-	void init();
-
+				
 	void XInit();
 	void minmaxInit();
 	
@@ -28,12 +21,18 @@ private:
 protected:
 	int size = 0;
 	double *X = nullptr;
+	double fitness = 0;
 
+	double* minValues = nullptr;
+	double* maxValues = nullptr;
+
+	virtual void normalize() = 0;
 	virtual double getFitness() const = 0;
 	virtual bool setX() = 0;
 	virtual void setMinMaxCoordinates() = 0;
 
 	void setStartingX();
+	void init();
 
 public:
 	Firefly();
@@ -42,7 +41,7 @@ public:
 
 	void Xprint() const;
 	
-	void move(const double** other);
+	bool move(const double** other);
 
 	void setAlpha(double alpha);
 	void setBeta(double beta);

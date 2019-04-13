@@ -90,7 +90,7 @@ void CounterData::init()
 	centersInit();
 	dInit();
 
-	recalculate();
+	recalculateFromMu();
 }
 
 void CounterData::clear()
@@ -182,20 +182,16 @@ void CounterData::muPrint() const
 	cout << endl;
 }
 
-void CounterData::computeMu()
+void CounterData::computeFromMu()
 {
-	double index = 2 / (m - 1);
-	for (int i = 0; i < numberOfObjects; i++) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			double sum = 0;
-			for (int k = 0; k < numberOfClusters; k++) {
-				double value = d[i][j] / d[i][k];
-				sum += pow(value, index);
-			}
-			mu[i][j] = 1 / sum;
-		}
-	}
-	recalculate();
+	computeMu();
+	recalculateFromMu();
+}
+
+void CounterData::computeFromCenters()
+{
+	computeCenters();
+	recalculateFromCenters();
 }
 
 void CounterData::normalizeMu()
@@ -211,10 +207,16 @@ void CounterData::normalizeMu()
 	}
 }
 
-void CounterData::recalculate()
+void CounterData::recalculateFromMu()
 {
 	computeCenters();
 	computeD();
+}
+
+void CounterData::recalculateFromCenters()
+{
+	computeD();
+	computeMu();
 }
 
 void CounterData::printAsMatrix(double * matrix, const char * text) const
@@ -331,6 +333,21 @@ void CounterData::dPrint() const
 		cout << endl;
 	}
 	cout << endl;
+}
+
+void CounterData::computeMu()
+{
+	double index = 2 / (m - 1);
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			double sum = 0;
+			for (int k = 0; k < numberOfClusters; k++) {
+				double value = d[i][j] / d[i][k];
+				sum += pow(value, index);
+			}
+			mu[i][j] = 1 / sum;
+		}
+	}
 }
 
 //vypocet matice euklidovskej vzdialenosti

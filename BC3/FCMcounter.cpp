@@ -76,7 +76,7 @@ void FCMcounter::muPrint() const
 void FCMcounter::computeMu()
 {
 	if (counterData) {
-		counterData->computeMu();
+		counterData->computeFromMu();
 	}
 }
 

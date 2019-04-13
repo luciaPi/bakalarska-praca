@@ -1,7 +1,6 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
-#include "Particle.h"
 #include "ParticleCounterData.h"
 #include "MainCounter.h"
 
@@ -25,6 +24,7 @@ private:
 	void dPrint() const;
 	void pbestsPrint() const;
 	void gbestPrint() const;
+	void particlesJmPrint() const;
 			
 	void setV(); //dat prec potom
 	

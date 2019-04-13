@@ -7,6 +7,7 @@ class ParticleCounterData : public CounterData, public Particle
 protected:
 	void normalize() override;
 	bool setX() override;
+	double getFitness() const override;
 
 public:
 	ParticleCounterData() {};
@@ -25,9 +26,7 @@ public:
 	void pbestPrint() const;
 	void Xprint() const;	
 	void pbestCentersPrint() const;
-
-	double getFitness() const override;
-	
+		
 	void setK(int K);
 	void setM(int m);
 	void setNumberOfClusters(int number);
