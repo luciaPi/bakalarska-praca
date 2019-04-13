@@ -14,6 +14,11 @@ void ParticleCounterData::pbestPrint() const
 	pbestCentersPrint();
 }
 
+void ParticleCounterData::pbestJmPrint() const
+{
+	cout << nameAlg << " - " << "Pbest Jm " << name << ":" << K/pbestFitness << endl;
+}
+
 void ParticleCounterData::Xprint() const
 {
 	muPrint();
@@ -107,7 +112,7 @@ void ParticleCounterData::normalize()
 		double rowSum = 0;
 		for (int j = 0; j < numberOfClusters; j++) {
 			if (mu[i][j] < 0) {
-				mu[i][j] = 0;
+				mu[i][j] = 0.001;
 				count++;
 			}
 			rowSum += mu[i][j];

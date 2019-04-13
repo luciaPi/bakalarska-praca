@@ -6,8 +6,7 @@ class ParticleCounterData : public CounterData, public Particle
 {
 protected:
 	void normalize() override;
-	bool setX() override;
-	double getFitness() const override;
+	bool setX() override;	
 
 public:
 	ParticleCounterData() {};
@@ -24,6 +23,7 @@ public:
 
 	void Vprint() const;
 	void pbestPrint() const;
+	void pbestJmPrint() const;
 	void Xprint() const;	
 	void pbestCentersPrint() const;
 		
@@ -34,5 +34,6 @@ public:
 	   
 	string getName() const override;
 	string getAlgorithmName() const override;
+	double getFitness() const override;
 };
 

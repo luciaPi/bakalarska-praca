@@ -28,7 +28,7 @@ void Firefly::setStartingX()
 	if (size > 0) {
 		setX();
 		setMinMaxCoordinates();
-		fitness = getFitness();
+		fitness = setFitness();
 	}
 }
 
@@ -69,7 +69,7 @@ void Firefly::Xprint() const
 	cout << endl;
 }
 
-double Firefly::computeOverallDistance(const double** other) const
+double Firefly::computeOverallDistance(const double* other) const
 {
 	double sum = 0;
 	for (int i = 0; i < size; i++) {
@@ -78,15 +78,15 @@ double Firefly::computeOverallDistance(const double** other) const
 	return sum;
 }
 
-bool Firefly::move(const double** other)
+bool Firefly::move(const Firefly* other)
 {
 	try {
-		double r = computeOverallDistance(other);
+		double r = computeOverallDistance(other->X);
 		double beta = beta * exp(-gamma * pow(r, 2));
 
 		for (int i = 0; i < size; i++) {
 			double randNumber = (double)rand() / RAND_MAX;
-			double coordinateDistance = **(other + i) - *(X + i);
+			double coordinateDistance = *(other->X + i) - *(X + i);
 			double newValue = *(X + i) + beta * coordinateDistance + alpha * (randNumber - 0.5);
 			if (newValue < minValues[i]) {
 				newValue = minValues[i];
@@ -97,7 +97,7 @@ bool Firefly::move(const double** other)
 			*(X + i) = newValue;
 		}
 		normalize();
-		fitness = getFitness();
+		fitness = setFitness();
 	}
 	catch (exception ex) {
 		return false;
@@ -132,6 +132,19 @@ void Firefly::setSize(int psize)
 		size = psize;
 		init();
 	}
+}
+
+double Firefly::getFireflyFitness() const
+{
+	return fitness;
+}
+
+void Firefly::setX(const Firefly & other)
+{
+	for (int i = 0; i < size; i++) {
+		*(X + i) = *(other.X + i);
+	}
+	fitness = setFitness();
 }
 
 void Firefly::XInit()

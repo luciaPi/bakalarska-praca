@@ -11,7 +11,7 @@ private:
 	double r2 = -1;
 	double w = 1;
 
-	const double maxV = 1;
+	const double maxV = 0.05;
 	
 	void pbestInit();
 	void VInit();
@@ -19,7 +19,7 @@ private:
 	
 	void computeV(const Particle* gbest);
 	void computeX();
-	void checkFitness(const Particle* gbest);
+	bool checkFitness(Particle* gbest);
 	
 	void clearParticle();
 
@@ -53,7 +53,7 @@ public:
 	void pbestPrint() const;
 	void Xprint() const;
 
-	bool compute(const Particle* gbest);
+	bool compute(Particle* gbest);
 	
 	void setc1c2(double c1, double c2);
 	void setr1r2(double r1, double r2);

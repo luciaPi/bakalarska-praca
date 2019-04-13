@@ -5,168 +5,132 @@
 
 using namespace std;
 
-FAcounter::FAcounter()
-{
-}
 
-FAcounter::FAcounter(const Dataset& pdata)
+void FAcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP)
 {
-	init(&pdata);
+	removeFireflies();
+	P = parP;
+
+	firefliesInit(pdata, numberOfClusters, m, alpha, beta, gamma);
 }
 
 FAcounter::~FAcounter()
 {
-	removeFireflies();
-	
+	removeFireflies();	
 }
 
-void FAcounter::init(const Dataset* pdata)
+void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP)
 {
-	m = 2;
-	atractiveness = 1;
-	LAC = 1;
+	if (pdata.getSize() > 0) {
+		setCounter(pdata, numberOfClusters, m, alpha, beta, gamma, parP);
 
-	maxIterationNumber = 100;
-	if (pdata) {
-		data = pdata;
-	}
-	minChange = 0.1;
-	P = 10;
-	numberOfClusters = 3;
-	fireflies = nullptr;
-	best = nullptr;
-}
+		muPrint();
+		dPrint();
+		XPrint();
+		firefliesJmPrint();
+		gbestPrint();
+		printJm();
 
-void FAcounter::count(const Dataset * pdata)
-{
-	if (pdata) {
-		init(pdata);
-	}
-	if (data) {
-		if (data->getSize() > 0) {
-			int numberOfIterations = 0;
+		rankFireflies();
 
-			removeFireflies();
-			firefliesInit();
-			centersPrint();
-			computeD();
-			//dPrint();
-			computeMu();
-			//muPrint();
-			setJm();
-			//firefliesJmPrint();	
+		int i = 1;
+		do {
+			cout << "Round" << i++ << endl;
+			compute();
 			rankFireflies();
-			printJmBest();
-						
-			int i = 1;
-			do {
-				//cout << "Round" << i++ << endl;	
-								
-				//rankFireflies();
-				//centersPrint();
-				/*bestPrint();
-				firefliesJmPrint();*/
-				//printJmBest();
 
-				for (int first = 0; first < P; first++) {
-					double firstJm = fireflies[first]->getJm();
-					for (int second = 0; second < P; second++) {
-						double secondJm = fireflies[second]->getJm();
-						if (secondJm < firstJm) {
-							fireflies[first]->move(fireflies[second]->getCenters(), fireflies[second]->getJm());
-
-							//centersPrint();
-							fireflies[first]->computeD();
-							//dPrint();
-							fireflies[first]->computeMu();
-							//muPrint();
-							//fireflies[first]->setJm();
-							//firefliesJmPrint();
-						}
-					}
-				}
-				/*computeD();
-				computeMu();*/
-/			setJm();
-
-				rankFireflies();
-				//centersPrint();
-				/*bestPrint();*/
-				//firefliesJmPrint();
-				//printJmBest();
-
-			} while (numberOfIterations++ < maxIterationNumber);
-			
-			centersPrint();
+			muPrint();
+			dPrint();
+			XPrint();
 			firefliesJmPrint();
-			printJmBest();
-			//bestPrint();
-		}
+			gbestPrint();
+			printJm();
+		} while (!isMetFinalCriterion(i++));
 	}
-}
-
-void FAcounter::bestPrint() const
-{
-	best->muPrint();
 }
 
 bool FAcounter::wasSignificantChange() const
 {
+	for (int l = 0; l < P; l++) {
+		if (fireflies[l]->wasSignificantChange()) {
+			return true;
+		}
+	}
 	return false;
+}
+
+const FireflyCounterData * FAcounter::getBest() const
+{
+	return gbest;
 }
 
 double FAcounter::getJm() const
 {
-	return 0.0;
+	return gbest->getJm();
 }
 
 void FAcounter::printJm() const
 {
+	gbest->printJm();
 }
 
-void FAcounter::firefliesInit()
+void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma)
 {
-	fireflies = new Firefly*[P];
+	fireflies = new FireflyCounterData*[P];
 	for (int l = 0; l < P; l++) {
-		fireflies[l] = new Firefly(m, LAC, atractiveness, numberOfClusters,minChange,data);
+		fireflies[l] = new FireflyCounterData(data, numberOfClusters, m, alpha, beta, gamma);
+		char name[8];
+		snprintf(name, sizeof(name), "FA%d", (l + 1));
+		fireflies[l]->setName(name);
+		fireflies[l]->setAlgorithmName("PSO");
 	}
-	gbest = new Firefly(m, LAC, atractiveness, numberOfClusters, minChange, data);
+	gbest = new FireflyCounterData(data, numberOfClusters, m, alpha, beta, gamma);
 }
 
 void FAcounter::firefliesJmPrint() const
 {
 	for (int l = 0; l < P; l++) {
-		//cout << "Jm " << l + 1 << ": " << endl;
-		fireflies[l]->JmPrint();
+		fireflies[l]->printJm();
 	}
-	gbest->JmPrint();
+}
+
+void FAcounter::gbestPrint() const
+{
+	cout << gbest->getAlgorithmName() << " - Gbest " << gbest->getName() << ":" << endl;
+	gbest->Xprint();
 }
 
 void FAcounter::rankFireflies()
 {
 	for (int l = 0; l < P; l++) {
 		for (int ll = l+1; ll < P; ll++) {
-			if (fireflies[l]->getJm() > fireflies[ll]->getJm()) {
-				Firefly* f = fireflies[l];
+			if (fireflies[l]->getFireflyFitness() < fireflies[ll]->getFireflyFitness()) {
+				FireflyCounterData* f = fireflies[l];
 				fireflies[l] = fireflies[ll];
 				fireflies[ll] = f;
 			}
 		}
 	}
-	gbest->setCenters(fireflies[0]->getCenters());
-}
-
-void FAcounter::computeMu()
-{
-	for (int l = 0; l < P; l++) {
-		fireflies[l]->computeMu();
+	if (gbest->getFireflyFitness() < fireflies[0]->getFireflyFitness()) {
+		gbest->setX(*(fireflies[0]));
 	}
 }
 
-void FAcounter::normalizeMu()
+void FAcounter::XPrint() const
 {
 	for (int l = 0; l < P; l++) {
-		fireflies[l]->normalizeMu();
+		fireflies[l]->Xprint();
+	}
+}
+
+void FAcounter::compute()
+{
+	for (int first = 0; first < P; first++) {
+		for (int second = 0; second < P; second++) {
+			if (fireflies[first]->getFireflyFitness() < fireflies[second]->getFireflyFitness()) {
+				fireflies[first]->move(fireflies[second]);
+			}
+		}
 	}
 }
 
@@ -177,58 +141,26 @@ void FAcounter::muPrint() const
 	}
 }
 
-void FAcounter::centersPrint() const
-{
-	cout << "Centra:" << endl;
-	for (int l = 0; l < P; l++) {
-		cout << "centra " << l + 1 << ": " << endl;
-		fireflies[l]->centersPrint();
-	}
-}
-
-//vypocet matice euklidovskej vzdialenosti
-void FAcounter::computeD()
-{
-	for (int l = 0; l < P; l++) {
-		fireflies[l]->computeD();
-	}
-}
-
 //vypis matice euklidovskej vzdialenosti
 void FAcounter::dPrint() const
 {
-	cout << "Matica euklidovskej vzdialenosti:" << endl;
 	for (int l = 0; l < P; l++) {
-		cout << "Matica " << l + 1 << ": " << endl;
 		fireflies[l]->dPrint();
 	}
 }
+
 
 void FAcounter::removeFireflies()
 {
 	if (fireflies!= nullptr) {
 		for (int l = 0; l < P; l++) {
 			delete fireflies[l];
-
 		}
 		delete[] fireflies;
 		fireflies = nullptr;
 	}
-	if (gbest != nullptr) {
-		delete gbest;
-		gbest = nullptr;
-	}
+	delete gbest;
+	gbest = nullptr;
 }
 
-void FAcounter::printJmBest() const
-{
-	cout << "Jm FA = ";
-	best->JmPrint();
-}
 
-void FAcounter::setJm()
-{
-	for (int l = 0; l < P; l++) {
-		fireflies[l]->setJm();
-	}
-}

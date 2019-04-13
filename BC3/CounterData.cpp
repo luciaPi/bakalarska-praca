@@ -292,6 +292,7 @@ void CounterData::computeCenters()
 	for (int j = 0; j < numberOfClusters; j++) {
 		values.clear();
 		for (int k = 0; k < numberOfCoordinates; k++) {
+		//for (int k = 0; k < 1; k++) {
 			double sum1 = 0;
 			double sum2 = 0;
 			for (int i = 0; i < numberOfObjects; i++) {
@@ -357,6 +358,7 @@ void CounterData::computeD()
 		for (int j = 0; j < numberOfClusters; j++) {
 			double sum = 0;
 			for (int k = 0; k < numberOfCoordinates; k++) {
+			//for (int k = 0; k < 1; k++) {
 				double coordinate1 = data[i].getValue(k);
 				double coordinate2 = centers[j]->getValue(k);
 				sum += pow(coordinate1 - coordinate2, 2);

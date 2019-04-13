@@ -31,10 +31,13 @@ void FCMcounter::count(const Dataset data, int numberOfClusters, int m)
 			computeMu();
 
 			//muPrint();
-			centersPrint();
+			//centersPrint();
 			//dPrint();
-			printJm();
+			//printJm();
 		} while (!isMetFinalCriterion(i++));
+		muPrint();
+		centersPrint();
+		printJm();
 	}	
 }
 

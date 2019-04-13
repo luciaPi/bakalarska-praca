@@ -12,7 +12,7 @@ private:
 	void XInit();
 	void minmaxInit();
 	
-	double computeOverallDistance(const double** other) const;
+	double computeOverallDistance(const double* other) const;
 
 	void clearFirefly();
 
@@ -27,7 +27,7 @@ protected:
 	double* maxValues = nullptr;
 
 	virtual void normalize() = 0;
-	virtual double getFitness() const = 0;
+	virtual double setFitness() const = 0;
 	virtual bool setX() = 0;
 	virtual void setMinMaxCoordinates() = 0;
 
@@ -41,7 +41,7 @@ public:
 
 	void Xprint() const;
 	
-	bool move(const double** other);
+	bool move(const Firefly* other);
 
 	void setAlpha(double alpha);
 	void setBeta(double beta);
@@ -51,6 +51,8 @@ public:
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;
 
+	double getFireflyFitness() const;
+	void setX(const Firefly& other);
 	//void setCenters(vector<Object> newCenters);
 };
 

@@ -25,6 +25,7 @@ private:
 	void pbestsPrint() const;
 	void gbestPrint() const;
 	void particlesJmPrint() const;
+	void particlesPbestJmPrint() const;
 			
 	void setV(); //dat prec potom
 	

@@ -30,25 +30,35 @@ void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, dou
 		
 		Vprint();
 		Xprint();
-		dPrint();
+		//dPrint();
 		pbestsPrint();
 		gbestPrint();
 		centersPrint();
 		printJm();
+		particlesJmPrint();
 
 		int i = 1;
 		do {	
 			cout << "Round" << i++ << endl;	
 			compute();
 
-			Vprint();
+			/*Vprint();
 			Xprint();
 			dPrint();
 			pbestsPrint();
 			gbestPrint();
+			centersPrint();*/
+			//printJm();
+			//particlesPbestJmPrint();
+			//particlesJmPrint();
+		} while (!isMetFinalCriterion(i++));	
+		Vprint();
+			//Xprint();
+			//dPrint();
+			//pbestsPrint();
+			particlesPbestJmPrint();
+			gbestPrint();
 			centersPrint();
-			printJm();
-		} while (!isMetFinalCriterion(i++));		
 	}
 }
 
@@ -60,13 +70,20 @@ void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double
 		char name[8];
 		snprintf(name,sizeof(name),"PSO%d", (l + 1));
 		particles[l]->setName(name);
+		particles[l]->setAlgorithmName("PSO");
 	}	
 }
 
 void PSOcounter::compute()
 {
 	for (int l = 0; l < P; l++) {
-		particles[l]->compute(gbest);
+		bool changeGbest = particles[l]->compute(gbest);
+		//cout << particles[l]->getJm() << " xx ";
+		//cout << particles[l]->getFitness() << endl;
+		if (changeGbest) {
+			//cout << "change" << endl;
+			gbest = particles[l];
+		}
 	}
 }
 
@@ -87,10 +104,17 @@ void PSOcounter::pbestsPrint() const
 void PSOcounter::gbestPrint() const
 {
 	cout << gbest->getAlgorithmName() << " - Gbest " << gbest->getName() << ":" << endl;
-	gbest->Xprint();
+	gbest->pbestPrint();
 }
 
 void PSOcounter::particlesJmPrint() const
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->printJm();
+	}
+}
+
+void PSOcounter::particlesPbestJmPrint() const
 {
 	for (int l = 0; l < P; l++) {
 		particles[l]->printJm();

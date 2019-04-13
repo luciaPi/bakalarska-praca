@@ -6,7 +6,7 @@ class MainCounter
 {	
 private:
 	double minChange = 0.0001;
-	int maxIteration = 20;
+	int maxIteration = 100;
 	FinalCriterion finalCriterion = FinalCriterion::both;
 
 protected:

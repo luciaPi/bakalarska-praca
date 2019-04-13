@@ -8,16 +8,16 @@ class FAcounter : public MainCounter
 private:
 	int P;
 
-	FireflyConterData** fireflies;
-	FireflyConterData* gbest;
+	FireflyCounterData** fireflies = nullptr;
+	FireflyCounterData* gbest = nullptr;
 	
-	void setCounter();
+	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 	void removeFireflies();
-	void firefliesInit();
+	void firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma);
 
 	void compute();
 
-	void centersPrint() const;
+	void muPrint() const;
 	void XPrint() const;
 	void dPrint() const;
 	void firefliesJmPrint() const;
@@ -27,12 +27,12 @@ private:
 	bool wasSignificantChange() const override;
 
 public:
-	FAcounter();
+	FAcounter() {};
 	~FAcounter();
 
-	void count(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
+	void count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 
-	const FireflyConterData* getBest() const;
+	const FireflyCounterData* getBest() const;
 
 	double getJm() const override;
 	void printJm() const override;

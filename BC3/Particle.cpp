@@ -90,7 +90,7 @@ void Particle::Xinit()
 	X = new double*[size];
 }
 
-void Particle::checkFitness(const Particle* gbest)
+bool Particle::checkFitness(Particle* gbest)
 {
 	double newFitness = getFitness();
 	if (newFitness > pbestFitness) {
@@ -98,11 +98,13 @@ void Particle::checkFitness(const Particle* gbest)
 		setValues(X, pbest);
 		
 		//if (gbest != nullptr) {
-			if (newFitness > gbest->getFitness()) {
-				gbest = this;
+		//cout << "change: old" << gbest->getFitness() << " new " << newFitness << endl;
+			if (newFitness > gbest->getFitness()) {				
+				return true;
 			}
 		//}
 	}
+	return false;
 }
 
 void Particle::computeV(const Particle* gbest)
@@ -114,7 +116,7 @@ void Particle::computeV(const Particle* gbest)
 		throw new exception();
 	}*/
 	for (int i = 0; i < size; i++) {
-		cout << (*(V + i)) << " " << *(pbest + i) << " " << **(X + i) << " " << gbest->getXValue(i) << " " << **(X + i) << endl;
+		//cout << (*(V + i)) << " " << *(pbest + i) << " " << **(X + i) << " " << gbest->getXValue(i) << " " << **(X + i) << endl;
 		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - **(X + i)) + c2 * r2*(gbest->getXValue(i) - **(X + i));
 		if (*(V + i) > maxV) {
 			*(V + i) = maxV;
@@ -132,18 +134,18 @@ void Particle::computeX()
 	}
 }
 
-bool Particle::compute(const Particle* gbest)
+bool Particle::compute(Particle* gbest)
 {
 	try {
 		computeV(gbest);
 		computeX();
 		normalize();
-		checkFitness(gbest);
+		return checkFitness(gbest);
 	}
 	catch (exception ex) {
 		return false;
 	}
-	return true;
+	return false;
 }
 
 void Particle::setc1c2(double parc1, double parc2)

@@ -2,7 +2,7 @@
 #include <math.h> 
 
 
-double FireflyConterData::computeOverallDistance(const double ** other) const
+double FireflyCounterData::computeOverallDistance(const double ** other) const
 {
 	double allSum = 0;
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -17,7 +17,7 @@ double FireflyConterData::computeOverallDistance(const double ** other) const
 	return allSum;
 }
 
-void FireflyConterData::setK(int parK)
+void FireflyCounterData::setK(int parK)
 {
 	if (parK > 0) {
 		fitness = fitness * parK / K;
@@ -25,7 +25,7 @@ void FireflyConterData::setK(int parK)
 	}
 }
 
-void FireflyConterData::setM(int parm)
+void FireflyCounterData::setM(int parm)
 {
 	if (parm > 0) {
 		CounterData::setM(parm);
@@ -33,7 +33,7 @@ void FireflyConterData::setM(int parm)
 	}
 }
 
-void FireflyConterData::setNumberOfClusters(int number)
+void FireflyCounterData::setNumberOfClusters(int number)
 {
 	if (numberOfClusters > 0) {
 		CounterData::setNumberOfClusters(number);
@@ -41,28 +41,39 @@ void FireflyConterData::setNumberOfClusters(int number)
 	}
 }
 
-void FireflyConterData::setData(Dataset pardata)
+void FireflyCounterData::setData(Dataset pardata)
 {
 	CounterData::setData(pardata);
 	setSize(data.getSize()*numberOfObjects);
 }
 
-void FireflyConterData::Xprint() const
+void FireflyCounterData::setX(const FireflyCounterData & other)
+{
+	for (int j = 0; j < numberOfClusters; j++) {
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			centers[j]->setValue(k, *(other.X + j * numberOfCoordinates + k));
+		}
+	}
+	recalculateFromCenters();
+	fitness = setFitness();
+}
+
+void FireflyCounterData::Xprint() const
 {
 	muPrint();
 }
 
-void FireflyConterData::normalize()
+void FireflyCounterData::normalize()
 {
 	recalculateFromCenters();
 }
 
-double FireflyConterData::getFitness() const
+double FireflyCounterData::setFitness() const
 {
 	return CounterData::getFitness();
 }
 
-bool FireflyConterData::setX()
+bool FireflyCounterData::setX()
 {
 	if (size == numberOfClusters * numberOfCoordinates) {
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -76,7 +87,7 @@ bool FireflyConterData::setX()
 	return false;
 }
 
-void FireflyConterData::setMinMaxCoordinates()
+void FireflyCounterData::setMinMaxCoordinates()
 {
 	for (int k = 0; k < numberOfCoordinates; k++) {
 		double min = data.getMinCoordinate(k);
@@ -88,12 +99,12 @@ void FireflyConterData::setMinMaxCoordinates()
 	}
 }
 
-std::string FireflyConterData::getName() const
+std::string FireflyCounterData::getName() const
 {
 	return name;
 }
 
-std::string FireflyConterData::getAlgorithmName() const
+std::string FireflyCounterData::getAlgorithmName() const
 {
 	return nameAlg;
 }
