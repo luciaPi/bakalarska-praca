@@ -10,7 +10,7 @@ void ParticleCounterData::Vprint() const
 
 void ParticleCounterData::pbestPrint() const
 {
-	printAsMatrix(pbest, "PBest");
+	//printAsMatrix(pbest, "PBest");
 	pbestCentersPrint();
 }
 
@@ -50,7 +50,7 @@ string ParticleCounterData::getAlgorithmName() const
 
 void ParticleCounterData::pbestCentersPrint() const
 {
-	cout << "Pbest centra:" << endl;
+	cout << nameAlg << " - Pbest centra "<< name << ":" << endl;
 	for (int j = 0; j < numberOfClusters; j++) {
 		cout << "Centrum " << j + 1 << ":";
 		for (int k = 0; k < numberOfCoordinates; k++) {

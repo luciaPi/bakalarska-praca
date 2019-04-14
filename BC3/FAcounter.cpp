@@ -38,15 +38,15 @@ void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, 
 
 		int i = 1;
 		do {
-			cout << "Round" << i << endl;
+			//cout << "Round" << i << endl;
 			compute();
 			rankFireflies();
 
 			//muPrint();
 			//dPrint();
 			//XPrint();
-			firefliesJmPrint();
-			gbestPrint();
+			//firefliesJmPrint();
+			//gbestPrint();
 			printJm();
 		} while (!isMetFinalCriterion(i++));
 		firefliesJmPrint();

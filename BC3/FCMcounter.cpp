@@ -9,7 +9,7 @@ void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM)
 	clear();
 	counterData = new CounterData(parData, parNumberOfClusters, parM);
 	counterData->setName("FCM");
-	counterData->setAlgorithmName("FCM");
+	counterData->setAlgorithmName(nameAlg);
 }
 
 FCMcounter::~FCMcounter() {
@@ -20,26 +20,40 @@ FCMcounter::~FCMcounter() {
 void FCMcounter::count(const Dataset data, int numberOfClusters, int m)
 {	
 	if (data.getSize() > 0) {
-		setCounter(data, numberOfClusters, m);
-		
-		muPrint();		
-		centersPrint();
-		dPrint();
-
-		int i = 0;
-		do {
-			cout << "Round" << i << endl;			
-			computeMu();
-
-			//muPrint();
-			//centersPrint();
-			//dPrint();
-			//printJm();
-		} while (!isMetFinalCriterion(i++));
-		muPrint();
-		centersPrint();
-		printJm();
+		setCounter(data, numberOfClusters, m);		
+		count();
 	}	
+}
+
+void FCMcounter::count(CounterData * other)
+{
+	if (other != nullptr) {
+		setCounter(other->getData(),other->getNumberOfClusters(),other->getM());
+		counterData->setMu(other->getMu());
+		count();
+	}
+	other->setMu(counterData->getMu());
+}
+
+void FCMcounter::count()
+{
+	//muPrint();
+	//centersPrint();
+	//dPrint();
+
+	int i = 0;
+	do {
+		//cout << "Round" << i << endl;
+		computeMu();
+
+		//muPrint();
+		//centersPrint();
+		//dPrint();
+		//printJm();
+	} while (!isMetFinalCriterion(i++));
+	//muPrint();
+	centersPrint();
+	printJm();
 }
 
 void FCMcounter::clear()

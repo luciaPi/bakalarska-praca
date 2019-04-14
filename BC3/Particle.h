@@ -19,7 +19,6 @@ private:
 	
 	void computeV(const Particle* gbest);
 	void computeX();
-	bool checkFitness(Particle* gbest);
 	
 	void clearParticle();
 
@@ -40,8 +39,6 @@ protected:
 	virtual double getFitness() const = 0;
 	virtual bool setX() = 0;
 	
-	void init();
-
 	void setStartingX();
 
 public:
@@ -64,5 +61,8 @@ public:
 
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;
+
+	void init();
+	bool checkFitness(Particle* gbest);
 };
 

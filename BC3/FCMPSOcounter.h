@@ -1,16 +1,19 @@
 #pragma once
 #include "Dataset.h"
+#include "FCMcounter.h"
+#include "PSOcounter.h"
 
-class FCMPSOcounter
+class FCMPSOcounter : public FCMcounter, public PSOcounter
 {
 private:
-	const Dataset* data;
+
 
 public:
-	FCMPSOcounter() : data(nullptr) {}
-	FCMPSOcounter(const Dataset* pdata);
-	~FCMPSOcounter();
+	FCMPSOcounter() {};
+	~FCMPSOcounter() {};
 
-	void count(const Dataset* pdata = nullptr);
+	void count(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);
+	
+	void setAlgorithmName(string name);
 };
 

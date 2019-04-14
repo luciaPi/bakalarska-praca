@@ -249,6 +249,7 @@ void CounterData::setMu(const double ** parmu)
 			}
 		}
 	}
+	recalculateFromMu();
 }
 
 void CounterData::setName(string pname)
@@ -396,6 +397,26 @@ void CounterData::printFitness() const
 	cout << nameAlg << " - Fitness " << name << " = ";
 	cout << getFitness() << endl;
 	cout << endl;
+}
+
+Dataset CounterData::getData() const
+{
+	return data;
+}
+
+int CounterData::getM() const
+{
+	return m;
+}
+
+int CounterData::getNumberOfClusters() const
+{
+	return numberOfClusters;
+}
+
+const double ** CounterData::getMu() const
+{
+	return (const double **)mu;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna

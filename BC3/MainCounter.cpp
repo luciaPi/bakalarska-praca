@@ -1,6 +1,6 @@
 #include "MainCounter.h"
 
-
+using namespace std;
 
 bool MainCounter::isMetFinalCriterion(int actualIterationNumber) const
 {
@@ -11,14 +11,6 @@ bool MainCounter::isMetFinalCriterion(int actualIterationNumber) const
 		return !wasSignificantChange();
 	}
 	return (actualIterationNumber > maxIteration || !wasSignificantChange());
-}
-
-MainCounter::MainCounter()
-{
-}
-
-MainCounter::~MainCounter()
-{
 }
 
 void MainCounter::setMaxIterations(int parmaxIteration)
@@ -34,4 +26,9 @@ void MainCounter::setMinChange(double parminChange)
 void MainCounter::setFinalCriterion(FinalCriterion fc)
 {
 	finalCriterion = fc;
+}
+
+void MainCounter::setAlgorithmName(string pname)
+{
+	nameAlg = pname;
 }

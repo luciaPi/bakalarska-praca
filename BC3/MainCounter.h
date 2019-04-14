@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 enum class FinalCriterion { minChange, maxIteration, both };
 
@@ -10,16 +11,20 @@ private:
 	FinalCriterion finalCriterion = FinalCriterion::both;
 
 protected:
+	std::string nameAlg = "Algorithm";
+
 	bool isMetFinalCriterion(int actualIterationNumber) const;
 	virtual bool wasSignificantChange() const = 0;
 
 public:
-	MainCounter();
-	~MainCounter();
+	MainCounter() {};
+	~MainCounter() {};
 
 	void setMaxIterations(int maxIteration);
 	void setMinChange(double minChange);
 	void setFinalCriterion(FinalCriterion fc);
+
+	void setAlgorithmName(std::string name);
 
 	virtual double getJm() const = 0;
 	virtual void printJm() const = 0;

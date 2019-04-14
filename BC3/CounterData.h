@@ -75,6 +75,11 @@ public:
 	double getFitness() const;
 	void printFitness() const;
 
+	Dataset getData() const;
+	int getM() const;
+	int getNumberOfClusters() const;
+	const double** getMu() const;
+
 	bool wasSignificantChange() const;
 };
 

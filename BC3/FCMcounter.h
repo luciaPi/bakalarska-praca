@@ -21,6 +21,7 @@ private:
 	void dPrint() const;
 
 	bool wasSignificantChange() const override;
+	void count();
 
 	//void computeD();	
 	//void computeCenters();
@@ -33,6 +34,7 @@ public:
 	~FCMcounter();
 	
 	void count(const Dataset data, int numberOfClusters, int m);
+	void count(CounterData* other);
 
 	double getJm() const override;
 	void printJm() const override;
