@@ -1,6 +1,6 @@
-#include "FAFCM.h"
+#include "FAFCMcounter.h"
 
-void FAFCM::count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P)
+void FAFCMcounter::count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P)
 {
 	FAcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FAcounter::setMaxIterations(20);
@@ -15,7 +15,7 @@ void FAFCM::count(Dataset data, int numberOfClusters, int m, double alpha, doubl
 	gbest->printJm();
 }
 
-void FAFCM::setAlgorithmName(string name)
+void FAFCMcounter::setAlgorithmName(string name)
 {
 	FAcounter::setAlgorithmName(name);
 	FCMcounter::setAlgorithmName(name);

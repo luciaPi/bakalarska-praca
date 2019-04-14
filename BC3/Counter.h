@@ -1,22 +1,32 @@
 #pragma once
-#include "Dataset.h"
-#include "Attribute.h"
+#include <string>
+
+enum class FinalCriterion { minChange, maxIteration, both };
 
 class Counter
-{
+{	
 private:
-	Dataset *data;
+	double minChange = 0.0001;
+	int maxIteration = 100;
+	FinalCriterion finalCriterion = FinalCriterion::both;
 
-	bool readDataFromFile(const char* name);
-	void dataObjectsPrint() const;
-	
+protected:
+	std::string nameAlg = "Algorithm";
+
+	bool isMetFinalCriterion(int actualIterationNumber) const;
+	virtual bool wasSignificantChange() const = 0;
+
 public:
-	Counter() : data(nullptr) {};
-	~Counter();
+	Counter() {};
+	~Counter() {};
 
-	enum class Algorithm { fcm };	
+	void setMaxIterations(int maxIteration);
+	void setMinChange(double minChange);
+	void setFinalCriterion(FinalCriterion fc);
 
-	void count(Algorithm alg, const char* name);
-	void saveOutputToArff(const char* filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const;
+	void setAlgorithmName(std::string name);
+
+	virtual double getJm() const = 0;
+	virtual void printJm() const = 0;
 };
 

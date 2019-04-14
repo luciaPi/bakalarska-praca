@@ -1,6 +1,6 @@
 #include <vld.h>
 #include <vector>
-#include "Counter.h"
+#include "Application.h"
 #include <iostream>
 
 using namespace std;
@@ -11,8 +11,18 @@ int main() {
 	//const char* fileName = "parkinsons.data";
 	//const char* fileName = "glass_csv.csv";
 	//const char* fileName = "wine.data";
-	Counter counter;
-	counter.count(Counter::Algorithm::fcm,fileName);
+
+
+	Application counter;
+	counter.setNumberOfClusters(3);
+	counter.setData(fileName);
+
+	counter.count(Algorithm::fcm);
+	counter.count(Algorithm::pso);
+	counter.count(Algorithm::fcmpso);
+	counter.count(Algorithm::fa);
+	counter.count(Algorithm::fafcm);
+		
 	/*char* title = "Iris Plants Database";
 	char* creator = "Lucia Piatrikova";
 	char* donor = " ";
@@ -43,5 +53,6 @@ int main() {
 		delete last;
 		attributes.pop_back();
 	}*/
+
  	return 0;
 }

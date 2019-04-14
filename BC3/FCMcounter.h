@@ -1,15 +1,15 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
-#include "CounterData.h"
-#include "MainCounter.h"
+#include "FuzzyData.h"
+#include "Counter.h"
 
 using namespace std;
 
-class FCMcounter : public MainCounter
+class FCMcounter : public Counter
 {
 private:
-	CounterData* counterData = nullptr;
+	FuzzyData* counterData = nullptr;
 	
 	void setCounter(Dataset data, int numberOfClusters, int m);
 	void clear();
@@ -34,7 +34,7 @@ public:
 	~FCMcounter();
 	
 	void count(const Dataset data, int numberOfClusters, int m);
-	void count(CounterData* other);
+	void count(FuzzyData* other);
 
 	double getJm() const override;
 	void printJm() const override;

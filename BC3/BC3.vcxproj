@@ -135,37 +135,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Counter.cpp" />
-    <ClCompile Include="CounterData.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="FuzzyData.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="FAcounter.cpp" />
-    <ClCompile Include="FAFCM.cpp" />
+    <ClCompile Include="FAFCMcounter.cpp" />
     <ClCompile Include="FCMcounter.cpp" />
     <ClCompile Include="FCMPSOcounter.cpp" />
     <ClCompile Include="Firefly.cpp" />
-    <ClCompile Include="FireflyConterData.cpp" />
+    <ClCompile Include="FireflyFuzzyData.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainCounter.cpp" />
+    <ClCompile Include="Counter.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="ParticleCounterData.cpp" />
+    <ClCompile Include="ParticleFuzzyData.cpp" />
     <ClCompile Include="PSOcounter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
-    <ClInclude Include="Counter.h" />
-    <ClInclude Include="CounterData.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="FuzzyData.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FAcounter.h" />
-    <ClInclude Include="FAFCM.h" />
+    <ClInclude Include="FAFCMcounter.h" />
     <ClInclude Include="FCMcounter.h" />
     <ClInclude Include="FCMPSOcounter.h" />
     <ClInclude Include="Firefly.h" />
-    <ClInclude Include="FireflyConterData.h" />
-    <ClInclude Include="MainCounter.h" />
+    <ClInclude Include="FireflyFuzzyData.h" />
+    <ClInclude Include="Counter.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Particle.h" />
-    <ClInclude Include="ParticleCounterData.h" />
+    <ClInclude Include="ParticleFuzzyData.h" />
     <ClInclude Include="PSOcounter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

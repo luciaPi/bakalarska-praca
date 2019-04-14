@@ -21,9 +21,6 @@
     <ClCompile Include="FCMcounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Counter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Dataset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,19 +42,22 @@
     <ClCompile Include="FAcounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CounterData.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleCounterData.cpp">
+    <ClCompile Include="FuzzyData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainCounter.cpp">
+    <ClCompile Include="FireflyFuzzyData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FireflyConterData.cpp">
+    <ClCompile Include="ParticleFuzzyData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FAFCM.cpp">
+    <ClCompile Include="FAFCMcounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Counter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,9 +66,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Attribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Counter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
@@ -92,19 +89,22 @@
     <ClInclude Include="FAcounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CounterData.h">
+    <ClInclude Include="Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleCounterData.h">
+    <ClInclude Include="FuzzyData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MainCounter.h">
+    <ClInclude Include="FireflyFuzzyData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FireflyConterData.h">
+    <ClInclude Include="ParticleFuzzyData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FAFCM.h">
+    <ClInclude Include="Counter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FAFCMcounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

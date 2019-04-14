@@ -1,8 +1,8 @@
 #pragma once
-#include "CounterData.h"
+#include "FuzzyData.h"
 #include "Firefly.h"
 
-class FireflyCounterData : public CounterData, public Firefly
+class FireflyFuzzyData : public FuzzyData, public Firefly
 {
 private:
 	virtual double setFitness() const override;
@@ -15,23 +15,23 @@ protected:
 	double computeOverallDistance(const double** other) const;
 
 public:
-	FireflyCounterData() {};
-	FireflyCounterData(int numberOfClusters) : CounterData(numberOfClusters) {};
-	FireflyCounterData(Dataset data) : CounterData(data) {};
-	FireflyCounterData(Dataset data, int numberOfClusters, int m) : CounterData(data, numberOfClusters, m) {};
-	FireflyCounterData(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma) :
-		CounterData(data, numberOfClusters, m),
+	FireflyFuzzyData() {};
+	FireflyFuzzyData(int numberOfClusters) : FuzzyData(numberOfClusters) {};
+	FireflyFuzzyData(Dataset data) : FuzzyData(data) {};
+	FireflyFuzzyData(Dataset data, int numberOfClusters, int m) : FuzzyData(data, numberOfClusters, m) {};
+	FireflyFuzzyData(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma) :
+		FuzzyData(data, numberOfClusters, m),
 		Firefly(alpha,beta,gamma, data[0].getNumberOfCoordinates()*numberOfClusters)
 	{
 		setStartingX();
 	};
-	~FireflyCounterData() {};
+	~FireflyFuzzyData() {};
 
 	void setK(int K);
 	void setM(int m);
 	void setNumberOfClusters(int number);
 	void setData(Dataset pardata);
-	void setX(const FireflyCounterData& other);
+	void setX(const FireflyFuzzyData& other);
 
 	void Xprint() const;
 

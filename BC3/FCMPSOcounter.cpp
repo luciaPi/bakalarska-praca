@@ -13,7 +13,7 @@ void FCMPSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, 
 	FCMcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FCMcounter::setMaxIterations(100);
 
-	CounterData* hybridGbest = new CounterData(data, numberOfClusters, m);
+	FuzzyData* hybridGbest = new FuzzyData(data, numberOfClusters, m);
 
 	PSOcounter::count(data, numberOfClusters, m, c1, c2, r1, r2, w, P);
 	hybridGbest->setMu(gbest->getMu());

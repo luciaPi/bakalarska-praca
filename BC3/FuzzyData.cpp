@@ -1,14 +1,14 @@
-#include "CounterData.h"
+#include "FuzzyData.h"
 #include <iostream>
 
 using namespace std;
 
-CounterData::CounterData()
+FuzzyData::FuzzyData()
 {
 	init();
 }
 
-CounterData::CounterData(int parnumberOfClusters)
+FuzzyData::FuzzyData(int parnumberOfClusters)
 {
 	if (parnumberOfClusters > 0) {
 		numberOfClusters = parnumberOfClusters;
@@ -16,13 +16,13 @@ CounterData::CounterData(int parnumberOfClusters)
 	init();	
 }
 
-CounterData::CounterData(Dataset pardata)
+FuzzyData::FuzzyData(Dataset pardata)
 {
 	data = pardata;
 	init();
 }
 
-CounterData::CounterData(Dataset pardata, int parnumberOfClusters, int parM)
+FuzzyData::FuzzyData(Dataset pardata, int parnumberOfClusters, int parM)
 {
 	data = pardata;
 	if (parnumberOfClusters > 0) {
@@ -34,12 +34,12 @@ CounterData::CounterData(Dataset pardata, int parnumberOfClusters, int parM)
 	init();
 }
 
-CounterData::~CounterData()
+FuzzyData::~FuzzyData()
 {
 	clear();
 }
 
-void CounterData::setNumberOfClusters(int number)
+void FuzzyData::setNumberOfClusters(int number)
 {
 	if (number > 0) {
 		numberOfClusters = number;
@@ -47,13 +47,13 @@ void CounterData::setNumberOfClusters(int number)
 	init();
 }
 
-void CounterData::setData(Dataset pardata)
+void FuzzyData::setData(Dataset pardata)
 {
 	data = pardata;
 	init();
 }
 
-void CounterData::setM(int parM)
+void FuzzyData::setM(int parM)
 {
 	if (m > 0) {
 		m = parM;
@@ -61,21 +61,21 @@ void CounterData::setM(int parM)
 	init();
 }
 
-void CounterData::setK(int parK)
+void FuzzyData::setK(int parK)
 {
 	if (K > 0) {
 		K = parK;
 	}
 }
 
-void CounterData::setMinChange(double parminChange)
+void FuzzyData::setMinChange(double parminChange)
 {
 	if (parminChange > 0) {
 		minChange = parminChange;
 	}
 }
 
-void CounterData::init()
+void FuzzyData::init()
 {
 	clear();
 	numberOfObjects = data.getSize();
@@ -93,7 +93,7 @@ void CounterData::init()
 	recalculateFromMu();
 }
 
-void CounterData::clear()
+void FuzzyData::clear()
 {
 	if (centers) {
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -133,7 +133,7 @@ void CounterData::clear()
 }
 
 //inicializacia matice mu
-void CounterData::muInit()
+void FuzzyData::muInit()
 {	
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -170,7 +170,7 @@ void CounterData::muInit()
 	}*/
 }
 
-void CounterData::muPrint() const
+void FuzzyData::muPrint() const
 {
 	cout << nameAlg << " - Matica prislusnosti mu " << name << ":" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -182,19 +182,19 @@ void CounterData::muPrint() const
 	cout << endl;
 }
 
-void CounterData::computeFromMu()
+void FuzzyData::computeFromMu()
 {
 	computeMu();
 	recalculateFromMu();
 }
 
-void CounterData::computeFromCenters()
+void FuzzyData::computeFromCenters()
 {
 	computeCenters();
 	recalculateFromCenters();
 }
 
-void CounterData::normalizeMu()
+void FuzzyData::normalizeMu()
 {
 	for (int i = 0; i < numberOfObjects; i++) {
 		double rowSum = 0;
@@ -207,19 +207,19 @@ void CounterData::normalizeMu()
 	}
 }
 
-void CounterData::recalculateFromMu()
+void FuzzyData::recalculateFromMu()
 {
 	computeCenters();
 	computeD();
 }
 
-void CounterData::recalculateFromCenters()
+void FuzzyData::recalculateFromCenters()
 {
 	computeD();
 	computeMu();
 }
 
-void CounterData::printAsMatrix(double * matrix, const char * text) const
+void FuzzyData::printAsMatrix(double * matrix, const char * text) const
 {
 	cout << nameAlg << " - " << text << " " << name << ":" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -231,7 +231,7 @@ void CounterData::printAsMatrix(double * matrix, const char * text) const
 	cout << endl;
 }
 
-void CounterData::setMatrix(double ** source, double ** dest)
+void FuzzyData::setMatrix(double ** source, double ** dest)
 {
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -240,7 +240,7 @@ void CounterData::setMatrix(double ** source, double ** dest)
 	}
 }
 
-void CounterData::setMu(const double ** parmu)
+void FuzzyData::setMu(const double ** parmu)
 {
 	if (parmu) {
 		for (int i = 0; i < numberOfObjects; i++) {
@@ -252,17 +252,17 @@ void CounterData::setMu(const double ** parmu)
 	recalculateFromMu();
 }
 
-void CounterData::setName(string pname)
+void FuzzyData::setName(string pname)
 {
 	name = pname;
 }
 
-void CounterData::setAlgorithmName(string pname)
+void FuzzyData::setAlgorithmName(string pname)
 {
 	nameAlg = pname;
 }
 
-void CounterData::centersInit()
+void FuzzyData::centersInit()
 {
 	centers = new Object*[numberOfClusters];
 	oldCenters = new Object*[numberOfClusters];
@@ -274,7 +274,7 @@ void CounterData::centersInit()
 	}
 }
 
-void CounterData::centersPrint() const
+void FuzzyData::centersPrint() const
 {
 	cout << nameAlg <<  " - Centra " << name << ":" << endl;
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -287,7 +287,7 @@ void CounterData::centersPrint() const
 	cout << endl;
 }
 
-void CounterData::computeCenters()
+void FuzzyData::computeCenters()
 {
 	vector<double> values;
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -317,7 +317,7 @@ void CounterData::computeCenters()
 	}
 }
 
-void CounterData::dInit()
+void FuzzyData::dInit()
 {
 	d = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -325,7 +325,7 @@ void CounterData::dInit()
 	}
 }
 
-void CounterData::dPrint() const
+void FuzzyData::dPrint() const
 {
 	cout << nameAlg << " - Matica euklidovskej vzdialenosti " << name << ":" << endl;
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -337,7 +337,7 @@ void CounterData::dPrint() const
 	cout << endl;
 }
 
-void CounterData::computeMu()
+void FuzzyData::computeMu()
 {
 	double index = 2 / (m - 1);
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -353,7 +353,7 @@ void CounterData::computeMu()
 }
 
 //vypocet matice euklidovskej vzdialenosti
-void CounterData::computeD()
+void FuzzyData::computeD()
 {
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -369,7 +369,7 @@ void CounterData::computeD()
 	}
 }
 
-double CounterData::getJm() const
+double FuzzyData::getJm() const
 {
 	double Jm = 0;
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -380,47 +380,47 @@ double CounterData::getJm() const
 	return Jm;
 }
 
-void CounterData::printJm() const
+void FuzzyData::printJm() const
 {
 	cout << nameAlg << " - Jm " << name << " = ";
 	cout << getJm() << endl;
 	cout << endl;
 }
 
-double CounterData::getFitness() const
+double FuzzyData::getFitness() const
 {
 	return K/getJm();
 }
 
-void CounterData::printFitness() const
+void FuzzyData::printFitness() const
 {
 	cout << nameAlg << " - Fitness " << name << " = ";
 	cout << getFitness() << endl;
 	cout << endl;
 }
 
-Dataset CounterData::getData() const
+Dataset FuzzyData::getData() const
 {
 	return data;
 }
 
-int CounterData::getM() const
+int FuzzyData::getM() const
 {
 	return m;
 }
 
-int CounterData::getNumberOfClusters() const
+int FuzzyData::getNumberOfClusters() const
 {
 	return numberOfClusters;
 }
 
-const double ** CounterData::getMu() const
+const double ** FuzzyData::getMu() const
 {
 	return (const double **)mu;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna
-bool CounterData::wasSignificantChange() const
+bool FuzzyData::wasSignificantChange() const
 {
 	for (int j = 0; j < numberOfClusters; j++) {
 		for (int k = 0; k < numberOfCoordinates; k++) {

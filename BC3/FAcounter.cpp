@@ -66,7 +66,7 @@ bool FAcounter::wasSignificantChange() const
 	return false;
 }
 
-const FireflyCounterData * FAcounter::getBest() const
+const FireflyFuzzyData * FAcounter::getBest() const
 {
 	return gbest;
 }
@@ -83,15 +83,15 @@ void FAcounter::printJm() const
 
 void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma)
 {
-	fireflies = new FireflyCounterData*[P];
+	fireflies = new FireflyFuzzyData*[P];
 	for (int l = 0; l < P; l++) {
-		fireflies[l] = new FireflyCounterData(data, numberOfClusters, m, alpha, beta, gamma);
+		fireflies[l] = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma);
 		char name[8];
 		snprintf(name, sizeof(name), "FA%d", (l + 1));
 		fireflies[l]->setName(name);
 		fireflies[l]->setAlgorithmName(nameAlg);
 	}
-	gbest = new FireflyCounterData(data, numberOfClusters, m, alpha, beta, gamma);
+	gbest = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma);
 	gbest->setAlgorithmName(nameAlg);
 	gbest->setName("FA BEST");
 }
@@ -115,7 +115,7 @@ void FAcounter::rankFireflies()
 	for (int l = 0; l < P; l++) {
 		for (int ll = l+1; ll < P; ll++) {
 			if (fireflies[l]->getFireflyFitness() < fireflies[ll]->getFireflyFitness()) {
-				FireflyCounterData* f = fireflies[l];
+				FireflyFuzzyData* f = fireflies[l];
 				fireflies[l] = fireflies[ll];
 				fireflies[ll] = f;
 			}

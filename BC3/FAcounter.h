@@ -1,14 +1,14 @@
 #pragma once
 #include "Dataset.h"
-#include "FireflyConterData.h"
-#include "MainCounter.h"
+#include "FireflyFuzzyData.h"
+#include "Counter.h"
 
-class FAcounter : public MainCounter
+class FAcounter : public Counter
 {
 private:
 	int P;
 
-	FireflyCounterData** fireflies = nullptr;
+	FireflyFuzzyData** fireflies = nullptr;
 	
 	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 	void removeFireflies();
@@ -29,11 +29,11 @@ public:
 	FAcounter() {};
 	~FAcounter();
 
-	FireflyCounterData* gbest = nullptr;
+	FireflyFuzzyData* gbest = nullptr;
 
 	void count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 
-	const FireflyCounterData* getBest() const;
+	const FireflyFuzzyData* getBest() const;
 
 	double getJm() const override;
 	void printJm() const override;

@@ -1,25 +1,25 @@
 #pragma once
-#include "CounterData.h"
+#include "FuzzyData.h"
 #include "Particle.h"
 
-class ParticleCounterData : public CounterData, public Particle
+class ParticleFuzzyData : public FuzzyData, public Particle
 {
 protected:
 	void normalize() override;
 	bool setX() override;	
 
 public:
-	ParticleCounterData() {};
-	ParticleCounterData(int numberOfClusters) : CounterData(numberOfClusters) {};
-	ParticleCounterData(Dataset data) : CounterData(data) {};
-	ParticleCounterData(Dataset data, int numberOfClusters, int m) : CounterData(data, numberOfClusters, m) {};
-	ParticleCounterData(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w) :
-		CounterData(data, numberOfClusters, m),
+	ParticleFuzzyData() {};
+	ParticleFuzzyData(int numberOfClusters) : FuzzyData(numberOfClusters) {};
+	ParticleFuzzyData(Dataset data) : FuzzyData(data) {};
+	ParticleFuzzyData(Dataset data, int numberOfClusters, int m) : FuzzyData(data, numberOfClusters, m) {};
+	ParticleFuzzyData(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w) :
+		FuzzyData(data, numberOfClusters, m),
 		Particle(c1,c2,r1,r2,w,data.getSize()*numberOfClusters)
 	{
 		setStartingX();
 	};
-	~ParticleCounterData() {};
+	~ParticleFuzzyData() {};
 
 	void Vprint() const;
 	void pbestPrint() const;

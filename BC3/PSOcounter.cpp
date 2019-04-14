@@ -67,9 +67,9 @@ void PSOcounter::count()
 
 void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w)
 {
-	particles = new ParticleCounterData*[P];
+	particles = new ParticleFuzzyData*[P];
 	for (int l = 0; l < P; l++) {
-		particles[l] = new ParticleCounterData(data, numberOfClusters, m, c1, c2, r1, r2, w);
+		particles[l] = new ParticleFuzzyData(data, numberOfClusters, m, c1, c2, r1, r2, w);
 		char name[8];
 		snprintf(name,sizeof(name),"PSO%d", (l + 1));
 		particles[l]->setName(name);
@@ -189,7 +189,7 @@ bool PSOcounter::wasSignificantChange() const
 	return false;
 }
 
-const ParticleCounterData* PSOcounter::getBest() const
+const ParticleFuzzyData* PSOcounter::getBest() const
 {
 	return gbest;
 }

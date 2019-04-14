@@ -3,7 +3,7 @@
 #include "Dataset.h"
 #include <string>
 
-class CounterData
+class FuzzyData
 {
 private:
 	double minChange = 0.0001;
@@ -46,11 +46,11 @@ protected:
 
 
 public:
-	CounterData();
-	CounterData(int numberOfClusters);
-	CounterData(Dataset data);
-	CounterData(Dataset data, int numberOfClusters, int m);
-	~CounterData();
+	FuzzyData();
+	FuzzyData(int numberOfClusters);
+	FuzzyData(Dataset data);
+	FuzzyData(Dataset data, int numberOfClusters, int m);
+	~FuzzyData();
 
 	void setNumberOfClusters(int number);
 	void setData(Dataset data);

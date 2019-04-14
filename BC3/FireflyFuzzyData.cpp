@@ -1,8 +1,8 @@
-#include "FireflyConterData.h"
+#include "FireflyFuzzyData.h"
 #include <math.h> 
 
 
-double FireflyCounterData::computeOverallDistance(const double ** other) const
+double FireflyFuzzyData::computeOverallDistance(const double ** other) const
 {
 	double allSum = 0;
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -17,37 +17,37 @@ double FireflyCounterData::computeOverallDistance(const double ** other) const
 	return allSum;
 }
 
-void FireflyCounterData::setK(int parK)
+void FireflyFuzzyData::setK(int parK)
 {
 	if (parK > 0) {
 		fitness = fitness * parK / K;
-		CounterData::setK(parK);		
+		FuzzyData::setK(parK);		
 	}
 }
 
-void FireflyCounterData::setM(int parm)
+void FireflyFuzzyData::setM(int parm)
 {
 	if (parm > 0) {
-		CounterData::setM(parm);
+		FuzzyData::setM(parm);
 		Firefly::init();
 	}
 }
 
-void FireflyCounterData::setNumberOfClusters(int number)
+void FireflyFuzzyData::setNumberOfClusters(int number)
 {
 	if (numberOfClusters > 0) {
-		CounterData::setNumberOfClusters(number);
+		FuzzyData::setNumberOfClusters(number);
 		setSize(data.getSize()*numberOfObjects);
 	}
 }
 
-void FireflyCounterData::setData(Dataset pardata)
+void FireflyFuzzyData::setData(Dataset pardata)
 {
-	CounterData::setData(pardata);
+	FuzzyData::setData(pardata);
 	setSize(data.getSize()*numberOfObjects);
 }
 
-void FireflyCounterData::setX(const FireflyCounterData & other)
+void FireflyFuzzyData::setX(const FireflyFuzzyData & other)
 {
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -63,23 +63,23 @@ void FireflyCounterData::setX(const FireflyCounterData & other)
 	other.centersPrint();*/
 }
 
-void FireflyCounterData::Xprint() const
+void FireflyFuzzyData::Xprint() const
 {
 	centersPrint();
 }
 
-void FireflyCounterData::normalize()
+void FireflyFuzzyData::normalize()
 {
 	recalculateFromCenters();
 	recalculateFromMu();
 }
 
-double FireflyCounterData::setFitness() const
+double FireflyFuzzyData::setFitness() const
 {
-	return CounterData::getFitness();
+	return FuzzyData::getFitness();
 }
 
-bool FireflyCounterData::setX()
+bool FireflyFuzzyData::setX()
 {
 	if (size == numberOfClusters * numberOfCoordinates) {
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -93,7 +93,7 @@ bool FireflyCounterData::setX()
 	return false;
 }
 
-void FireflyCounterData::setMinMaxCoordinates()
+void FireflyFuzzyData::setMinMaxCoordinates()
 {
 	for (int k = 0; k < numberOfCoordinates; k++) {
 		double min = data.getMinCoordinate(k);
@@ -105,12 +105,12 @@ void FireflyCounterData::setMinMaxCoordinates()
 	}
 }
 
-std::string FireflyCounterData::getName() const
+std::string FireflyFuzzyData::getName() const
 {
 	return name;
 }
 
-std::string FireflyCounterData::getAlgorithmName() const
+std::string FireflyFuzzyData::getAlgorithmName() const
 {
 	return nameAlg;
 }

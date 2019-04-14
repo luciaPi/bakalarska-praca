@@ -1,30 +1,30 @@
-#include "ParticleCounterData.h"
+#include "ParticleFuzzyData.h"
 #include <iostream>
 
 using namespace std;
 
-void ParticleCounterData::Vprint() const
+void ParticleFuzzyData::Vprint() const
 {
 	printAsMatrix(V, "V");
 }
 
-void ParticleCounterData::pbestPrint() const
+void ParticleFuzzyData::pbestPrint() const
 {
 	//printAsMatrix(pbest, "PBest");
 	pbestCentersPrint();
 }
 
-void ParticleCounterData::pbestJmPrint() const
+void ParticleFuzzyData::pbestJmPrint() const
 {
 	cout << nameAlg << " - " << "Pbest Jm " << name << ":" << K/pbestFitness << endl;
 }
 
-void ParticleCounterData::Xprint() const
+void ParticleFuzzyData::Xprint() const
 {
 	muPrint();
 }
 
-bool ParticleCounterData::setX()
+bool ParticleFuzzyData::setX()
 {
 	if (numberOfClusters * numberOfObjects == size) {
 		for (int i = 0; i < numberOfObjects; i++) {
@@ -38,17 +38,17 @@ bool ParticleCounterData::setX()
 	return false;
 }
 
-string ParticleCounterData::getName() const
+string ParticleFuzzyData::getName() const
 {
 	return name;
 }
 
-string ParticleCounterData::getAlgorithmName() const
+string ParticleFuzzyData::getAlgorithmName() const
 {
 	return nameAlg;
 }
 
-void ParticleCounterData::pbestCentersPrint() const
+void ParticleFuzzyData::pbestCentersPrint() const
 {
 	cout << nameAlg << " - Pbest centra "<< name << ":" << endl;
 	for (int j = 0; j < numberOfClusters; j++) {
@@ -69,43 +69,43 @@ void ParticleCounterData::pbestCentersPrint() const
 	cout << endl;
 }
 
-double ParticleCounterData::getFitness() const
+double ParticleFuzzyData::getFitness() const
 {
-	return CounterData::getFitness();
+	return FuzzyData::getFitness();
 }
 
-void ParticleCounterData::setK(int parK)
+void ParticleFuzzyData::setK(int parK)
 {
 	if (parK > 0) {
 		pbestFitness = pbestFitness * parK / K;
-		CounterData::setK(parK);
+		FuzzyData::setK(parK);
 	}
 }
 
-void ParticleCounterData::setM(int parm)
+void ParticleFuzzyData::setM(int parm)
 {
 	if (parm > 0) {
-		CounterData::setM(parm);
+		FuzzyData::setM(parm);
 		Particle::init();
 	}
 }
 
-void ParticleCounterData::setNumberOfClusters(int number)
+void ParticleFuzzyData::setNumberOfClusters(int number)
 {
 	if (numberOfClusters > 0) {
-		CounterData::setNumberOfClusters(number);
+		FuzzyData::setNumberOfClusters(number);
 		setSize(data.getSize()*numberOfObjects);
 	}
 }
 
-void ParticleCounterData::setData(Dataset pardata)
+void ParticleFuzzyData::setData(Dataset pardata)
 {
-	CounterData::setData(pardata);
+	FuzzyData::setData(pardata);
 	setSize(data.getSize()*numberOfObjects);
 }
 
 //nie nula!!!
-void ParticleCounterData::normalize()
+void ParticleFuzzyData::normalize()
 {
 	for (int i = 0; i < numberOfObjects; i++) {
 		int count = 0;

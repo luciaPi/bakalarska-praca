@@ -7,7 +7,7 @@
 void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM)
 {
 	clear();
-	counterData = new CounterData(parData, parNumberOfClusters, parM);
+	counterData = new FuzzyData(parData, parNumberOfClusters, parM);
 	counterData->setName("FCM");
 	counterData->setAlgorithmName(nameAlg);
 }
@@ -25,7 +25,7 @@ void FCMcounter::count(const Dataset data, int numberOfClusters, int m)
 	}	
 }
 
-void FCMcounter::count(CounterData * other)
+void FCMcounter::count(FuzzyData * other)
 {
 	if (other != nullptr) {
 		setCounter(other->getData(),other->getNumberOfClusters(),other->getM());

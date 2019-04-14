@@ -2,11 +2,11 @@
 #include "FCMcounter.h"
 #include "FAcounter.h"
 
-class FAFCM : public FCMcounter, public FAcounter
+class FAFCMcounter : public FCMcounter, public FAcounter
 {
 public:
-	FAFCM() {};
-	~FAFCM() {};
+	FAFCMcounter() {};
+	~FAFCMcounter() {};
 
 	void count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 
