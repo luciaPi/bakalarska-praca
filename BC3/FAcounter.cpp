@@ -23,29 +23,36 @@ void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, 
 {
 	if (pdata.getSize() > 0) {
 		setCounter(pdata, numberOfClusters, m, alpha, beta, gamma, parP);
-
-		muPrint();
-		dPrint();
-		XPrint();
-		firefliesJmPrint();
-		gbestPrint();
-		printJm();
+		
+		fireflies[0]->printMinMax();
 
 		rankFireflies();
 
+		/*muPrint();
+		dPrint();*/
+		firefliesJmPrint();
+		gbestPrint();
+		XPrint();
+		printJm();
+
+
 		int i = 1;
 		do {
-			cout << "Round" << i++ << endl;
+			cout << "Round" << i << endl;
 			compute();
 			rankFireflies();
 
-			muPrint();
-			dPrint();
-			XPrint();
+			//muPrint();
+			//dPrint();
+			//XPrint();
 			firefliesJmPrint();
 			gbestPrint();
 			printJm();
 		} while (!isMetFinalCriterion(i++));
+		firefliesJmPrint();
+		gbestPrint();
+		XPrint();
+		muPrint();
 	}
 }
 
@@ -82,7 +89,7 @@ void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double 
 		char name[8];
 		snprintf(name, sizeof(name), "FA%d", (l + 1));
 		fireflies[l]->setName(name);
-		fireflies[l]->setAlgorithmName("PSO");
+		fireflies[l]->setAlgorithmName("FA");
 	}
 	gbest = new FireflyCounterData(data, numberOfClusters, m, alpha, beta, gamma);
 }
@@ -97,7 +104,8 @@ void FAcounter::firefliesJmPrint() const
 void FAcounter::gbestPrint() const
 {
 	cout << gbest->getAlgorithmName() << " - Gbest " << gbest->getName() << ":" << endl;
-	gbest->Xprint();
+	//gbest->muPrint();
+	gbest->Xprint();	
 }
 
 void FAcounter::rankFireflies()
@@ -132,6 +140,7 @@ void FAcounter::compute()
 			}
 		}
 	}
+	fireflies[0]->moveRandomly();
 }
 
 void FAcounter::muPrint() const

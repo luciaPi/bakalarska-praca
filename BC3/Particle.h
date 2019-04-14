@@ -11,7 +11,7 @@ private:
 	double r2 = -1;
 	double w = 1;
 
-	const double maxV = 0.05;
+	const double maxV = 0.005; //0.0001 10000iteracii
 	
 	void pbestInit();
 	void VInit();

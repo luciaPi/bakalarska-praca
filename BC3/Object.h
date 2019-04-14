@@ -18,7 +18,7 @@ public:
 	void setValue(int which, double newValue);
 	//vector<double> getValues();
 	double getValue(int which) const;
-	double& getPointerValue(int which);
+	double* getPointerValue(int which);
 	void printValues() const;
 
 	int getNumberOfCoordinates() const;

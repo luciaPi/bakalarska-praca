@@ -21,7 +21,7 @@ public:
 	FireflyCounterData(Dataset data, int numberOfClusters, int m) : CounterData(data, numberOfClusters, m) {};
 	FireflyCounterData(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma) :
 		CounterData(data, numberOfClusters, m),
-		Firefly(alpha,beta,gamma, data.getSize()*numberOfClusters)
+		Firefly(alpha,beta,gamma, data[0].getNumberOfCoordinates()*numberOfClusters)
 	{
 		setStartingX();
 	};

@@ -23,6 +23,11 @@ void Firefly::init()
 	}
 }
 
+double Firefly::getXValue(int i) const
+{
+	return **(X + i);
+}
+
 void Firefly::setStartingX()
 {
 	if (size > 0) {
@@ -69,40 +74,53 @@ void Firefly::Xprint() const
 	cout << endl;
 }
 
-double Firefly::computeOverallDistance(const double* other) const
+double Firefly::computeOverallDistance(const Firefly* other) const
 {
 	double sum = 0;
 	for (int i = 0; i < size; i++) {
-		sum += *(X + i);
+		sum += pow(**(X + i)-other->getXValue(i),2);
 	}
-	return sum;
+	return sqrt(sum);
 }
 
 bool Firefly::move(const Firefly* other)
 {
 	try {
-		double r = computeOverallDistance(other->X);
-		double beta = beta * exp(-gamma * pow(r, 2));
-
-		for (int i = 0; i < size; i++) {
-			double randNumber = (double)rand() / RAND_MAX;
-			double coordinateDistance = *(other->X + i) - *(X + i);
-			double newValue = *(X + i) + beta * coordinateDistance + alpha * (randNumber - 0.5);
-			if (newValue < minValues[i]) {
-				newValue = minValues[i];
+		double r = computeOverallDistance(other);
+		double betaMove = beta * exp(-gamma * pow(r, 2));	//dat na druhu
+		//cout << getName() << " to " << other->getName() << endl;
+		if (betaMove > 0) {
+			for (int i = 0; i < size; i++) {
+				double randNumber = (double)rand() / RAND_MAX;
+				double coordinateDistance = **(other->X + i) - **(X + i);
+				double newValue = **(X + i) + betaMove * coordinateDistance + alpha * (randNumber - 0.5);
+				if (newValue < minValues[i]) {
+					newValue = minValues[i];
+				}
+				if (newValue > maxValues[i]) {
+					newValue = maxValues[i];
+				}
+				//cout << **(X + i) << " : " << newValue << endl;
+				**(X + i) = newValue;
 			}
-			if (newValue > maxValues[i]) {
-				newValue = maxValues[i];
-			}
-			*(X + i) = newValue;
+			//cout << endl;
+			normalize();
+			fitness = setFitness();
 		}
-		normalize();
-		fitness = setFitness();
 	}
 	catch (exception ex) {
 		return false;
 	}
 	return true;
+}
+
+void Firefly::moveRandomly()
+{
+	for (int i = 0; i < size; i++) {
+		**(X+i) = (double)rand() / RAND_MAX * (maxValues[i]-minValues[i])+minValues[i];
+	}
+	normalize();
+	fitness = setFitness();
 }
 
 void Firefly::setAlpha(double palpha)
@@ -149,7 +167,7 @@ void Firefly::setX(const Firefly & other)
 
 void Firefly::XInit()
 {
-	X = new double[size];
+	X = new double*[size];
 }
 
 void Firefly::minmaxInit()
@@ -175,4 +193,18 @@ void Firefly::clearFirefly()
 int Firefly::getSize() const
 {
 	return size;
+}
+
+void Firefly::printMinMax() const
+{
+	cout << "min: ";
+	for (int i = 0; i < size; i++) {
+		cout << minValues[i] << " ";
+	}
+	cout << endl;
+	cout << "max: ";
+	for (int i = 0; i < size; i++) {
+		cout << maxValues[i] << " ";
+	}
+	cout << endl;
 }

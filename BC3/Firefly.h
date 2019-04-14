@@ -12,15 +12,15 @@ private:
 	void XInit();
 	void minmaxInit();
 	
-	double computeOverallDistance(const double* other) const;
+	double computeOverallDistance(const Firefly* other) const;
 
 	void clearFirefly();
 
 	int getSize() const;
-
+	
 protected:
 	int size = 0;
-	double *X = nullptr;
+	double **X = nullptr;
 	double fitness = 0;
 
 	double* minValues = nullptr;
@@ -34,6 +34,8 @@ protected:
 	void setStartingX();
 	void init();
 
+	double getXValue(int i) const;
+
 public:
 	Firefly();
 	Firefly(double alpha, double beta, double gamma, int size);
@@ -42,6 +44,7 @@ public:
 	void Xprint() const;
 	
 	bool move(const Firefly* other);
+	void moveRandomly();
 
 	void setAlpha(double alpha);
 	void setBeta(double beta);
@@ -54,5 +57,7 @@ public:
 	double getFireflyFitness() const;
 	void setX(const Firefly& other);
 	//void setCenters(vector<Object> newCenters);
+
+	void printMinMax() const;
 };
 

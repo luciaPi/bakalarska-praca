@@ -20,7 +20,6 @@ private:
 	
 	void computeMu();
 	void computeD();
-	void computeCenters();
 	void normalizeMu();
 	
 protected:
@@ -42,6 +41,9 @@ protected:
 
 	void recalculateFromMu();
 	void recalculateFromCenters();
+
+	void computeCenters();
+
 
 public:
 	CounterData();

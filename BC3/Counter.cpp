@@ -23,7 +23,7 @@ void Counter::count(Algorithm alg, const char * name)
 {
 	srand(time(NULL));
 
-	int numberOfClusters = 6;
+	int numberOfClusters = 3;
 	int m = 2;
 	double c1 = 2;
 	double c2 = 2;
@@ -36,11 +36,11 @@ void Counter::count(Algorithm alg, const char * name)
 	double gamma = 1;
 
 	readDataFromFile(name);
-	dataObjectsPrint();
-	//FCMcounter fcmCounter;
-	//fcmCounter.count(*data,numberOfClusters,m);
+	//dataObjectsPrint();
+	FCMcounter fcmCounter;
+	fcmCounter.count(*data,numberOfClusters,m);
 	//fcmCounter.printJm();
-	PSOcounter psoCounter;
+	/*PSOcounter psoCounter;
 	psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
 	psoCounter.count(*data,numberOfClusters,m,c1,c2,r1,r2,w,P);
 	//psoCounter.printbestCentre();
@@ -49,9 +49,11 @@ cout << "FCM-PSO" << endl;
 	FCMPSOcounter fcmpso;
 	fcmpso.count(data);*/
 
-/*	FAcounter faCounter;
+	P = 20;
+
+	FAcounter faCounter;
 	faCounter.setFinalCriterion(FinalCriterion::maxIteration);
-	faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, P);*/
+	faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, P);
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const

@@ -35,10 +35,10 @@ double Object::getValue(int which) const {
 	}
 }
 
-double &Object::getPointerValue(int which)
+double *Object::getPointerValue(int which)
 {
 	if (which >= 0 && which < numberOfCoordinates) {
-		return  values.at(which);			
+		return  &values[which];			
 	}
 }
 

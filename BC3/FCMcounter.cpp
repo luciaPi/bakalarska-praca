@@ -9,6 +9,7 @@ void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM)
 	clear();
 	counterData = new CounterData(parData, parNumberOfClusters, parM);
 	counterData->setName("FCM");
+	counterData->setAlgorithmName("FCM");
 }
 
 FCMcounter::~FCMcounter() {

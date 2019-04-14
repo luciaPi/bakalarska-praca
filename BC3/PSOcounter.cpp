@@ -28,20 +28,20 @@ void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, dou
 
 		//setV();
 		
-		Vprint();
+		/*Vprint();
 		Xprint();
 		//dPrint();
 		pbestsPrint();
 		gbestPrint();
 		centersPrint();
 		printJm();
-		particlesJmPrint();
+		particlesJmPrint();*/
 
 		int i = 1;
 		do {	
-			cout << "Round" << i++ << endl;	
+			cout << "Round" << i << endl;	
 			compute();
-
+			printJm();
 			/*Vprint();
 			Xprint();
 			dPrint();
@@ -117,7 +117,7 @@ void PSOcounter::particlesJmPrint() const
 void PSOcounter::particlesPbestJmPrint() const
 {
 	for (int l = 0; l < P; l++) {
-		particles[l]->printJm();
+		particles[l]->pbestJmPrint();
 	}
 }
 
@@ -166,7 +166,7 @@ void PSOcounter::setV()
 
 void PSOcounter::printJm() const
 {
-	gbest->printJm();
+	gbest->pbestJmPrint();
 }
 
 void PSOcounter::setK(int K)

@@ -49,23 +49,29 @@ void FireflyCounterData::setData(Dataset pardata)
 
 void FireflyCounterData::setX(const FireflyCounterData & other)
 {
-	for (int j = 0; j < numberOfClusters; j++) {
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			centers[j]->setValue(k, *(other.X + j * numberOfCoordinates + k));
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			mu[i][j] = other.mu[i][j];
 		}
 	}
-	recalculateFromCenters();
+	recalculateFromMu();
 	fitness = setFitness();
+
+	muPrint();
+	other.muPrint();
+	centersPrint();
+	other.centersPrint();
 }
 
 void FireflyCounterData::Xprint() const
 {
-	muPrint();
+	centersPrint();
 }
 
 void FireflyCounterData::normalize()
 {
 	recalculateFromCenters();
+	recalculateFromMu();
 }
 
 double FireflyCounterData::setFitness() const
