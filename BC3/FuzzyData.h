@@ -17,7 +17,8 @@ private:
 	void muInit();
 	void centersInit();
 	void dInit();
-	
+
+	void computeCenters();
 	void computeMu();
 	void computeD();
 	void normalizeMu();
@@ -41,10 +42,7 @@ protected:
 
 	void recalculateFromMu();
 	void recalculateFromCenters();
-
-	void computeCenters();
-
-
+	
 public:
 	FuzzyData();
 	FuzzyData(int numberOfClusters);
@@ -61,12 +59,11 @@ public:
 	void setName(string name);
 	void setAlgorithmName(string name);
 
-	void muPrint() const;
 	void computeFromMu();
-	void computeFromCenters();
+	//void computeFromCenters();
 
+	void muPrint() const;
 	void centersPrint() const;
-
 	void dPrint() const;
 
 	double getJm() const ;

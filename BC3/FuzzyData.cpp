@@ -188,11 +188,11 @@ void FuzzyData::computeFromMu()
 	recalculateFromMu();
 }
 
-void FuzzyData::computeFromCenters()
+/*void FuzzyData::computeFromCenters()
 {
 	computeCenters();
 	recalculateFromCenters();
-}
+}*/
 
 void FuzzyData::normalizeMu()
 {
@@ -217,6 +217,7 @@ void FuzzyData::recalculateFromCenters()
 {
 	computeD();
 	computeMu();
+	recalculateFromMu();
 }
 
 void FuzzyData::printAsMatrix(double * matrix, const char * text) const

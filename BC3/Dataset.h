@@ -10,7 +10,7 @@ private:
 	vector<Object*> all;
 
 public:
-	Dataset() : numberOfObjects(0) {};
+	Dataset() {};
 	Dataset(const Dataset& other);
 	~Dataset();
 	Dataset& operator=(const Dataset& other);

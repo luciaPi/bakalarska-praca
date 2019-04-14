@@ -42,6 +42,7 @@ public:
 	~Firefly();
 
 	void Xprint() const;
+	void printMinMax() const;
 	
 	bool move(const Firefly* other);
 	void moveRandomly();
@@ -50,14 +51,12 @@ public:
 	void setBeta(double beta);
 	void setGamma(double gamma);
 	void setSize(int size);
+	void setX(const Firefly& other);
 
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;
-
 	double getFireflyFitness() const;
-	void setX(const Firefly& other);
-	//void setCenters(vector<Object> newCenters);
 
-	void printMinMax() const;
+	//void setCenters(vector<Object> newCenters);
 };
 

@@ -9,7 +9,7 @@ using namespace std;
 class FCMcounter : public Counter
 {
 private:
-	FuzzyData* counterData = nullptr;
+	FuzzyData* fuzzyData = nullptr;
 	
 	void setCounter(Dataset data, int numberOfClusters, int m);
 	void clear();
@@ -35,6 +35,8 @@ public:
 	
 	void count(const Dataset data, int numberOfClusters, int m);
 	void count(FuzzyData* other);
+
+	const FuzzyData* getBest() const;
 
 	double getJm() const override;
 	void printJm() const override;

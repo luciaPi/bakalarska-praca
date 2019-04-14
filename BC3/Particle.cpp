@@ -98,7 +98,6 @@ bool Particle::checkFitness(Particle* gbest)
 		setValues(X, pbest);
 		
 		if (gbest != nullptr) {
-		//cout << "change: old" << gbest->getFitness() << " new " << newFitness << endl;
 			if (newFitness > gbest->getFitness()) {				
 				return true;
 			}
@@ -124,7 +123,6 @@ void Particle::computeV(const Particle* gbest)
 		throw new exception();
 	}*/
 	for (int i = 0; i < size; i++) {
-		//cout << (*(V + i)) << " " << *(pbest + i) << " " << **(X + i) << " " << gbest->getXValue(i) << " " << **(X + i) << endl;
 		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - **(X + i)) + c2 * r2*(gbest->getXValue(i) - **(X + i));
 		if (*(V + i) > maxV) {
 			*(V + i) = maxV;

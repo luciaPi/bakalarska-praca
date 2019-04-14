@@ -25,9 +25,9 @@ Application::~Application()
 	data = nullptr;
 }
 
-void Application::count(Algorithm alg)
+void Application::count(Algorithm alg, int numberOfItertion)
 {
-	if (data != nullptr && numberOfClusters > 0) {
+	if (data != nullptr && numberOfClusters > 0 && numberOfItertion > 0) {
 		r1 = (double)rand() / RAND_MAX;
 		r2 = (double)rand() / RAND_MAX;		
 		alpha = (double)rand() / RAND_MAX;
@@ -36,6 +36,7 @@ void Application::count(Algorithm alg)
 			case Algorithm::fcm: {
 				FCMcounter fcmCounter;
 				fcmCounter.setAlgorithmName("FCM");
+				fcmCounter.setMaxIterations(numberOfItertion);
 				fcmCounter.count(*data, numberOfClusters, m);
 				fcmCounter.printJm();
 				break;
@@ -44,21 +45,24 @@ void Application::count(Algorithm alg)
 				PSOcounter psoCounter;
 				psoCounter.setAlgorithmName("PSO");
 				psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
-				psoCounter.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, P);
+				psoCounter.setMaxIterations(numberOfItertion);
+				psoCounter.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
 				psoCounter.printJm();
 				break;
 			}	
 			case Algorithm::fcmpso: {
 				FCMPSOcounter fcmpso;
 				fcmpso.setAlgorithmName("FCM-PSO");
-				fcmpso.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, P);
+				fcmpso.setNumberOfIterations(numberOfItertion);
+				fcmpso.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
 				break;
 			}
 			case Algorithm::fa: {
 				FAcounter faCounter;
 				faCounter.setAlgorithmName("FA");
+				faCounter.setMaxIterations(numberOfItertion);
 				faCounter.setFinalCriterion(FinalCriterion::maxIteration);
-				faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, Ppso);
+				faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
 				break;
 			}
 			case Algorithm::fafcm: {

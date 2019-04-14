@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 void FAcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP)
 {
 	removeFireflies();
@@ -34,7 +33,6 @@ void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, 
 		/*gbestPrint();
 		XPrint();
 		printJm();*/
-
 
 		int i = 1;
 		do {
@@ -66,7 +64,7 @@ bool FAcounter::wasSignificantChange() const
 	return false;
 }
 
-const FireflyFuzzyData * FAcounter::getBest() const
+const FuzzyData * FAcounter::getBest() const
 {
 	return gbest;
 }

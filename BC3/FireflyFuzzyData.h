@@ -8,7 +8,6 @@ private:
 	virtual double setFitness() const override;
 	virtual bool setX() override;
 	virtual void normalize() override;
-
 	virtual void setMinMaxCoordinates() override;
 	
 protected:

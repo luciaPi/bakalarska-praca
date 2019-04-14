@@ -39,7 +39,7 @@ public:
 	void count(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);	
 	void count();
 
-	const ParticleFuzzyData* getBest() const;
+	const FuzzyData* getBest() const;
 		
 	double getJm() const override;
 	void printJm() const override;

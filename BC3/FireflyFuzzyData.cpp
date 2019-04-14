@@ -71,7 +71,6 @@ void FireflyFuzzyData::Xprint() const
 void FireflyFuzzyData::normalize()
 {
 	recalculateFromCenters();
-	recalculateFromMu();
 }
 
 double FireflyFuzzyData::setFitness() const
@@ -87,7 +86,7 @@ bool FireflyFuzzyData::setX()
 				*(X + j * numberOfCoordinates + k) = centers[j]->getPointerValue(k);
 			}
 		}
-		recalculateFromCenters(); //mozno?
+		recalculateFromCenters(); 
 		return true;
 	}
 	return false;

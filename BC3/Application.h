@@ -29,7 +29,7 @@ public:
 	Application();
 	~Application();		
 
-	void count(Algorithm alg);
+	void count(Algorithm alg, int numberOfIteration);
 
 	bool setData(const char* name);
 	bool setNumberOfClusters(int number);

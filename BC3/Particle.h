@@ -42,6 +42,7 @@ protected:
 	void setStartingX();
 
 	void init();
+	bool checkFitness(Particle* gbest);
 
 public:
 	Particle();
@@ -63,8 +64,6 @@ public:
 
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;
-
-	bool checkFitness(Particle* gbest);
 
 	void reinit();
 };

@@ -5,15 +5,26 @@
 
 using namespace std;
 
+void FCMPSOcounter::clear()
+{
+	delete hybridGbest;
+}
+
+FCMPSOcounter::~FCMPSOcounter()
+{
+	clear();
+}
+
 void FCMPSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P)
 {
+	clear();
 	PSOcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	PSOcounter::setMaxIterations(100);
 
 	FCMcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FCMcounter::setMaxIterations(100);
 
-	FuzzyData* hybridGbest = new FuzzyData(data, numberOfClusters, m);
+	hybridGbest = new FuzzyData(data, numberOfClusters, m);
 
 	PSOcounter::count(data, numberOfClusters, m, c1, c2, r1, r2, w, P);
 	hybridGbest->setMu(gbest->getMu());
@@ -57,8 +68,6 @@ void FCMPSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, 
 	
 	hybridGbest->printJm();
 	hybridGbest->centersPrint();
-
-	delete hybridGbest;
 }
 
 void FCMPSOcounter::setAlgorithmName(string name)
@@ -70,4 +79,9 @@ void FCMPSOcounter::setAlgorithmName(string name)
 void FCMPSOcounter::setNumberOfIterations(int number)
 {
 	iterationNumber = number;
+}
+
+const FuzzyData * FCMPSOcounter::getBest() const
+{
+	return hybridGbest;
 }

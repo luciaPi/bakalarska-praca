@@ -81,10 +81,7 @@ void PSOcounter::compute()
 {
 	for (int l = 0; l < P; l++) {
 		bool changeGbest = particles[l]->compute(gbest);
-		//cout << particles[l]->getJm() << " xx ";
-		//cout << particles[l]->getFitness() << endl;
 		if (changeGbest) {
-			//cout << "change" << endl;
 			gbest = particles[l];
 		}
 	}
@@ -189,7 +186,7 @@ bool PSOcounter::wasSignificantChange() const
 	return false;
 }
 
-const ParticleFuzzyData* PSOcounter::getBest() const
+const FuzzyData* PSOcounter::getBest() const
 {
 	return gbest;
 }

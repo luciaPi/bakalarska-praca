@@ -7,9 +7,9 @@
 void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM)
 {
 	clear();
-	counterData = new FuzzyData(parData, parNumberOfClusters, parM);
-	counterData->setName("FCM");
-	counterData->setAlgorithmName(nameAlg);
+	fuzzyData = new FuzzyData(parData, parNumberOfClusters, parM);
+	fuzzyData->setName("FCM");
+	fuzzyData->setAlgorithmName(nameAlg);
 }
 
 FCMcounter::~FCMcounter() {
@@ -29,10 +29,15 @@ void FCMcounter::count(FuzzyData * other)
 {
 	if (other != nullptr) {
 		setCounter(other->getData(),other->getNumberOfClusters(),other->getM());
-		counterData->setMu(other->getMu());
+		fuzzyData->setMu(other->getMu());
 		count();
 	}
-	other->setMu(counterData->getMu());
+	other->setMu(fuzzyData->getMu());
+}
+
+const FuzzyData * FCMcounter::getBest() const
+{
+	return fuzzyData;
 }
 
 void FCMcounter::count()
@@ -58,51 +63,51 @@ void FCMcounter::count()
 
 void FCMcounter::clear()
 {
-	delete counterData;
-	counterData = nullptr;
+	delete fuzzyData;
+	fuzzyData = nullptr;
 }
 
 double FCMcounter::getJm() const
 {
-	if (counterData) {
-		return counterData->getJm();
+	if (fuzzyData) {
+		return fuzzyData->getJm();
 	}
 	return -1;
 }
 
 void FCMcounter::printJm() const
 {
-	if (counterData) {
-		counterData->printJm();
+	if (fuzzyData) {
+		fuzzyData->printJm();
 	}
 }
 
 bool FCMcounter::wasSignificantChange() const
 {
-	return counterData->wasSignificantChange();
+	return fuzzyData->wasSignificantChange();
 }
 
 //vypis matice mu
 void FCMcounter::muPrint() const
 {
-	if (counterData) {
-		counterData->muPrint();
+	if (fuzzyData) {
+		fuzzyData->muPrint();
 	}
 }
 
 //vypocet matice mu
 void FCMcounter::computeMu()
 {
-	if (counterData) {
-		counterData->computeFromMu();
+	if (fuzzyData) {
+		fuzzyData->computeFromMu();
 	}
 }
 
 //vypis centier
 void FCMcounter::centersPrint() const
 {
-	if (counterData) {
-		counterData->centersPrint();
+	if (fuzzyData) {
+		fuzzyData->centersPrint();
 	}
 }
 
@@ -117,8 +122,8 @@ void FCMcounter::computeCenters()
 //vypis matice euklidovskej vzdialenosti
 void FCMcounter::dPrint() const
 {
-	if (counterData) {
-		counterData->dPrint();
+	if (fuzzyData) {
+		fuzzyData->dPrint();
 	}
 }
 
