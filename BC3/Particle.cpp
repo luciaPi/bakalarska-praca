@@ -97,14 +97,22 @@ bool Particle::checkFitness(Particle* gbest)
 		pbestFitness = newFitness;
 		setValues(X, pbest);
 		
-		//if (gbest != nullptr) {
+		if (gbest != nullptr) {
 		//cout << "change: old" << gbest->getFitness() << " new " << newFitness << endl;
 			if (newFitness > gbest->getFitness()) {				
 				return true;
 			}
-		//}
+		}
 	}
 	return false;
+}
+
+void Particle::reinit()
+{
+	for (int i = 0; i < size; i++) {
+		*(V + i) = (double)rand() / RAND_MAX * 2.0 - 1.0;
+	}
+	checkFitness(nullptr);
 }
 
 void Particle::computeV(const Particle* gbest)

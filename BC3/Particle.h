@@ -41,6 +41,8 @@ protected:
 	
 	void setStartingX();
 
+	void init();
+
 public:
 	Particle();
 	Particle(double c1,double c2, double r1, double r2, double w, int size);
@@ -62,7 +64,8 @@ public:
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;
 
-	void init();
 	bool checkFitness(Particle* gbest);
+
+	void reinit();
 };
 

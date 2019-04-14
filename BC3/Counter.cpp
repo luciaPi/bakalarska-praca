@@ -10,6 +10,7 @@
 #include "PSOcounter.h"
 #include "FCMPSOcounter.h"
 #include "FAcounter.h"
+#include "FAFCM.h"
 
 using namespace std;
 
@@ -40,19 +41,28 @@ void Counter::count(Algorithm alg, const char * name)
 	FCMcounter fcmCounter;
 	fcmCounter.setAlgorithmName("FCM");
 	fcmCounter.count(*data,numberOfClusters,m);
-	PSOcounter psoCounter;
+	fcmCounter.printJm();
+
+	/*PSOcounter psoCounter;
 	psoCounter.setAlgorithmName("PSO");
 	psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
 	psoCounter.count(*data,numberOfClusters,m,c1,c2,r1,r2,w,P);
+	psoCounter.printJm();*/
+
 	FCMPSOcounter fcmpso;
 	fcmpso.setAlgorithmName("FCM-PSO");
 	fcmpso.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, P);
-
+	
 	P = 20;
 
-	/*FAcounter faCounter;
+	FAcounter faCounter;
+	faCounter.setAlgorithmName("FA");
 	faCounter.setFinalCriterion(FinalCriterion::maxIteration);
-	faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, P);*/
+	faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, P);
+	
+	FAFCM fafcm;
+	fafcm.setAlgorithmName("FAFCM");
+	fafcm.count(*data, numberOfClusters, m, alpha, beta, gamma, P);
 }
 
 void Counter::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const

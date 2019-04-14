@@ -12,28 +12,62 @@ void FCMPSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, 
 
 	FCMcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FCMcounter::setMaxIterations(100);
-	
-	PSOcounter::count(data, numberOfClusters, m, c1, c2, r1, r2, w, P);
 
+	CounterData* hybridGbest = new CounterData(data, numberOfClusters, m);
+
+	PSOcounter::count(data, numberOfClusters, m, c1, c2, r1, r2, w, P);
+	hybridGbest->setMu(gbest->getMu());
+	int i = 0;
+	while (i++ < (iterationNumber - 1)) {
+		for (int l = 0; l < P; l++) {
+			FCMcounter::count(particles[l]);
+			particles[l]->reinit();
+			if (particles[l]->getFitness() > gbest->getFitness()) {
+				gbest = particles[l];
+			}
+			if (hybridGbest->getFitness() < particles[l]->getFitness()) {
+				hybridGbest->setMu(particles[l]->getMu());
+			}
+			particles[l]->muPrint();
+		}
+		PSOcounter::count();
+		if (hybridGbest->getFitness() < gbest->getFitness()) {
+			hybridGbest->setMu(gbest->getMu());
+		}
+		/*
+		PSOcounter::gbestPrint();
+		PSOcounter::printJm();
+		PSOcounter::pbestsPrint();
+		PSOcounter::particlesPbestJmPrint();*/
+	}
 	for (int l = 0; l < P; l++) {
 		FCMcounter::count(particles[l]);
-		particles[l]->Particle::init();
+		particles[l]->reinit();
 		if (particles[l]->getFitness() > gbest->getFitness()) {
 			gbest = particles[l];
+		}	
+		if (hybridGbest->getFitness() < particles[l]->getFitness()) {
+			hybridGbest->setMu(particles[l]->getMu());
 		}
-	}	
-	cout << endl;
-	cout << endl;
-	cout << endl;
-	PSOcounter::count();/*
-	PSOcounter::gbestPrint();
+	}
+	/*PSOcounter::gbestPrint();
 	PSOcounter::printJm();
 	PSOcounter::pbestsPrint();
 	PSOcounter::particlesPbestJmPrint();*/
+	
+	hybridGbest->printJm();
+	hybridGbest->centersPrint();
+
+	delete hybridGbest;
 }
 
 void FCMPSOcounter::setAlgorithmName(string name)
 {
 	PSOcounter::setAlgorithmName(name);
 	FCMcounter::setAlgorithmName(name);
+}
+
+void FCMPSOcounter::setNumberOfIterations(int number)
+{
+	iterationNumber = number;
 }

@@ -9,7 +9,6 @@ private:
 	int P;
 
 	FireflyCounterData** fireflies = nullptr;
-	FireflyCounterData* gbest = nullptr;
 	
 	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 	void removeFireflies();
@@ -29,6 +28,8 @@ private:
 public:
 	FAcounter() {};
 	~FAcounter();
+
+	FireflyCounterData* gbest = nullptr;
 
 	void count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 

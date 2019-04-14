@@ -57,10 +57,10 @@ void FireflyCounterData::setX(const FireflyCounterData & other)
 	recalculateFromMu();
 	fitness = setFitness();
 
-	muPrint();
+	/*muPrint();
 	other.muPrint();
 	centersPrint();
-	other.centersPrint();
+	other.centersPrint();*/
 }
 
 void FireflyCounterData::Xprint() const

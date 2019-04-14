@@ -139,6 +139,7 @@
     <ClCompile Include="CounterData.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="FAcounter.cpp" />
+    <ClCompile Include="FAFCM.cpp" />
     <ClCompile Include="FCMcounter.cpp" />
     <ClCompile Include="FCMPSOcounter.cpp" />
     <ClCompile Include="Firefly.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="CounterData.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FAcounter.h" />
+    <ClInclude Include="FAFCM.h" />
     <ClInclude Include="FCMcounter.h" />
     <ClInclude Include="FCMPSOcounter.h" />
     <ClInclude Include="Firefly.h" />

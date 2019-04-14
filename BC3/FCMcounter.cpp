@@ -49,11 +49,11 @@ void FCMcounter::count()
 		//muPrint();
 		//centersPrint();
 		//dPrint();
-		//printJm();
+		printJm();
 	} while (!isMetFinalCriterion(i++));
 	//muPrint();
-	centersPrint();
-	printJm();
+	//centersPrint();
+	//printJm();
 }
 
 void FCMcounter::clear()

@@ -57,6 +57,9 @@
     <ClCompile Include="FireflyConterData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FAFCM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FCMcounter.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FireflyConterData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FAFCM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

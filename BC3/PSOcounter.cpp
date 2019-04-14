@@ -33,14 +33,14 @@ void PSOcounter::count()
 {
 	//setV();
 
-		Vprint();
+		/*Vprint();
 		Xprint();
 		//dPrint();
 		pbestsPrint();
 		gbestPrint();
 		centersPrint();
 		printJm();
-		particlesJmPrint();
+		particlesJmPrint();*/
 
 	int i = 1;
 	do {
@@ -59,10 +59,10 @@ void PSOcounter::count()
 	//Vprint();
 	//Xprint();
 	//dPrint();			
-	gbestPrint();
+	/*gbestPrint();
 	printJm();
 	pbestsPrint();
-	particlesPbestJmPrint();
+	particlesPbestJmPrint();*/
 }
 
 void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w)
