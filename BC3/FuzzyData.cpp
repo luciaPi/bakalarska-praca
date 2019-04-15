@@ -157,8 +157,8 @@ void FuzzyData::muInit()
 		}
 		which++;
 	}*/
-
-	/*double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
+	/*
+	double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
 	int which = 0;
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -306,7 +306,7 @@ void FuzzyData::computeCenters()
 			}
 			values.push_back(sum1 / sum2);
 		}
-		*(oldCenters[j]) = *(centers[j]);
+		*oldCenters[j]=*centers[j];
 		centers[j]->setValues(values);
 		for (int i = 0; i < numberOfObjects; i++) {
 			for (int k = 0; k < numberOfCoordinates; k++) {
@@ -385,7 +385,6 @@ void FuzzyData::printJm() const
 {
 	cout << nameAlg << " - Jm " << name << " = ";
 	cout << getJm() << endl;
-	cout << endl;
 }
 
 double FuzzyData::getFitness() const
@@ -421,11 +420,14 @@ const double ** FuzzyData::getMu() const
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna
-bool FuzzyData::wasSignificantChange() const
+bool FuzzyData::wasSignificantChange(double pminchange) const
 {
+	if (pminchange <= 0) {
+		pminchange = minChange;
+	}
 	for (int j = 0; j < numberOfClusters; j++) {
 		for (int k = 0; k < numberOfCoordinates; k++) {
-			if ((abs(oldCenters[j]->getValue(k) - centers[j]->getValue(k))) > minChange) {
+			if ((abs(oldCenters[j]->getValue(k) - centers[j]->getValue(k))) > pminchange) {
 				return true;
 			}
 		}

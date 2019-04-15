@@ -6,11 +6,8 @@
 class FAcounter : public Counter
 {
 private:
-	int P;
-
 	FireflyFuzzyData** fireflies = nullptr;
 	
-	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 	void removeFireflies();
 	void firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma);
 	
@@ -22,6 +19,9 @@ private:
 
 	void compute();
 	void rankFireflies();
+
+protected:
+	int P;
 	bool wasSignificantChange() const override;
 
 public:
@@ -30,11 +30,14 @@ public:
 
 	FireflyFuzzyData* gbest = nullptr;
 
+	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
+
 	void count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
 
 	const FuzzyData* getBest() const;
 
 	double getJm() const override;
 	void printJm() const override;
+	void recount() override;
 };
 

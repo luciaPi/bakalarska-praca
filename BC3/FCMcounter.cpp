@@ -29,6 +29,7 @@ void FCMcounter::count(FuzzyData * other)
 {
 	if (other != nullptr) {
 		setCounter(other->getData(),other->getNumberOfClusters(),other->getM());
+		other->muPrint();
 		fuzzyData->setMu(other->getMu());
 		count();
 	}
@@ -43,18 +44,18 @@ const FuzzyData * FCMcounter::getBest() const
 void FCMcounter::count()
 {
 	//muPrint();
-	//centersPrint();
-	//dPrint();
+	/*centersPrint();
+	dPrint();*/
 
 	int i = 0;
 	do {
 		//cout << "Round" << i << endl;
 		computeMu();
 
-		//muPrint();
-		//centersPrint();
-		//dPrint();
-		printJm();
+		/*muPrint();
+		centersPrint();
+		dPrint();*/
+		//FCMcounter::printJm();
 	} while (!isMetFinalCriterion(i++));
 	//muPrint();
 	//centersPrint();
@@ -82,9 +83,19 @@ void FCMcounter::printJm() const
 	}
 }
 
+void FCMcounter::recount()
+{
+	if (fuzzyData != nullptr) {
+		if ((fuzzyData->getData()).getSize() > 0) {
+			setCounter(fuzzyData->getData(), fuzzyData->getNumberOfClusters(), fuzzyData->getM());
+			count();
+		}
+	}
+}
+
 bool FCMcounter::wasSignificantChange() const
 {
-	return fuzzyData->wasSignificantChange();
+	return fuzzyData->wasSignificantChange(minChange);
 }
 
 //vypis matice mu

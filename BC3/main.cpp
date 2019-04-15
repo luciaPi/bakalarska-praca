@@ -2,6 +2,7 @@
 #include <vector>
 #include "Application.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -12,16 +13,22 @@ int main() {
 	//const char* fileName = "glass_csv.csv";
 	//const char* fileName = "wine.data";
 
+	//string fileName = "";
+	//getline(cin, fileName);
+	int numberOfIteration = 35;
+	//cin >> numberOfIteration;
 
 	Application counter;
 	counter.setNumberOfClusters(3);
+	//counter.setData(fileName.c_str());
 	counter.setData(fileName);
 
-	counter.count(Algorithm::fcm);
-	counter.count(Algorithm::pso);
-	counter.count(Algorithm::fcmpso);
-	counter.count(Algorithm::fa);
-	counter.count(Algorithm::fafcm);
+	counter.setNumberOfReplications(numberOfIteration);
+	counter.count(Algorithm::fcm,100);
+	//counter.count(Algorithm::pso,100);
+	//counter.count(Algorithm::fcmpso,3);
+	//counter.count(Algorithm::fa,20);
+	//counter.count(Algorithm::fafcm,1);
 		
 	/*char* title = "Iris Plants Database";
 	char* creator = "Lucia Piatrikova";

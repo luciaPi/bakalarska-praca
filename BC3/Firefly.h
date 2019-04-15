@@ -57,6 +57,10 @@ public:
 	virtual std::string getAlgorithmName() const = 0;
 	double getFireflyFitness() const;
 
+	double getAlpha() const;
+	double getBeta() const;
+	double getGamma() const;
+
 	//void setCenters(vector<Object> newCenters);
 };
 

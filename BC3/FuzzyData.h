@@ -77,6 +77,6 @@ public:
 	int getNumberOfClusters() const;
 	const double** getMu() const;
 
-	bool wasSignificantChange() const;
+	bool wasSignificantChange(double minchange) const;
 };
 

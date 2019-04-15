@@ -11,7 +11,6 @@ class FCMcounter : public Counter
 private:
 	FuzzyData* fuzzyData = nullptr;
 	
-	void setCounter(Dataset data, int numberOfClusters, int m);
 	void clear();
 
 	void muPrint() const;
@@ -20,8 +19,10 @@ private:
 	void centersPrint() const;
 	void dPrint() const;
 
-	bool wasSignificantChange() const override;
 	void count();
+
+protected:
+	bool wasSignificantChange() const override;
 
 	//void computeD();	
 	//void computeCenters();
@@ -32,6 +33,8 @@ private:
 public:
 	FCMcounter() {};
 	~FCMcounter();
+
+	void setCounter(Dataset data, int numberOfClusters, int m);
 	
 	void count(const Dataset data, int numberOfClusters, int m);
 	void count(FuzzyData* other);
@@ -40,5 +43,6 @@ public:
 
 	double getJm() const override;
 	void printJm() const override;
+	virtual void recount() override;
 };
 

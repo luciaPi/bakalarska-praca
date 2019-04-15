@@ -6,6 +6,7 @@ using namespace std;
 Object & Object::operator=(const Object & other)
 {
 	numberOfCoordinates = other.numberOfCoordinates;
+	values.clear();
 	for (double cur : other.values) {
 		values.push_back(cur);
 	}
@@ -24,9 +25,9 @@ void Object::setValue(int which, double newValue) {
 }
 
 //vrati vektor suradnic
-/*vector<double> Object::getValues() {
+vector<double> Object::getValues() {
 	return values;
-}*/
+}
 
 //vrati konkretnu suradnicu
 double Object::getValue(int which) const {

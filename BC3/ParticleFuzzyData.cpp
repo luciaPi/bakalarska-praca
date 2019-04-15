@@ -16,7 +16,7 @@ void ParticleFuzzyData::pbestPrint() const
 
 void ParticleFuzzyData::pbestJmPrint() const
 {
-	cout << nameAlg << " - " << "Pbest Jm " << name << ":" << K/pbestFitness << endl;
+	cout << nameAlg << " - Jm " << name << ":" << K/pbestFitness << endl;
 }
 
 void ParticleFuzzyData::Xprint() const

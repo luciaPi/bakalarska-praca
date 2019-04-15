@@ -157,6 +157,21 @@ double Firefly::getFireflyFitness() const
 	return fitness;
 }
 
+double Firefly::getAlpha() const
+{
+	return alpha;
+}
+
+double Firefly::getBeta() const
+{
+	return beta;
+}
+
+double Firefly::getGamma() const
+{
+	return gamma;
+}
+
 void Firefly::setX(const Firefly & other)
 {
 	for (int i = 0; i < size; i++) {

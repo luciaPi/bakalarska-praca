@@ -6,10 +6,7 @@
 
 class PSOcounter : public Counter
 {
-private:	
-	int P;
-	
-	void setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);
+private:		
 	void removeParticles();
 	void particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w);
 	
@@ -17,11 +14,14 @@ private:
 				
 	void setV(); //dat prec potom
 	
-	bool wasSignificantChange() const override;
-
 protected:
 	ParticleFuzzyData** particles = nullptr;
 	ParticleFuzzyData* gbest = nullptr;
+	int P;
+
+	void count();
+
+	bool wasSignificantChange() const override;
 
 	void Xprint() const;
 	void Vprint() const;
@@ -37,7 +37,9 @@ public:
 	~PSOcounter();
 
 	void count(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);	
-	void count();
+	void recount();
+
+	void setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P);
 
 	const FuzzyData* getBest() const;
 		

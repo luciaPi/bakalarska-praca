@@ -35,10 +35,12 @@ void Application::count(Algorithm alg, int numberOfItertion)
 		switch (alg) {
 			case Algorithm::fcm: {
 				FCMcounter fcmCounter;
+				fcmCounter.setFinalCriterion(FinalCriterion::minChange);
 				fcmCounter.setAlgorithmName("FCM");
 				fcmCounter.setMaxIterations(numberOfItertion);
-				fcmCounter.count(*data, numberOfClusters, m);
-				fcmCounter.printJm();
+
+				fcmCounter.setCounter(*data, numberOfClusters, m);
+				count(&fcmCounter);
 				break;
 			}
 			case Algorithm::pso: {
@@ -46,29 +48,35 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				psoCounter.setAlgorithmName("PSO");
 				psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
 				psoCounter.setMaxIterations(numberOfItertion);
-				psoCounter.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
-				psoCounter.printJm();
+
+				psoCounter.setCounter(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
+				count(&psoCounter);
 				break;
 			}	
 			case Algorithm::fcmpso: {
-				FCMPSOcounter fcmpso;
-				fcmpso.setAlgorithmName("FCM-PSO");
-				fcmpso.setNumberOfIterations(numberOfItertion);
-				fcmpso.count(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
-				break;
+				FCMPSOcounter fcmpsoCounter;
+				fcmpsoCounter.setAlgorithmName("FCM-PSO");
+				fcmpsoCounter.setNumberOfIterations(numberOfItertion);
+
+				fcmpsoCounter.setCounter(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
+				count(&fcmpsoCounter);
 			}
 			case Algorithm::fa: {
 				FAcounter faCounter;
 				faCounter.setAlgorithmName("FA");
 				faCounter.setMaxIterations(numberOfItertion);
 				faCounter.setFinalCriterion(FinalCriterion::maxIteration);
-				faCounter.count(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
+
+				faCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
+				count(&faCounter);
 				break;
 			}
 			case Algorithm::fafcm: {
-				FAFCMcounter fafcm;
-				fafcm.setAlgorithmName("FAFCM");
-				fafcm.count(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
+				FAFCMcounter fafcmCounter;
+				fafcmCounter.setAlgorithmName("FAFCM");
+
+				fafcmCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
+				count(&fafcmCounter);
 				break;
 			}
 		}	
@@ -123,7 +131,7 @@ bool Application::setData(const char* fileName)
 {
 	FILE* datafile;
 	if ((datafile = fopen(fileName, "r")) == NULL) {
-		//cout << "CHYBA" << endl;
+		cout << "CHYBA" << endl;
 		return false;
 	}
 	else {
@@ -194,6 +202,15 @@ bool Application::setNumberOfClusters(int number)
 	return false;
 }
 
+bool Application::setNumberOfReplications(int number)
+{
+	if (number > 0) {
+		numberOfReplications = number;
+		return true;
+	}
+	return false;
+}
+
 //vypis vstupnych dat
 void Application::dataObjectsPrint() const
 {
@@ -209,4 +226,23 @@ void Application::dataObjectsPrint() const
 			cout << endl;
 		}
 	}
+}
+
+void Application::count(Counter * counter)
+{
+	double sum = 0;
+	double sumSquared = 0;
+	for (int i = 0; i < numberOfReplications; i++) {
+		counter->recount();
+		counter->printJm();
+		sum += counter->getJm();
+		sumSquared += pow(counter->getJm(),2);
+	}
+	double average = sum / numberOfReplications;
+	cout << counter->getAlgorithmName() << " - Stredna hodnota: " << average << endl;
+	double s = sqrt(abs((sumSquared/(numberOfReplications -1))-pow(sum/(numberOfReplications -1),2)));
+	double t = 1.96;
+	double interval = (s * t) / sqrt(numberOfReplications);
+	cout << counter->getAlgorithmName() << " - Interval spolahlivosti: " << average << " +- " << interval << endl;
+	cout << endl;
 }

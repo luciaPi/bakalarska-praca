@@ -11,7 +11,7 @@ private:
 	double r2 = -1;
 	double w = 1;
 
-	const double maxV = 0.005; //0.0001 10000iteracii
+	const double maxV = 0.0001; //0.0001 10000iteracii
 	
 	void pbestInit();
 	void VInit();
@@ -64,6 +64,12 @@ public:
 
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;
+
+	double getC1() const;
+	double getC2() const;
+	double getR1() const;
+	double getR2() const;
+	double getW() const;
 
 	void reinit();
 };

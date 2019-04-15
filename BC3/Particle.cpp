@@ -124,6 +124,7 @@ void Particle::computeV(const Particle* gbest)
 	}*/
 	for (int i = 0; i < size; i++) {
 		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - **(X + i)) + c2 * r2*(gbest->getXValue(i) - **(X + i));
+		//double xx = *(V + i);
 		if (*(V + i) > maxV) {
 			*(V + i) = maxV;
 		}
@@ -261,4 +262,29 @@ void Particle::setV(double par[])
 	for (int i = 0; i < size; i++) {
 		*(V+i) = par[i];
 	}
+}
+
+double Particle::getC1() const
+{
+	return c1;
+}
+
+double Particle::getC2() const
+{
+	return c2;
+}
+
+double Particle::getR1() const
+{
+	return r1;
+}
+
+double Particle::getR2() const
+{
+	return r2;
+}
+
+double Particle::getW() const
+{
+	return w;
 }

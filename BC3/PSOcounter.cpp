@@ -29,6 +29,14 @@ void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, dou
 	}
 }
 
+void PSOcounter::recount()
+{
+	if (gbest) {
+		setCounter(gbest->getData(), gbest->getNumberOfClusters(), gbest->getM(), gbest->getC1(), gbest->getC2(), gbest->getR1(), gbest->getR2(), gbest->getW(), P);
+		count();
+	}
+}
+
 void PSOcounter::count()
 {
 	//setV();
@@ -38,9 +46,9 @@ void PSOcounter::count()
 		//dPrint();
 		pbestsPrint();
 		gbestPrint();
-		centersPrint();
-		printJm();
-		particlesJmPrint();*/
+		centersPrint();*/
+		//printJm();
+		//particlesJmPrint();*/
 
 	int i = 1;
 	do {
@@ -50,9 +58,9 @@ void PSOcounter::count()
 		Xprint();
 		dPrint();
 		pbestsPrint();
-		gbestPrint();
-		centersPrint();*/
-		//printJm();
+		gbestPrint();*/
+		//centersPrint();
+		//PSOcounter::printJm();
 		//particlesPbestJmPrint();
 		//particlesJmPrint();
 	} while (!isMetFinalCriterion(i++));
@@ -179,7 +187,7 @@ void PSOcounter::setK(int K)
 bool PSOcounter::wasSignificantChange() const
 {
 	for (int l = 0; l < P; l++) {
-		if (particles[l]->wasSignificantChange()) {
+		if (particles[l]->wasSignificantChange(minChange)) {
 			return true;
 		}
 	}

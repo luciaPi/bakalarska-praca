@@ -45,7 +45,7 @@ void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, 
 			//XPrint();
 			//firefliesJmPrint();
 			//gbestPrint();
-			printJm();
+			//printJm();
 		} while (!isMetFinalCriterion(i++));
 		/*firefliesJmPrint();
 		gbestPrint();
@@ -57,7 +57,7 @@ void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, 
 bool FAcounter::wasSignificantChange() const
 {
 	for (int l = 0; l < P; l++) {
-		if (fireflies[l]->wasSignificantChange()) {
+		if (fireflies[l]->wasSignificantChange(minChange)) {
 			return true;
 		}
 	}
@@ -77,6 +77,13 @@ double FAcounter::getJm() const
 void FAcounter::printJm() const
 {
 	gbest->printJm();
+}
+
+void FAcounter::recount()
+{
+	if (fireflies != nullptr) {
+		count(fireflies[0]->getData(), fireflies[0]->getNumberOfClusters(), fireflies[0]->getM(), fireflies[0]->getAlpha(), fireflies[0]->getBeta(), fireflies[0]->getGamma(), P);
+	}
 }
 
 void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma)

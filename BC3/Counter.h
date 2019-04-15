@@ -6,11 +6,12 @@ enum class FinalCriterion { minChange, maxIteration, both };
 class Counter
 {	
 private:
-	double minChange = 0.0001;
 	int maxIteration = 100;
 	FinalCriterion finalCriterion = FinalCriterion::both;
 
 protected:
+	double minChange = 0.0001;
+
 	std::string nameAlg = "Algorithm";
 
 	bool isMetFinalCriterion(int actualIterationNumber) const;
@@ -25,8 +26,10 @@ public:
 	void setFinalCriterion(FinalCriterion fc);
 
 	void setAlgorithmName(std::string name);
+	std::string getAlgorithmName() const;
 
 	virtual double getJm() const = 0;
 	virtual void printJm() const = 0;
+	virtual void recount() = 0;
 };
 

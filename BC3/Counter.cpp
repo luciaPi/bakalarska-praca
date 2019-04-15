@@ -1,4 +1,5 @@
 #include "Counter.h"
+#include <iostream>
 
 using namespace std;
 
@@ -32,3 +33,9 @@ void Counter::setAlgorithmName(string pname)
 {
 	nameAlg = pname;
 }
+
+string Counter::getAlgorithmName() const
+{
+	return nameAlg;
+}
+
