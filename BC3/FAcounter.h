@@ -10,6 +10,7 @@ private:
 	RandomGenerator muGenerator;
 	RandomGenerator randMovementGenerator;
 	RandomGenerator randMovementFirstGenerator;
+	RandomGenerator centersGenerator;
 
 	FireflyFuzzyData** fireflies = nullptr;
 	
@@ -31,7 +32,7 @@ protected:
 
 public:
 	FAcounter();
-	FAcounter(int seed1, int seed2, int seed3);
+	FAcounter(int seed1, int seed2, int seed3, int seed4);
 	~FAcounter();
 
 	FireflyFuzzyData* gbest = nullptr;

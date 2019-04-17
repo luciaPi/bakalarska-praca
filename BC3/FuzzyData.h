@@ -10,6 +10,7 @@ class FuzzyData
 {
 private:
 	double minChange = 0.0001;
+	int p = 3;
 	
 	Object** oldCenters = nullptr;
 	double** d = nullptr;
@@ -26,7 +27,13 @@ private:
 	void computeCenters();
 	void computeMu();
 	void computeD();
+	void computeDFor(int start, int end);
+	double sumDFor(int end) const;
+	double getLowestDistance(int whichObject, int whichMax) const;
 	void normalizeMu();
+
+	void randomMuInit();
+	void plusplusInit();
 	
 protected:
 	int m = 1;
@@ -36,6 +43,7 @@ protected:
 	string nameAlg = "Algorithm";
 
 	RandomGenerator* muGenerator;
+	RandomGenerator* centersGenerator;
 
 	int numberOfObjects = 0;
 	int numberOfCoordinates = 0;
@@ -54,7 +62,7 @@ public:
 	FuzzyData();
 	FuzzyData(int numberOfClusters);
 	FuzzyData(Dataset data);
-	FuzzyData(Dataset data, int numberOfClusters, int m, int K, RandomGenerator* generator, MuInitializationMode muInitMode);
+	FuzzyData(Dataset data, int numberOfClusters, int m, int K, RandomGenerator* mugenerator, RandomGenerator* centersgenerator, MuInitializationMode muInitMode);
 	~FuzzyData();
 
 	void setNumberOfClusters(int number);

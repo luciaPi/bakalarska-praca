@@ -18,13 +18,15 @@ FAcounter::FAcounter()
 	muGenerator = RandomGenerator(rand(), 0, 1);
 	randMovementGenerator = RandomGenerator(rand(), 0, 1);
 	randMovementFirstGenerator = RandomGenerator(rand(), 0, INT_MAX);
+	centersGenerator = RandomGenerator(rand(), 0, INT_MAX);
 }
 
-FAcounter::FAcounter(int seed1, int seed2, int seed3)
+FAcounter::FAcounter(int seed1, int seed2, int seed3, int seed4)
 {
 	muGenerator = RandomGenerator(seed1, 0, 1);	
 	randMovementGenerator = RandomGenerator(seed2, 0, 1);
 	randMovementFirstGenerator = RandomGenerator(seed3, 0, INT_MAX);
+	centersGenerator = RandomGenerator(seed4, 0, INT_MAX);
 }
 
 FAcounter::~FAcounter()
@@ -104,13 +106,13 @@ void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double 
 {
 	fireflies = new FireflyFuzzyData*[P];
 	for (int l = 0; l < P; l++) {
-		fireflies[l] = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma, K,&muGenerator, &randMovementGenerator, &randMovementFirstGenerator, muInitMode);
+		fireflies[l] = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma, K,&muGenerator, &centersGenerator, &randMovementGenerator, &randMovementFirstGenerator, muInitMode);
 		char name[8];
 		snprintf(name, sizeof(name), "FA%d", (l + 1));
 		fireflies[l]->setName(name);
 		fireflies[l]->setAlgorithmName(nameAlg);
 	}
-	gbest = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma,K, &muGenerator, &randMovementGenerator, &randMovementFirstGenerator, muInitMode);
+	gbest = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma,K, &muGenerator,&centersGenerator, &randMovementGenerator, &randMovementFirstGenerator, muInitMode);
 	gbest->setAlgorithmName(nameAlg);
 	gbest->setName("FA BEST");
 }

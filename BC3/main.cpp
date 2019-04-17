@@ -8,16 +8,16 @@
 using namespace std;
 
 int main() {		
-	const char* fileName = "vysky.txt";
+	//const char* fileName = "vysky.txt";
 	//const char* fileName = "fcmexample.txt";
 	//const char* fileName = "iris.data";
 	//const char* fileName = "parkinsons.data";
-	//const char* fileName = "glass_csv.csv";
+	const char* fileName = "glass_csv.csv";
 	//const char* fileName = "wine.data";
 
 	//string fileName = "";
 	//getline(cin, fileName);
-	int numberOfReplication = 5;
+	int numberOfReplication = 1;
 	//cin >> numberOfIteration;
 	
 	/*std::random_device rd;
@@ -34,6 +34,8 @@ int main() {
 	counter.setNumberOfClusters(3);
 	//counter.setData(fileName.c_str());
 	counter.setData(fileName);
+
+	counter.setMuInitializationMode(MuInitializationMode::fcmPlusPlus);
 
 	counter.setNumberOfReplications(numberOfReplication);
 	counter.count(Algorithm::fcm,100);

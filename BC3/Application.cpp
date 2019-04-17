@@ -41,7 +41,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 
 		switch (alg) {
 			case Algorithm::fcm: {
-				FCMcounter fcmCounter(rd());
+				FCMcounter fcmCounter(rd(),rd());
 				fcmCounter.setFinalCriterion(FinalCriterion::minChange);
 				fcmCounter.setAlgorithmName("FCM");
 				fcmCounter.setMaxIterations(numberOfItertion);
@@ -51,7 +51,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				break;
 			}
 			case Algorithm::pso: {
-				PSOcounter psoCounter(rd(), rd());
+				PSOcounter psoCounter(rd(), rd(), rd());
 				psoCounter.setAlgorithmName("PSO");
 				psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
 				psoCounter.setMaxIterations(numberOfItertion);				
@@ -61,7 +61,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				break;
 			}	
 			case Algorithm::fcmpso: {
-				FCMPSOcounter fcmpsoCounter(rd(), rd(), rd());
+				FCMPSOcounter fcmpsoCounter(rd(), rd(), rd(),rd(), rd());
 				fcmpsoCounter.setAlgorithmName("FCM-PSO");
 				fcmpsoCounter.setNumberOfIterations(numberOfItertion);
 
@@ -70,7 +70,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				break;
 			}
 			case Algorithm::fa: {
-				FAcounter faCounter(rd(), rd(), rd());
+				FAcounter faCounter(rd(), rd(), rd(), rd());
 				faCounter.setAlgorithmName("FA");
 				faCounter.setMaxIterations(numberOfItertion);
 				faCounter.setFinalCriterion(FinalCriterion::maxIteration);
@@ -80,7 +80,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				break;
 			}
 			case Algorithm::fafcm: {
-				FAFCMcounter fafcmCounter(rd(), rd(), rd(), rd());
+				FAFCMcounter fafcmCounter(rd(), rd(), rd(), rd(),rd(), rd());
 				fafcmCounter.setAlgorithmName("FAFCM");
 
 				fafcmCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa, K, muInitMode);
@@ -89,6 +89,12 @@ void Application::count(Algorithm alg, int numberOfItertion)
 			}
 		}	
 	}
+}
+
+bool Application::setMuInitializationMode(MuInitializationMode mode)
+{
+	muInitMode = mode;
+	return true;
 }
 
 void Application::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const

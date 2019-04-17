@@ -20,12 +20,14 @@ PSOcounter::PSOcounter()
 {
 	Vgenerator = RandomGenerator(rand(), -1, 1);
 	muGenerator = RandomGenerator(rand(), 0, 1);
+	centersGenerator = RandomGenerator(rand(), 0, INT_MAX);
 }
 
-PSOcounter::PSOcounter(int seed1, int seed2)
+PSOcounter::PSOcounter(int seed1, int seed2, int seed3)
 {
 	Vgenerator = RandomGenerator(seed1,-1,1);
 	muGenerator = RandomGenerator(seed2,0,1);
+	centersGenerator = RandomGenerator(seed3,0,INT_MAX);
 }
 
 PSOcounter::~PSOcounter()
@@ -89,7 +91,7 @@ void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double
 {
 	particles = new ParticleFuzzyData*[P];
 	for (int l = 0; l < P; l++) {
-		particles[l] = new ParticleFuzzyData(data, numberOfClusters, m, c1, c2, r1, r2, w,K,&muGenerator, &Vgenerator,muInitMode);
+		particles[l] = new ParticleFuzzyData(data, numberOfClusters, m, c1, c2, r1, r2, w,K,&muGenerator, &centersGenerator, &Vgenerator,muInitMode);
 		char name[8];
 		snprintf(name,sizeof(name),"PSO%d", (l + 1));
 		particles[l]->setName(name);

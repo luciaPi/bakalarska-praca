@@ -23,6 +23,8 @@ public:
 
 	int getNumberOfCoordinates() const;
 
+	void addToValues(double number);
+
 	//void setName(const char pname[]);
 	//string getName();	
 };

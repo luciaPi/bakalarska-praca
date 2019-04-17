@@ -23,7 +23,7 @@ void FCMPSOcounter::setCounter(Dataset data, int numberOfClusters, int m, double
 	FCMcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FCMcounter::setMaxIterations(100);
 
-	hybridGbest = new FuzzyData(data, numberOfClusters, m,K, &(FCMcounter::muGenerator),muInitMode);
+	hybridGbest = new FuzzyData(data, numberOfClusters, m,K, &(FCMcounter::muGenerator), &(FCMcounter::centersGenerator),muInitMode);
 	hybridGbest->setAlgorithmName(Counter::nameAlg);
 	hybridGbest->setName("Best");
 

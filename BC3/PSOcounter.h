@@ -17,6 +17,7 @@ private:
 
 	RandomGenerator Vgenerator;
 	RandomGenerator muGenerator;
+	RandomGenerator centersGenerator;
 	
 protected:
 	ParticleFuzzyData** particles = nullptr;
@@ -38,7 +39,7 @@ protected:
 
 public:
 	PSOcounter();
-	PSOcounter(int seed1, int seed2);
+	PSOcounter(int seed1, int seed2, int seed3);
 	~PSOcounter();
 
 	void count(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P, int K, MuInitializationMode muInitMode);

@@ -58,6 +58,13 @@ int Object::getNumberOfCoordinates() const
 	return numberOfCoordinates;
 }
 
+void Object::addToValues(double number)
+{
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		values[i]+=number;
+	}
+}
+
 void Object::printValues() const
 {
 	for (double cur : values) {

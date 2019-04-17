@@ -23,6 +23,7 @@ private:
 
 protected:
 	RandomGenerator muGenerator;
+	RandomGenerator centersGenerator;
 
 	bool wasSignificantChange() const override;
 
@@ -34,7 +35,7 @@ protected:
 
 public:
 	FCMcounter();
-	FCMcounter(int seed);
+	FCMcounter(int seed1, int seed2);
 	~FCMcounter();
 
 	void setCounter(Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);

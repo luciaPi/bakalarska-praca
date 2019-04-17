@@ -22,10 +22,11 @@ FuzzyData::FuzzyData(Dataset pardata)
 	init();
 }
 
-FuzzyData::FuzzyData(Dataset pardata, int parnumberOfClusters, int parM, int parK, RandomGenerator* generator, MuInitializationMode parmuInitMode)
+FuzzyData::FuzzyData(Dataset pardata, int parnumberOfClusters, int parM, int parK, RandomGenerator* parmugenerator, RandomGenerator* parcentersGenerator,MuInitializationMode parmuInitMode)
 {
 	K = parK;
-	muGenerator = generator;
+	muGenerator = parmugenerator;
+	centersGenerator = parcentersGenerator;
 	muInitMode = parmuInitMode;
 	data = pardata;
 	if (parnumberOfClusters > 0) {
@@ -91,10 +92,10 @@ void FuzzyData::init()
 	else {
 		numberOfCoordinates = 0;
 	}
-	
-	muInit();
+
 	centersInit();
 	dInit();
+	muInit();
 
 	recalculateFromMu();
 }
@@ -144,12 +145,13 @@ void FuzzyData::muInit()
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
 		mu[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = muGenerator->nextRandom();			
-		}
 	}
-	normalizeMu();
-
+	if (muInitMode == MuInitializationMode::fcmPlusPlus) {
+		plusplusInit();
+	}
+	else {
+		randomMuInit();
+	}
 	/*int which = 0;
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -220,6 +222,49 @@ void FuzzyData::normalizeMu()
 		for (int j = 0; j < numberOfClusters; j++) {
 			mu[i][j] = mu[i][j] / rowSum;
 		}
+	}
+}
+
+void FuzzyData::randomMuInit()
+{
+	for (int i = 0; i < numberOfObjects; i++) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			mu[i][j] = muGenerator->nextRandom();
+		}
+	}
+	normalizeMu();
+}
+
+void FuzzyData::plusplusInit()
+{	
+	if (numberOfClusters > 0) {
+		int which = ((centersGenerator->nextRandom() / centersGenerator->getMax()) * numberOfObjects);
+		centers[0]->setValues(data[which].getValues());
+		centers[0]->addToValues(minChange*0.1);
+		int initCenters = 1;
+		int i = 0;
+		computeDFor(initCenters - 1, initCenters);
+		double sum = sumDFor(initCenters);
+		//centersPrint();
+		while (initCenters < numberOfClusters) {	
+			//dPrint();
+			double prob = pow(getLowestDistance(i++ % numberOfObjects,initCenters),p)/sum;
+			double randomProb = ((centersGenerator->nextRandom() / centersGenerator->getMax()));
+			//cout << randomProb << "prob randomprob " << prob << endl;
+			if (randomProb < prob) {
+				centers[initCenters]->setValues(data[(i - 1) % numberOfObjects].getValues());
+				centers[initCenters]->addToValues(minChange*0.1);
+				initCenters++;
+				computeDFor(initCenters - 1, initCenters);
+				sum = sumDFor(initCenters);				
+			}
+			//centersPrint();
+			//dPrint();
+		} cout << i << endl;
+
+		computeD();
+		computeMu();
+		//dPrint();
 	}
 }
 
@@ -339,6 +384,9 @@ void FuzzyData::dInit()
 	d = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
 		d[i] = new double[numberOfClusters];
+		for (int j = 0; j < numberOfClusters; j++) {
+			d[i][j] = INT_MAX;
+		}
 	}
 }
 
@@ -376,7 +424,6 @@ void FuzzyData::computeD()
 		for (int j = 0; j < numberOfClusters; j++) {
 			double sum = 0;
 			for (int k = 0; k < numberOfCoordinates; k++) {
-			//for (int k = 0; k < 1; k++) {
 				double coordinate1 = data[i].getValue(k);
 				double coordinate2 = centers[j]->getValue(k);
 				sum += pow(coordinate1 - coordinate2, 2);
@@ -384,6 +431,48 @@ void FuzzyData::computeD()
 			d[i][j] = sqrt(sum);
 		}
 	}
+}
+
+void FuzzyData::computeDFor(int start, int end)
+{
+	if (start >= 0 && end <= numberOfClusters) {
+		for (int i = 0; i < numberOfObjects; i++) {
+			for (int j = start; j < end; j++) {
+				double sum = 0;
+				for (int k = 0; k < numberOfCoordinates; k++) {
+					double coordinate1 = data[i].getValue(k);
+					double coordinate2 = centers[j]->getValue(k);
+					sum += pow(coordinate1 - coordinate2, 2);
+				}
+				d[i][j] = sqrt(sum);
+			}
+		}
+	}
+}
+
+double FuzzyData::sumDFor(int end) const
+{
+	double sum = 0;
+	for (int j = 0; j < end; j++) {
+		for (int i = 0; i < numberOfObjects; i++) {
+			if (d[i][j] > 0) {
+				sum += pow(d[i][j], p);
+			}
+		}
+	}
+	return sum;
+}
+
+double FuzzyData::getLowestDistance(int whichObject, int whichMax) const
+{
+	double min = INT_MAX;
+	for (int j = 0; j < whichMax; j++) {
+		if (min>d[whichObject][j]) {
+			min = d[whichObject][j];
+		}
+	}
+	//cout << min << endl;
+	return min;
 }
 
 double FuzzyData::getJm() const

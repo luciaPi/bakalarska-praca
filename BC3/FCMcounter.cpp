@@ -7,7 +7,7 @@
 void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM, int K, MuInitializationMode muInitMode)
 {
 	clear();
-	fuzzyData = new FuzzyData(parData, parNumberOfClusters, parM, K, &muGenerator, muInitMode);
+	fuzzyData = new FuzzyData(parData, parNumberOfClusters, parM, K, &muGenerator,&centersGenerator, muInitMode);
 	fuzzyData->setName("FCM");
 	fuzzyData->setAlgorithmName(nameAlg);
 }
@@ -15,11 +15,13 @@ void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM, 
 FCMcounter::FCMcounter()
 {
 	muGenerator = RandomGenerator(rand(), 0, 1);
+	centersGenerator = RandomGenerator(rand(), 0, INT_MAX);
 }
 
-FCMcounter::FCMcounter(int seed)
+FCMcounter::FCMcounter(int seed1, int seed2)
 {
-	muGenerator = RandomGenerator(seed, 0, 1);
+	muGenerator = RandomGenerator(seed1, 0, 1);
+	centersGenerator = RandomGenerator(seed2, 0, INT_MAX);
 }
 
 FCMcounter::~FCMcounter() {
