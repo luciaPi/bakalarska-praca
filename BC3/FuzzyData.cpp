@@ -22,8 +22,11 @@ FuzzyData::FuzzyData(Dataset pardata)
 	init();
 }
 
-FuzzyData::FuzzyData(Dataset pardata, int parnumberOfClusters, int parM)
+FuzzyData::FuzzyData(Dataset pardata, int parnumberOfClusters, int parM, int parK, RandomGenerator* generator, MuInitializationMode parmuInitMode)
 {
+	K = parK;
+	muGenerator = generator;
+	muInitMode = parmuInitMode;
 	data = pardata;
 	if (parnumberOfClusters > 0) {
 		numberOfClusters = parnumberOfClusters;
@@ -77,6 +80,9 @@ void FuzzyData::setMinChange(double parminChange)
 
 void FuzzyData::init()
 {
+	if (muGenerator == nullptr) {
+		throw exception();
+	}
 	clear();
 	numberOfObjects = data.getSize();
 	if (numberOfObjects > 0) {
@@ -139,7 +145,7 @@ void FuzzyData::muInit()
 	for (int i = 0; i < numberOfObjects; i++) {
 		mu[i] = new double[numberOfClusters];
 		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = (double)rand() / RAND_MAX;;
+			mu[i][j] = muGenerator->nextRandom();			
 		}
 	}
 	normalizeMu();
@@ -159,6 +165,16 @@ void FuzzyData::muInit()
 	}*/
 	/*
 	double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
+	int which = 0;
+	mu = new double*[numberOfObjects];
+	for (int i = 0; i < numberOfObjects; i++) {
+		mu[i] = new double[numberOfClusters];
+		for (int j = 0; j < numberOfClusters; j++) {
+			mu[i][j] = values[which];
+			which++;
+		}
+	}*/
+	/*double values[] = { 0.8, 0.2, 0.9, 0.1,0.7,0.3,0.3,0.7,0.5,0.5,0.2,0.8 };
 	int which = 0;
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -417,6 +433,16 @@ int FuzzyData::getNumberOfClusters() const
 const double ** FuzzyData::getMu() const
 {
 	return (const double **)mu;
+}
+
+MuInitializationMode FuzzyData::getMuInitMode() const
+{
+	return muInitMode;
+}
+
+int FuzzyData::getK() const
+{
+	return K;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna

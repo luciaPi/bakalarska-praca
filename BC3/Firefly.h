@@ -1,11 +1,15 @@
 #pragma once
 #include "Object.h"
 #include "Dataset.h"
+#include "RandomGenerator.h"
 
 class Firefly
 {
 private:
-	double alpha = -1;
+	RandomGenerator* randMovementGenerator;
+	RandomGenerator* randMovementFirstGenerator;
+
+	double alpha = 0.5;
 	double beta = 1;
 	double gamma = 1;
 				
@@ -38,7 +42,7 @@ protected:
 
 public:
 	Firefly();
-	Firefly(double alpha, double beta, double gamma, int size);
+	Firefly(double alpha, double beta, double gamma, int size, RandomGenerator* randMovementGenerator, RandomGenerator* randMovementFirstGenerator);
 	~Firefly();
 
 	void Xprint() const;

@@ -1,17 +1,20 @@
 #pragma once
 //#include "ParticleCounterData.h"
 #include <string>
+#include "RandomGenerator.h"
 
 class Particle 
 {
 private:
 	double c1 = 1;
 	double c2 = 1;
-	double r1 = -1;
-	double r2 = -1;
+	double r1 = 0.5;
+	double r2 = 0.5;
 	double w = 1;
 
 	const double maxV = 0.0001; //0.0001 10000iteracii
+
+	RandomGenerator* Vgenerator = nullptr;
 	
 	void pbestInit();
 	void VInit();
@@ -46,7 +49,7 @@ protected:
 
 public:
 	Particle();
-	Particle(double c1,double c2, double r1, double r2, double w, int size);
+	Particle(double c1,double c2, double r1, double r2, double w, int size, RandomGenerator* Vgenerator);
 	~Particle();
 
 	void Vprint() const;	

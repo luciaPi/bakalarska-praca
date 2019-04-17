@@ -9,9 +9,12 @@ private:
 
 public:
 	FAFCMcounter() {};
+	FAFCMcounter(int seed1, int seed2, int seed3, int seed4) :
+		FAcounter(seed2, seed3, seed4),
+		FCMcounter(seed1) {};
 	~FAFCMcounter() {};
 
-	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P);
+	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P, int K, MuInitializationMode muInitMode);
 		
 	void recount();
 

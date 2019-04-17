@@ -1,5 +1,4 @@
 #include "FCMPSOcounter.h"
-#include "FCMcounter.h"
 #include "PSOcounter.h"
 #include <iostream>
 
@@ -15,7 +14,7 @@ FCMPSOcounter::~FCMPSOcounter()
 	clear();
 }
 
-void FCMPSOcounter::setCounter(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P)
+void FCMPSOcounter::setCounter(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P, int K, MuInitializationMode muInitMode)
 {
 	clear();
 	PSOcounter::setFinalCriterion(FinalCriterion::maxIteration);
@@ -24,11 +23,11 @@ void FCMPSOcounter::setCounter(Dataset data, int numberOfClusters, int m, double
 	FCMcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FCMcounter::setMaxIterations(100);
 
-	hybridGbest = new FuzzyData(data, numberOfClusters, m);
+	hybridGbest = new FuzzyData(data, numberOfClusters, m,K, &(FCMcounter::muGenerator),muInitMode);
 	hybridGbest->setAlgorithmName(Counter::nameAlg);
 	hybridGbest->setName("Best");
 
-	PSOcounter::setCounter(data, numberOfClusters, m, c1, c2, r1, r2, w, P);
+	PSOcounter::setCounter(data, numberOfClusters, m, c1, c2, r1, r2, w, P,K,muInitMode);
 }
 
 void FCMPSOcounter::recount()

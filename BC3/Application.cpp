@@ -16,7 +16,8 @@ using namespace std;
 
 Application::Application()
 {
-	srand(time(NULL));
+	srand(time(0));
+	parameterGenerator = RandomGenerator(rd(), 0, 1);
 }
 
 Application::~Application()
@@ -27,55 +28,62 @@ Application::~Application()
 
 void Application::count(Algorithm alg, int numberOfItertion)
 {
+	if (alpha < 0) {
+		alpha = parameterGenerator.nextRandom();
+	}
+	if (r1 < 0) {
+		r1 = parameterGenerator.nextRandom();
+	}
+	if (r2 < 0) {
+		r2 = parameterGenerator.nextRandom();
+	}
 	if (data != nullptr && numberOfClusters > 0 && numberOfItertion > 0) {
-		r1 = (double)rand() / RAND_MAX;
-		r2 = (double)rand() / RAND_MAX;		
-		alpha = (double)rand() / RAND_MAX;
 
 		switch (alg) {
 			case Algorithm::fcm: {
-				FCMcounter fcmCounter;
+				FCMcounter fcmCounter(rd());
 				fcmCounter.setFinalCriterion(FinalCriterion::minChange);
 				fcmCounter.setAlgorithmName("FCM");
 				fcmCounter.setMaxIterations(numberOfItertion);
 
-				fcmCounter.setCounter(*data, numberOfClusters, m);
+				fcmCounter.setCounter(*data, numberOfClusters, m, K, muInitMode);
 				count(&fcmCounter);
 				break;
 			}
 			case Algorithm::pso: {
-				PSOcounter psoCounter;
+				PSOcounter psoCounter(rd(), rd());
 				psoCounter.setAlgorithmName("PSO");
 				psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
-				psoCounter.setMaxIterations(numberOfItertion);
+				psoCounter.setMaxIterations(numberOfItertion);				
 
-				psoCounter.setCounter(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
+				psoCounter.setCounter(*data, numberOfClusters, m,c1, c2, r1, r2, w, Ppso, K, muInitMode);
 				count(&psoCounter);
 				break;
 			}	
 			case Algorithm::fcmpso: {
-				FCMPSOcounter fcmpsoCounter;
+				FCMPSOcounter fcmpsoCounter(rd(), rd(), rd());
 				fcmpsoCounter.setAlgorithmName("FCM-PSO");
 				fcmpsoCounter.setNumberOfIterations(numberOfItertion);
 
-				fcmpsoCounter.setCounter(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso);
+				fcmpsoCounter.setCounter(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso, K, muInitMode);
 				count(&fcmpsoCounter);
+				break;
 			}
 			case Algorithm::fa: {
-				FAcounter faCounter;
+				FAcounter faCounter(rd(), rd(), rd());
 				faCounter.setAlgorithmName("FA");
 				faCounter.setMaxIterations(numberOfItertion);
 				faCounter.setFinalCriterion(FinalCriterion::maxIteration);
 
-				faCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
+				faCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa, K, muInitMode);
 				count(&faCounter);
 				break;
 			}
 			case Algorithm::fafcm: {
-				FAFCMcounter fafcmCounter;
+				FAFCMcounter fafcmCounter(rd(), rd(), rd(), rd());
 				fafcmCounter.setAlgorithmName("FAFCM");
 
-				fafcmCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa);
+				fafcmCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa, K, muInitMode);
 				count(&fafcmCounter);
 				break;
 			}
@@ -211,6 +219,25 @@ bool Application::setNumberOfReplications(int number)
 	return false;
 }
 
+bool Application::setConfidenceInterval(int value)
+{
+	switch (value) {
+		case 95: {
+			actualT = t95;
+			return true;
+		}
+		case 99: {
+			actualT = t99;
+			return true;
+		}
+		case 90: {
+			actualT = t90;
+			return true;
+		}
+	}
+	return false;
+}
+
 //vypis vstupnych dat
 void Application::dataObjectsPrint() const
 {
@@ -240,9 +267,10 @@ void Application::count(Counter * counter)
 	}
 	double average = sum / numberOfReplications;
 	cout << counter->getAlgorithmName() << " - Stredna hodnota: " << average << endl;
-	double s = sqrt(abs((sumSquared/(numberOfReplications -1))-pow(sum/(numberOfReplications -1),2)));
-	double t = 1.96;
-	double interval = (s * t) / sqrt(numberOfReplications);
-	cout << counter->getAlgorithmName() << " - Interval spolahlivosti: " << average << " +- " << interval << endl;
+	if (numberOfReplications >= 30) {
+		double s = sqrt(abs((sumSquared / (numberOfReplications - 1)) - pow(sum / (numberOfReplications - 1), 2)));
+		double interval = (s * actualT) / sqrt(numberOfReplications);
+		cout << counter->getAlgorithmName() << " - Interval spolahlivosti: " << average << " +- " << interval << endl;
+	}
 	cout << endl;
 }

@@ -6,11 +6,13 @@ using namespace std;
 
 Particle::Particle()
 {
-	init();
+	init();	
 }
 
-Particle::Particle(double parc1, double parc2, double parr1, double parr2, double parw, int psize)	
+Particle::Particle(double parc1, double parc2, double parr1, double parr2, double parw, int psize, RandomGenerator* pargenerator)	
 {
+	Vgenerator = pargenerator;
+	
 	if (parw >= 0) {
 		w = parw;
 	}
@@ -23,8 +25,14 @@ Particle::Particle(double parc1, double parc2, double parr1, double parr2, doubl
 	if (parr1 <= 1 && parr1 >= 0) {
 		r1 = parr1;
 	}
+	else {
+		r1 = 0.5;
+	}
 	if (parr2 <= 1 && parr2 >= 0) {
 		r2 = parr2;
+	}
+	else {
+		r2 = 0.5;
 	}
 	if (psize > 0) {
 		size = psize;
@@ -39,6 +47,9 @@ Particle::~Particle()
 
 void Particle::init()
 {
+	if (Vgenerator == nullptr) {
+		throw exception();
+	}
 	bool first = true;
 	if (X != nullptr) {
 		first = false;
@@ -48,12 +59,6 @@ void Particle::init()
 	VInit();
 	Xinit();
 
-	if (r1 < 0) {
-		r1 = (double)rand() / RAND_MAX;
-	}
-	if (r2 < 0) {
-		r2 = (double)rand() / RAND_MAX;
-	}	
 	if (!first) {
 		setStartingX();
 	}
@@ -81,7 +86,7 @@ void Particle::VInit()
 {
 	V = new double[size];
 	for (int i = 0; i < size; i++) {
-		*(V+i) = (double)rand() / RAND_MAX * 2.0 - 1.0;
+		*(V + i) = Vgenerator->nextRandom();
 	}
 }
 
@@ -109,7 +114,7 @@ bool Particle::checkFitness(Particle* gbest)
 void Particle::reinit()
 {
 	for (int i = 0; i < size; i++) {
-		*(V + i) = (double)rand() / RAND_MAX * 2.0 - 1.0;
+		*(V + i) = Vgenerator->nextRandom();
 	}
 	checkFitness(nullptr);
 }

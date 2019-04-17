@@ -120,8 +120,7 @@ void ParticleFuzzyData::normalize()
 		if (count == numberOfClusters) {
 			for (int j = 0; j < numberOfClusters; j++) {
 				if (mu[i][j] < 0) {
-					mu[i][j] = rand() / RAND_MAX;
-					count++;
+					mu[i][j] = muGenerator->nextRandom();
 				}
 			}
 		}

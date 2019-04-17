@@ -17,10 +17,10 @@ public:
 	FireflyFuzzyData() {};
 	FireflyFuzzyData(int numberOfClusters) : FuzzyData(numberOfClusters) {};
 	FireflyFuzzyData(Dataset data) : FuzzyData(data) {};
-	FireflyFuzzyData(Dataset data, int numberOfClusters, int m) : FuzzyData(data, numberOfClusters, m) {};
-	FireflyFuzzyData(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma) :
-		FuzzyData(data, numberOfClusters, m),
-		Firefly(alpha,beta,gamma, data[0].getNumberOfCoordinates()*numberOfClusters)
+	FireflyFuzzyData(Dataset data, int numberOfClusters, int m,int K, RandomGenerator* mugenerator, MuInitializationMode muInitMode) : FuzzyData(data, numberOfClusters, m, K, mugenerator,muInitMode) {};
+	FireflyFuzzyData(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int K, RandomGenerator* mugenerator, RandomGenerator* randMovementGenerator, RandomGenerator* randMovementFirstGenerator, MuInitializationMode muInitMode) :
+		FuzzyData(data, numberOfClusters, m, K, mugenerator, muInitMode),
+		Firefly(alpha,beta,gamma, data[0].getNumberOfCoordinates()*numberOfClusters, randMovementGenerator, randMovementFirstGenerator)
 	{
 		setStartingX();
 	};

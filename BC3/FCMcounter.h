@@ -22,6 +22,8 @@ private:
 	void count();
 
 protected:
+	RandomGenerator muGenerator;
+
 	bool wasSignificantChange() const override;
 
 	//void computeD();	
@@ -31,12 +33,13 @@ protected:
 	//int whichNumberOfObject(const Object &object) const;
 
 public:
-	FCMcounter() {};
+	FCMcounter();
+	FCMcounter(int seed);
 	~FCMcounter();
 
-	void setCounter(Dataset data, int numberOfClusters, int m);
+	void setCounter(Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);
 	
-	void count(const Dataset data, int numberOfClusters, int m);
+	void count(const Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);
 	void count(FuzzyData* other);
 
 	const FuzzyData* getBest() const;

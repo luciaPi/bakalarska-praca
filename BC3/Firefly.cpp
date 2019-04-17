@@ -7,6 +7,9 @@ using namespace std;
 
 void Firefly::init()
 {
+	if (randMovementGenerator == nullptr || randMovementFirstGenerator == nullptr) {
+		throw exception();
+	}
 	bool first = true;
 	if (X != nullptr) {
 		first = false;
@@ -15,9 +18,6 @@ void Firefly::init()
 	XInit();
 	minmaxInit();
 
-	if (alpha < 0) {
-		alpha = (double)rand() / RAND_MAX;
-	}
 	if (!first) {
 		setStartingX();
 	}
@@ -42,8 +42,11 @@ Firefly::Firefly()
 	init();
 }
 
-Firefly::Firefly(double palpha, double pbeta, double pgamma, int psize)
+Firefly::Firefly(double palpha, double pbeta, double pgamma, int psize, RandomGenerator* parrandMovementGenerator, RandomGenerator* parrandMovementFirstGenerator)
 {
+	randMovementGenerator = parrandMovementGenerator;
+	randMovementFirstGenerator = parrandMovementFirstGenerator;
+
 	if (palpha >= 0 && alpha <= 1) {
 		alpha = palpha;
 	}
@@ -91,7 +94,7 @@ bool Firefly::move(const Firefly* other)
 		//cout << getName() << " to " << other->getName() << endl;
 		if (betaMove > 0) {
 			for (int i = 0; i < size; i++) {
-				double randNumber = (double)rand() / RAND_MAX;
+				double randNumber = randMovementGenerator->nextRandom();
 				double coordinateDistance = **(other->X + i) - **(X + i);
 				double newValue = **(X + i) + betaMove * coordinateDistance + alpha * (randNumber - 0.5);
 				if (newValue < minValues[i]) {
@@ -117,7 +120,7 @@ bool Firefly::move(const Firefly* other)
 void Firefly::moveRandomly()
 {
 	for (int i = 0; i < size; i++) {
-		**(X+i) = (double)rand() / RAND_MAX * (maxValues[i]-minValues[i])+minValues[i];
+		**(X + i) = randMovementFirstGenerator->nextRandom() / randMovementFirstGenerator->getMax() * (maxValues[i] - minValues[i]) + minValues[i];
 	}
 	normalize();
 	fitness = setFitness();
@@ -125,7 +128,7 @@ void Firefly::moveRandomly()
 
 void Firefly::setAlpha(double palpha)
 {
-	if (palpha >= 0) {
+	if (palpha >= 0 && alpha <= 1) {
 		alpha = palpha;
 	}
 }

@@ -5,12 +5,26 @@
 
 using namespace std;
 
-void FAcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP)
+void FAcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP, int K, MuInitializationMode muInitMode)
 {
 	removeFireflies();
 	P = parP;
 
-	firefliesInit(pdata, numberOfClusters, m, alpha, beta, gamma);
+	firefliesInit(pdata, numberOfClusters, m, alpha, beta, gamma, K, muInitMode);
+}
+
+FAcounter::FAcounter()
+{
+	muGenerator = RandomGenerator(rand(), 0, 1);
+	randMovementGenerator = RandomGenerator(rand(), 0, 1);
+	randMovementFirstGenerator = RandomGenerator(rand(), 0, INT_MAX);
+}
+
+FAcounter::FAcounter(int seed1, int seed2, int seed3)
+{
+	muGenerator = RandomGenerator(seed1, 0, 1);	
+	randMovementGenerator = RandomGenerator(seed2, 0, 1);
+	randMovementFirstGenerator = RandomGenerator(seed3, 0, INT_MAX);
 }
 
 FAcounter::~FAcounter()
@@ -18,10 +32,10 @@ FAcounter::~FAcounter()
 	removeFireflies();	
 }
 
-void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP)
+void FAcounter::count(Dataset pdata, int numberOfClusters, int m, double alpha, double beta, double gamma, int parP, int K, MuInitializationMode muInitMode)
 {
 	if (pdata.getSize() > 0) {
-		setCounter(pdata, numberOfClusters, m, alpha, beta, gamma, parP);
+		setCounter(pdata, numberOfClusters, m, alpha, beta, gamma, parP, K, muInitMode);
 		
 		//fireflies[0]->printMinMax();
 
@@ -82,21 +96,21 @@ void FAcounter::printJm() const
 void FAcounter::recount()
 {
 	if (fireflies != nullptr) {
-		count(fireflies[0]->getData(), fireflies[0]->getNumberOfClusters(), fireflies[0]->getM(), fireflies[0]->getAlpha(), fireflies[0]->getBeta(), fireflies[0]->getGamma(), P);
+		count(fireflies[0]->getData(), fireflies[0]->getNumberOfClusters(), fireflies[0]->getM(), fireflies[0]->getAlpha(), fireflies[0]->getBeta(), fireflies[0]->getGamma(), P, fireflies[0]->getK(), fireflies[0]->getMuInitMode());
 	}
 }
 
-void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma)
+void FAcounter::firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int K, MuInitializationMode muInitMode)
 {
 	fireflies = new FireflyFuzzyData*[P];
 	for (int l = 0; l < P; l++) {
-		fireflies[l] = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma);
+		fireflies[l] = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma, K,&muGenerator, &randMovementGenerator, &randMovementFirstGenerator, muInitMode);
 		char name[8];
 		snprintf(name, sizeof(name), "FA%d", (l + 1));
 		fireflies[l]->setName(name);
 		fireflies[l]->setAlgorithmName(nameAlg);
 	}
-	gbest = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma);
+	gbest = new FireflyFuzzyData(data, numberOfClusters, m, alpha, beta, gamma,K, &muGenerator, &randMovementGenerator, &randMovementFirstGenerator, muInitMode);
 	gbest->setAlgorithmName(nameAlg);
 	gbest->setName("FA BEST");
 }

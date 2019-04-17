@@ -1,6 +1,6 @@
 #include "FAFCMcounter.h"
 
-void FAFCMcounter::setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P)
+void FAFCMcounter::setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P, int K, MuInitializationMode muInitMode)
 {
 	FAcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FAcounter::setMaxIterations(20);
@@ -8,8 +8,8 @@ void FAFCMcounter::setCounter(Dataset data, int numberOfClusters, int m, double 
 	FCMcounter::setFinalCriterion(FinalCriterion::maxIteration);
 	FCMcounter::setMaxIterations(20);
 
-	FAcounter::setCounter(data, numberOfClusters, m, alpha, beta, gamma, P);
-	FCMcounter::setCounter(data, numberOfClusters, m);
+	FAcounter::setCounter(data, numberOfClusters, m, alpha, beta, gamma, P,K, muInitMode);
+	FCMcounter::setCounter(data, numberOfClusters, m,K,muInitMode);
 }
 
 void FAFCMcounter::count()

@@ -5,15 +5,27 @@
 
 using namespace std;
 
-void PSOcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int parP)
+void PSOcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int parP, int K, MuInitializationMode muInitMode)
 {
 	removeParticles();
 	P = parP;
 
-	particlesInit(pdata, numberOfClusters, m, c1, c2, r1, r2, w);
+	particlesInit(pdata, numberOfClusters, m, c1, c2, r1, r2, w, K, muInitMode);
 	if (P > 0) {
 		gbest = particles[0];
 	}
+}
+
+PSOcounter::PSOcounter()
+{
+	Vgenerator = RandomGenerator(rand(), -1, 1);
+	muGenerator = RandomGenerator(rand(), 0, 1);
+}
+
+PSOcounter::PSOcounter(int seed1, int seed2)
+{
+	Vgenerator = RandomGenerator(seed1,-1,1);
+	muGenerator = RandomGenerator(seed2,0,1);
 }
 
 PSOcounter::~PSOcounter()
@@ -21,10 +33,10 @@ PSOcounter::~PSOcounter()
 	removeParticles();	
 }
 
-void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int parP)
+void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int parP, int K, MuInitializationMode muInitMode)
 {
 	if (data.getSize() > 0) {
-		setCounter(data, numberOfClusters, m, c1, c2, r1, r2, w, parP);
+		setCounter(data, numberOfClusters, m, c1, c2, r1, r2, w, parP, K,muInitMode);
 		count();
 	}
 }
@@ -32,7 +44,7 @@ void PSOcounter::count(Dataset data, int numberOfClusters, int m, double c1, dou
 void PSOcounter::recount()
 {
 	if (gbest) {
-		setCounter(gbest->getData(), gbest->getNumberOfClusters(), gbest->getM(), gbest->getC1(), gbest->getC2(), gbest->getR1(), gbest->getR2(), gbest->getW(), P);
+		setCounter(gbest->getData(), gbest->getNumberOfClusters(), gbest->getM(), gbest->getC1(), gbest->getC2(), gbest->getR1(), gbest->getR2(), gbest->getW(), P,gbest->getK(),gbest->getMuInitMode());
 		count();
 	}
 }
@@ -54,8 +66,8 @@ void PSOcounter::count()
 	do {
 		//cout << "Round" << i << endl;	
 		compute();
-		/*Vprint();
-		Xprint();
+		//Vprint();
+		/*Xprint();
 		dPrint();
 		pbestsPrint();
 		gbestPrint();*/
@@ -73,11 +85,11 @@ void PSOcounter::count()
 	particlesPbestJmPrint();*/
 }
 
-void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w)
+void PSOcounter::particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int K, MuInitializationMode muInitMode)
 {
 	particles = new ParticleFuzzyData*[P];
 	for (int l = 0; l < P; l++) {
-		particles[l] = new ParticleFuzzyData(data, numberOfClusters, m, c1, c2, r1, r2, w);
+		particles[l] = new ParticleFuzzyData(data, numberOfClusters, m, c1, c2, r1, r2, w,K,&muGenerator, &Vgenerator,muInitMode);
 		char name[8];
 		snprintf(name,sizeof(name),"PSO%d", (l + 1));
 		particles[l]->setName(name);

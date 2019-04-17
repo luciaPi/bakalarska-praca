@@ -4,12 +4,22 @@
 #include <ctime>
 #include "Attribute.h"
 
-void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM)
+void FCMcounter::setCounter(Dataset parData, int parNumberOfClusters, int parM, int K, MuInitializationMode muInitMode)
 {
 	clear();
-	fuzzyData = new FuzzyData(parData, parNumberOfClusters, parM);
+	fuzzyData = new FuzzyData(parData, parNumberOfClusters, parM, K, &muGenerator, muInitMode);
 	fuzzyData->setName("FCM");
 	fuzzyData->setAlgorithmName(nameAlg);
+}
+
+FCMcounter::FCMcounter()
+{
+	muGenerator = RandomGenerator(rand(), 0, 1);
+}
+
+FCMcounter::FCMcounter(int seed)
+{
+	muGenerator = RandomGenerator(seed, 0, 1);
 }
 
 FCMcounter::~FCMcounter() {
@@ -17,10 +27,10 @@ FCMcounter::~FCMcounter() {
 }
 
 //kroky algoritmu
-void FCMcounter::count(const Dataset data, int numberOfClusters, int m)
+void FCMcounter::count(const Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode)
 {	
 	if (data.getSize() > 0) {
-		setCounter(data, numberOfClusters, m);		
+		setCounter(data, numberOfClusters, m, K, muInitMode);		
 		count();
 	}	
 }
@@ -28,8 +38,7 @@ void FCMcounter::count(const Dataset data, int numberOfClusters, int m)
 void FCMcounter::count(FuzzyData * other)
 {
 	if (other != nullptr) {
-		setCounter(other->getData(),other->getNumberOfClusters(),other->getM());
-		other->muPrint();
+		setCounter(other->getData(),other->getNumberOfClusters(),other->getM(), other->getK(),other->getMuInitMode());
 		fuzzyData->setMu(other->getMu());
 		count();
 	}
@@ -43,8 +52,8 @@ const FuzzyData * FCMcounter::getBest() const
 
 void FCMcounter::count()
 {
-	//muPrint();
-	/*centersPrint();
+	/*muPrint();
+	centersPrint();
 	dPrint();*/
 
 	int i = 0;
@@ -87,7 +96,7 @@ void FCMcounter::recount()
 {
 	if (fuzzyData != nullptr) {
 		if ((fuzzyData->getData()).getSize() > 0) {
-			setCounter(fuzzyData->getData(), fuzzyData->getNumberOfClusters(), fuzzyData->getM());
+			setCounter(fuzzyData->getData(), fuzzyData->getNumberOfClusters(), fuzzyData->getM(), fuzzyData->getK(),fuzzyData->getMuInitMode());
 			count();
 		}
 	}

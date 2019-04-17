@@ -2,6 +2,9 @@
 #include "Object.h"
 #include "Dataset.h"
 #include <string>
+#include "RandomGenerator.h"
+
+enum class MuInitializationMode { random, fcmPlusPlus };
 
 class FuzzyData
 {
@@ -10,6 +13,8 @@ private:
 	
 	Object** oldCenters = nullptr;
 	double** d = nullptr;
+
+	MuInitializationMode muInitMode = MuInitializationMode::random;
 
 	void init();
 	void clear();
@@ -30,6 +35,8 @@ protected:
 	string name = "Data";
 	string nameAlg = "Algorithm";
 
+	RandomGenerator* muGenerator;
+
 	int numberOfObjects = 0;
 	int numberOfCoordinates = 0;
 	int numberOfClusters = 0;
@@ -47,7 +54,7 @@ public:
 	FuzzyData();
 	FuzzyData(int numberOfClusters);
 	FuzzyData(Dataset data);
-	FuzzyData(Dataset data, int numberOfClusters, int m);
+	FuzzyData(Dataset data, int numberOfClusters, int m, int K, RandomGenerator* generator, MuInitializationMode muInitMode);
 	~FuzzyData();
 
 	void setNumberOfClusters(int number);
@@ -76,6 +83,8 @@ public:
 	int getM() const;
 	int getNumberOfClusters() const;
 	const double** getMu() const;
+	MuInitializationMode getMuInitMode() const;
+	int getK() const;
 
 	bool wasSignificantChange(double minchange) const;
 };
