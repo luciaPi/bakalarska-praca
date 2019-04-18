@@ -260,8 +260,7 @@ void FuzzyData::plusplusInit()
 			}
 			//centersPrint();
 			//dPrint();
-		} cout << i << endl;
-
+		}
 		computeD();
 		computeMu();
 		//dPrint();
@@ -272,6 +271,8 @@ void FuzzyData::recalculateFromMu()
 {
 	computeCenters();
 	computeD();
+	//centersPrint();
+	//dPrint();
 }
 
 void FuzzyData::recalculateFromCenters()
@@ -532,6 +533,11 @@ MuInitializationMode FuzzyData::getMuInitMode() const
 int FuzzyData::getK() const
 {
 	return K;
+}
+
+const Object** FuzzyData::getCenters() const
+{
+	return (const Object**)centers;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna

@@ -93,6 +93,7 @@ public:
 	const double** getMu() const;
 	MuInitializationMode getMuInitMode() const;
 	int getK() const;
+	const Object** getCenters() const;
 
 	bool wasSignificantChange(double minchange) const;
 };

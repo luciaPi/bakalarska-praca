@@ -44,14 +44,14 @@ double *Object::getPointerValue(int which)
 }
 
 //nastavi  nazov zhluku
-/*void Object::setName(const char pname[]) {
+void Object::setName(string pname) {
 	name = pname;
-}*/
+}
 
 //vrati nazov zhluku
-/*string Object::getName() {
+string Object::getName() {
 	return name;
-}*/
+}
 
 int Object::getNumberOfCoordinates() const
 {

@@ -43,8 +43,7 @@ public:
 	void count(const Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);
 	void count(FuzzyData* other);
 
-	const FuzzyData* getBest() const;
-
+	const FuzzyData* getBest() const override;
 	double getJm() const override;
 	void printJm() const override;
 	virtual void recount() override;

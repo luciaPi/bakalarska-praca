@@ -48,3 +48,8 @@ void FAFCMcounter::printJm() const
 {
 	return FAcounter::printJm();
 }
+
+const FuzzyData * FAFCMcounter::getBest() const
+{
+	return FAcounter::getBest();
+}

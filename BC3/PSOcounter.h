@@ -47,7 +47,7 @@ public:
 
 	void setCounter(Dataset pdata, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int P, int K, MuInitializationMode muInitMode);
 
-	const FuzzyData* getBest() const;
+	const FuzzyData* getBest() const override;
 		
 	double getJm() const override;
 	void printJm() const override;

@@ -1,8 +1,10 @@
 #include "Application.h"
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <ctime>
 #include <string>
+#include <sstream>
 #include <vector>
 #include "Object.h"
 #include "Attribute.h"
@@ -97,51 +99,199 @@ bool Application::setMuInitializationMode(MuInitializationMode mode)
 	return true;
 }
 
-void Application::saveOutputToArff(const char * filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const
+void Application::saveOutputToArff(const FuzzyData* fuzzyData, const char * filename, char* title, vector<Attribute*> attributes) const
 {
 	FILE* datafile;
-	if ((datafile = fopen(filename, "w")) == NULL) {
+	if ((datafile = fopen(filename, "w")) == NULL && data != nullptr) {
 		cout << "CHYBA" << endl;
 	}
 	else {
 		char* titles[] = {
-		"1. Title",
-		"2. Sources",
-		"(a) Creator",
-		"(b) Donor",
-		"(c) Date",
+		"Title",
+		"Centers",
 		"@RELATION",
 		"@ATTRIBUTE",
 		"@DATA"
 		};
-		char shape = '%';
+		char comment = '%';
 		time_t now = time(0);
 		tm* date = localtime(&now);
 
-		int which = 0;
-		fprintf(datafile, "%c %s: ", shape, titles[which++]);
-		fprintf(datafile, "%s\n%c\n", title, shape);
-		fprintf(datafile, "%c %s:\n", shape, titles[which++]);
-		fprintf(datafile, "%c\t%s: %s\n", shape, titles[which++], creator);
-		fprintf(datafile, "%c\t%s: %s\n", shape, titles[which++], donor);
-		fprintf(datafile, "%c\t%s: %d\-%d-%d\n", shape, titles[which++], date->tm_mday, date->tm_mon, date->tm_year + 1900);
-		fprintf(datafile, "%c\n\n", shape);
-		fprintf(datafile, "%s %s\n\n", titles[which++], relation);
-
-
-		for (int i = 0; i < attributes.size(); i++) {
-			const char* actual = attributes[i]->getName();
-			fprintf(datafile, "%s %s ", titles[which], attributes[i]->getName());
-			fprintf(datafile, "%s\n", attributes[i]->getTypes());
+		vector<string> clusters;
+		for (int j = 0; j < numberOfClusters; j++) {
+			clusters.push_back("Zhluk"+to_string(j));
 		}
+
+		//title
+		int which = 0;
+		fprintf(datafile, "%c %s: ", comment, titles[which++]);
+		fprintf(datafile, "%s\n%c\n", title, comment);
+		//centers
+		fprintf(datafile, "%c %s:\n", comment, titles[which++]);
+
+		const Object** centers = fuzzyData->getCenters();
+		for (int j = 0; j < numberOfClusters; j++) {
+			fprintf(datafile, "%c \t", comment);
+			for (int k = 0; k < (*data)[0].getNumberOfCoordinates(); k++) {
+				fprintf(datafile, "%f ", centers[j]->getValue(k));
+			}
+			fprintf(datafile, "\n", comment);
+		}		
+		//fprintf(datafile, "%c\t%s: %d\-%d-%d\n", comment, titles[which++], date->tm_mday, date->tm_mon, date->tm_year + 1900);
+		fprintf(datafile, "%c\n\n", comment);
+		fprintf(datafile, "%s\n\n", titles[which++]);
+
+		//attributes
+		for (int i = 0; i < attributes.size(); i++) {
+			string actual = attributes[i]->getName();
+			fprintf(datafile, "%s %s \t REAL\n", titles[which], actual.c_str());
+		}
+		//mu
+		fprintf(datafile, "%s MU \t FUZZY {", titles[which]);
+		for (string actual : clusters) {
+			if (actual != clusters[0]) {
+				fprintf(datafile, ", ");
+			}
+			fprintf(datafile, "%s", actual.c_str());
+		}
+		fprintf(datafile, "}\n");
+		//class
+		fprintf(datafile, "%s class \t {", titles[which]);
+		for (string actual : clusters) {
+			if (actual != clusters[0]) {
+				fprintf(datafile, ", ");
+			}
+			fprintf(datafile, "%s", actual.c_str());
+		}
+		fprintf(datafile, "}\n");		
+		//data
+		const double** mu = fuzzyData->getMu();
 		fprintf(datafile, "\n%s\n", titles[++which]);
+		for (int i = 0; i < data->getSize(); i++) {
+			for (int k = 0; k < (*data)[i].getNumberOfCoordinates(); k++) {
+				fprintf(datafile, "%.2f, ", (*data)[i].getValue(k));
+			}
+			for (int j = 0; j < numberOfClusters; j++) {
+				fprintf(datafile, "%f, ", mu[i][j]);
+			}
+			fprintf(datafile, "%s\n", ((*data)[i].getName()).c_str());
+		}
 
 		fclose(datafile);
 	}
 }
 
-//nacitanie vstupnych dat
+void Application::saveArff(const FuzzyData* fuzzyData)
+{
+	char* title = "Iris";
+
+	/*vector<string> type;
+	type.push_back("numeric");
+	vector<string> type2;
+	type2.push_back("Iris - setosa");
+	type2.push_back("Iris - versicolor");
+	type2.push_back("Iris - virginica");*/
+	vector<Attribute*> attributes;
+	/*attributes[0].setValues("sepallength", type);
+	attributes[1].setValues("sepalwidth", type);
+	attributes[2].setValues("petallength", type);
+	attributes[3].setValues("petalwidth", type);
+	attributes[4].setValues("class", type2);*/
+	/*attributes.push_back(new Attribute("sepallength"));
+	attributes.push_back(new Attribute("sepalwidth"));
+	attributes.push_back(new Attribute("petallength"));
+	attributes.push_back(new Attribute("petalwidth"));*/
+	for (int k = 0; k < (*data)[0].getNumberOfCoordinates(); k++) {
+		attributes.push_back(new Attribute("Attribute"+to_string(k)));
+	}
+
+	saveOutputToArff(fuzzyData,"wine.txt", title, attributes);
+
+	while (attributes.size() > 0) {
+		Attribute* last = attributes.back();
+		delete last;
+		attributes.pop_back();
+	}
+}
+
 bool Application::setData(const char* fileName)
+{
+	ifstream myFile;
+	myFile.open(fileName);
+	if (!myFile.is_open()) {
+		return false;
+	}
+	data = new Dataset();
+	vector<double> values;
+	Object *flower = new Object();
+
+	char nextChar;
+	float value;
+	int countChars = 0;
+	//string name = "";
+	string line = "";
+
+	int next = myFile.peek();
+	while (next != EOF) {
+		values.clear();
+		getline(myFile, line);
+		stringstream ss;
+		ss << line;
+		string word = "";
+		double value;
+
+		while (!ss.eof()) {
+			getline(ss, word, ',');
+			if (stringstream(word) >> value) {
+				values.push_back(value);
+			}
+			else {
+				flower->setName(word);
+			}
+			word = "";
+		}
+		if (next != 37 && values.size() > 0) {
+			flower->setValues(values);
+			data->add(flower);
+			flower = new Object();
+			values.clear();
+		}
+
+		next = myFile.peek();
+
+		/*if (isdigit(next)) {
+			myFile >> value;
+			values.push_back(value);
+		}
+		else {
+			myFile >> nextChar;
+			if (nextChar == '\n') {
+				flower->setValues(values);
+				flower->setName(name);
+				data->add(flower);
+				flower = new Object();
+				values.clear();
+			}
+			if (next == '%') {
+				getline(myFile,name);
+				//string line;
+				//myFile >> line;
+				/*while (nextChar != '\0') {
+					myFile >> nextChar;
+				}
+
+			}*/
+		
+	}
+	delete flower;
+
+	myFile.close();
+
+	return true;
+}
+
+//nacitanie vstupnych dat
+/*bool Application::setData(const char* fileName)
 {
 	FILE* datafile;
 	if ((datafile = fopen(fileName, "r")) == NULL) {
@@ -156,7 +306,8 @@ bool Application::setData(const char* fileName)
 		int returnVal;
 		Object *flower = new Object();
 		int lastPosition;
-		char name[100];
+		char oneChar[1];
+		string name = "";
 		int countChars = 0;
 		int countNumbers = 0;
 		int numAttributes = 0;
@@ -174,17 +325,21 @@ bool Application::setData(const char* fileName)
 				numberOfCoordinates = values.size();
 				all.push_back(flower);
 				flower = new Object();
-				values.clear();*/
+				values.clear();*//*
+				name = "";
 				do {
-					fscanf(datafile, "%c", &name);
+					fscanf(datafile, "%c", &oneChar);
+					name += oneChar[0];
 					countChars++;
 					countNumbers = 0;
-				} while (*name != ',' && *name != '\n');
+				} while (*oneChar != ',' && *oneChar != '\n');
 			}
 			else {
 				//fscanf(datafile, "%c",&name);
 				if ((countChars > 2 && values.size() > 0) || countNumbers == 1) {
 					flower->setValues(values);
+					name = name.substr(0, name.size() - 1);
+					flower->setName(name);
 					data->add(flower);
 					flower = new Object();
 					values.clear();
@@ -199,13 +354,15 @@ bool Application::setData(const char* fileName)
 				countNumbers = 1;
 			}
 		} while (true);
+		name = name.substr(0, name.size() - 1);
+		flower->setName(name);
 		flower->setValues(values);
 		data->add(flower);
 
 		fclose(datafile);
 	}
 	return true;
-}
+}*/
 
 bool Application::setNumberOfClusters(int number)
 {
@@ -263,11 +420,17 @@ void Application::dataObjectsPrint() const
 
 void Application::count(Counter * counter)
 {
+	dataObjectsPrint();
+
 	double sum = 0;
 	double sumSquared = 0;
 	for (int i = 0; i < numberOfReplications; i++) {
 		counter->recount();
 		counter->printJm();
+
+		const FuzzyData* best = counter->getBest();
+		saveArff(best);
+
 		sum += counter->getJm();
 		sumSquared += pow(counter->getJm(),2);
 	}

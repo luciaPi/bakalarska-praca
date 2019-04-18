@@ -21,10 +21,8 @@ public:
 	void setAlgorithmName(string name);
 
 	bool wasSignificantChange() const override;
-
 	double getJm() const override;
-
 	void printJm() const override;
-
+	const FuzzyData* getBest() const override;
 };
 

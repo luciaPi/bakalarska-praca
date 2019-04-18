@@ -26,7 +26,7 @@ public:
 	void setAlgorithmName(string name);
 	void setNumberOfIterations(int number);
 
-	const FuzzyData* getBest() const;
+	const FuzzyData* getBest() const override;
 		
 	bool wasSignificantChange() const override;
 	double getJm() const override;

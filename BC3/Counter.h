@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "FuzzyData.h"
 
 enum class FinalCriterion { minChange, maxIteration, both };
 
@@ -30,6 +31,7 @@ public:
 
 	virtual double getJm() const = 0;
 	virtual void printJm() const = 0;
+	virtual const FuzzyData* getBest() const = 0;
 	virtual void recount() = 0;
 };
 

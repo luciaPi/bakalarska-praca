@@ -72,6 +72,7 @@ public:
 	bool setMinChange(double minCHange);
 	bool setMuInitializationMode(MuInitializationMode mode);
 
-	void saveOutputToArff(const char* filename, char* title, char* creator, char* donor, char* relation, vector<Attribute*> attributes) const;
+	void saveOutputToArff(const FuzzyData* fuzzyData, const char * filename, char* title, vector<Attribute*> attributes) const;
+	void saveArff(const FuzzyData* fuzzyData);
 };
 

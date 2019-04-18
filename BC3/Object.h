@@ -7,7 +7,7 @@ class Object {
 private:
 	int numberOfCoordinates;
 	vector<double> values;
-	//string name;
+	string name = "xx";
 
 public:
 	Object() : numberOfCoordinates(0) {};
@@ -25,6 +25,6 @@ public:
 
 	void addToValues(double number);
 
-	//void setName(const char pname[]);
-	//string getName();	
+	void setName(string pname);
+	string getName();	
 };
