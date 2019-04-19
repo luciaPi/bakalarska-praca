@@ -5,14 +5,13 @@ using namespace std;
 
 class Attribute {
 	string name;
-	int len;
 
 public:
 	Attribute() {
 	}
 	Attribute(string pname)
 	{
-		setValues(pname);
+		name = pname;
 	}
 
 	~Attribute() {}

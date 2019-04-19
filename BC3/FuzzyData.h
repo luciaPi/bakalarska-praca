@@ -90,6 +90,8 @@ public:
 	Dataset getData() const;
 	int getM() const;
 	int getNumberOfClusters() const;
+	int getNumberOfObjects() const;
+	int getNumberOfCoordinates() const;
 	const double** getMu() const;
 	MuInitializationMode getMuInitMode() const;
 	int getK() const;

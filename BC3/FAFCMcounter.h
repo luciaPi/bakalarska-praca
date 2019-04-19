@@ -23,6 +23,6 @@ public:
 	bool wasSignificantChange() const override;
 	double getJm() const override;
 	void printJm() const override;
-	const FuzzyData* getBest() const override;
+	FuzzyData* getBest() const override;
 };
 

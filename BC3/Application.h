@@ -3,10 +3,13 @@
 #include "Attribute.h"
 #include "Counter.h"
 #include <random>
+#include <string>
 #include "RandomGenerator.h"
 #include "FCMcounter.h"
+#include "CVI.h"
 
 enum class Algorithm { fcm, pso, fa, fcmpso, fafcm };
+enum class OutputType  { txt, arff };
 
 class Application
 {
@@ -19,6 +22,14 @@ private:
 	int numberOfReplications = 1;
 	int m = 2;
 	int K = 1;
+	CVI cvi;
+
+	string resultFolderName = "Results"; 
+	string outputExtesion = "txt";
+	char* title = "Title";
+	bool fileOutputMode = true;
+
+	vector<Attribute*> objectClasses;
 
 	MuInitializationMode muInitMode = MuInitializationMode::random;
 
@@ -42,6 +53,8 @@ private:
 	void dataObjectsPrint() const;
 
 	void count(Counter* counter);
+
+	string createFloderForOutput() const;
 	
 public:
 	Application();
@@ -68,11 +81,21 @@ public:
 	bool setNumberOfReplications(int number);
 	bool setConfidenceInterval(int value);
 
+	bool setTitle(const char* title);
+
 	bool setFinalCriterion(FinalCriterion criterion);
 	bool setMinChange(double minCHange);
 	bool setMuInitializationMode(MuInitializationMode mode);
+	
+	bool setTypeOfOutput(OutputType type);
 
-	void saveOutputToArff(const FuzzyData* fuzzyData, const char * filename, char* title, vector<Attribute*> attributes) const;
-	void saveArff(const FuzzyData* fuzzyData);
+	void setCVI(Index index);
+	void unsetCVI(Index index);
+
+	void setFileOutputMode();
+	void unsetFileOutputMode();
+
+	void saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const;
+	void saveResultToFile(const FuzzyData* fuzzyData, int which, string resultPath);
 };
 

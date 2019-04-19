@@ -101,7 +101,7 @@ void FCMPSOcounter::setNumberOfIterations(int number)
 	iterationNumber = number;
 }
 
-const FuzzyData * FCMPSOcounter::getBest() const
+FuzzyData * FCMPSOcounter::getBest() const
 {
 	return hybridGbest;
 }

@@ -13,6 +13,7 @@
 #include "FCMPSOcounter.h"
 #include "FAcounter.h"
 #include "FAFCMcounter.h"
+#include <direct.h>
 
 using namespace std;
 
@@ -26,6 +27,11 @@ Application::~Application()
 {
 	delete data;
 	data = nullptr;
+	while (objectClasses.size() > 0) {
+		Attribute* last = objectClasses.back();
+		delete last;
+		objectClasses.pop_back();
+	}
 }
 
 void Application::count(Algorithm alg, int numberOfItertion)
@@ -99,7 +105,32 @@ bool Application::setMuInitializationMode(MuInitializationMode mode)
 	return true;
 }
 
-void Application::saveOutputToArff(const FuzzyData* fuzzyData, const char * filename, char* title, vector<Attribute*> attributes) const
+bool Application::setTypeOfOutput(OutputType type)
+{
+	switch (type) {
+		case OutputType::txt : {
+			outputExtesion = "txt";
+			return true;
+		}
+		case OutputType::arff : {
+			outputExtesion = "arff";
+			return true;
+		}
+	}
+	return false;
+}
+
+void Application::setFileOutputMode()
+{
+	fileOutputMode = true;
+}
+
+void Application::unsetFileOutputMode()
+{
+	fileOutputMode = false;
+}
+
+void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const
 {
 	FILE* datafile;
 	if ((datafile = fopen(filename, "w")) == NULL && data != nullptr) {
@@ -114,8 +145,6 @@ void Application::saveOutputToArff(const FuzzyData* fuzzyData, const char * file
 		"@DATA"
 		};
 		char comment = '%';
-		time_t now = time(0);
-		tm* date = localtime(&now);
 
 		vector<string> clusters;
 		for (int j = 0; j < numberOfClusters; j++) {
@@ -157,11 +186,11 @@ void Application::saveOutputToArff(const FuzzyData* fuzzyData, const char * file
 		fprintf(datafile, "}\n");
 		//class
 		fprintf(datafile, "%s class \t {", titles[which]);
-		for (string actual : clusters) {
-			if (actual != clusters[0]) {
+		for (Attribute *actual : objectClasses) {
+			if (actual != objectClasses[0]) {
 				fprintf(datafile, ", ");
 			}
-			fprintf(datafile, "%s", actual.c_str());
+			fprintf(datafile, "%s", (actual->getName()).c_str());
 		}
 		fprintf(datafile, "}\n");		
 		//data
@@ -181,31 +210,18 @@ void Application::saveOutputToArff(const FuzzyData* fuzzyData, const char * file
 	}
 }
 
-void Application::saveArff(const FuzzyData* fuzzyData)
+void Application::saveResultToFile(const FuzzyData* fuzzyData, int which, string resultPath)
 {
-	char* title = "Iris";
-
-	/*vector<string> type;
-	type.push_back("numeric");
-	vector<string> type2;
-	type2.push_back("Iris - setosa");
-	type2.push_back("Iris - versicolor");
-	type2.push_back("Iris - virginica");*/
+	string titleString = title;
 	vector<Attribute*> attributes;
-	/*attributes[0].setValues("sepallength", type);
-	attributes[1].setValues("sepalwidth", type);
-	attributes[2].setValues("petallength", type);
-	attributes[3].setValues("petalwidth", type);
-	attributes[4].setValues("class", type2);*/
-	/*attributes.push_back(new Attribute("sepallength"));
-	attributes.push_back(new Attribute("sepalwidth"));
-	attributes.push_back(new Attribute("petallength"));
-	attributes.push_back(new Attribute("petalwidth"));*/
+
 	for (int k = 0; k < (*data)[0].getNumberOfCoordinates(); k++) {
 		attributes.push_back(new Attribute("Attribute"+to_string(k)));
 	}
-
-	saveOutputToArff(fuzzyData,"wine.txt", title, attributes);
+		
+	string filename = titleString + "(" + to_string(which) + ")." + outputExtesion;
+	string filenameWithPath = resultPath + "/" + filename;
+	saveToArff(fuzzyData, filenameWithPath.c_str(), attributes);
 
 	while (attributes.size() > 0) {
 		Attribute* last = attributes.back();
@@ -228,7 +244,7 @@ bool Application::setData(const char* fileName)
 	char nextChar;
 	float value;
 	int countChars = 0;
-	//string name = "";
+	//string objectClass = "";
 	string line = "";
 
 	int next = myFile.peek();
@@ -245,8 +261,20 @@ bool Application::setData(const char* fileName)
 			if (stringstream(word) >> value) {
 				values.push_back(value);
 			}
-			else {
-				flower->setName(word);
+			else {	
+				bool found = false;
+				for (Attribute* actual : objectClasses) {
+					if (actual->getName() == word) {
+						flower->setObjectClass(actual);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					Attribute* first = new Attribute(word);
+					objectClasses.push_back(first);
+					flower->setObjectClass(first);
+				}
 			}
 			word = "";
 		}
@@ -267,13 +295,13 @@ bool Application::setData(const char* fileName)
 			myFile >> nextChar;
 			if (nextChar == '\n') {
 				flower->setValues(values);
-				flower->setName(name);
+				flower->setName(objectClass);
 				data->add(flower);
 				flower = new Object();
 				values.clear();
 			}
 			if (next == '%') {
-				getline(myFile,name);
+				getline(myFile,objectClass);
 				//string line;
 				//myFile >> line;
 				/*while (nextChar != '\0') {
@@ -307,7 +335,7 @@ bool Application::setData(const char* fileName)
 		Object *flower = new Object();
 		int lastPosition;
 		char oneChar[1];
-		string name = "";
+		string objectClass = "";
 		int countChars = 0;
 		int countNumbers = 0;
 		int numAttributes = 0;
@@ -319,27 +347,27 @@ bool Application::setData(const char* fileName)
 			}
 			if (returnVal == 0) {
 				//fseek(datafile, lastPosition, SEEK_SET);				
-				/*fscanf(datafile, "%s", &name);
-				flower->setName(name);
+				/*fscanf(datafile, "%s", &objectClass);
+				flower->setName(objectClass);
 				flower->setValues(values);
 				numberOfCoordinates = values.size();
 				all.push_back(flower);
 				flower = new Object();
 				values.clear();*//*
-				name = "";
+				objectClass = "";
 				do {
 					fscanf(datafile, "%c", &oneChar);
-					name += oneChar[0];
+					objectClass += oneChar[0];
 					countChars++;
 					countNumbers = 0;
 				} while (*oneChar != ',' && *oneChar != '\n');
 			}
 			else {
-				//fscanf(datafile, "%c",&name);
+				//fscanf(datafile, "%c",&objectClass);
 				if ((countChars > 2 && values.size() > 0) || countNumbers == 1) {
 					flower->setValues(values);
-					name = name.substr(0, name.size() - 1);
-					flower->setName(name);
+					objectClass = objectClass.substr(0, objectClass.size() - 1);
+					flower->setName(objectClass);
 					data->add(flower);
 					flower = new Object();
 					values.clear();
@@ -354,8 +382,8 @@ bool Application::setData(const char* fileName)
 				countNumbers = 1;
 			}
 		} while (true);
-		name = name.substr(0, name.size() - 1);
-		flower->setName(name);
+		objectClass = objectClass.substr(0, objectClass.size() - 1);
+		flower->setName(objectClass);
 		flower->setValues(values);
 		data->add(flower);
 
@@ -420,7 +448,10 @@ void Application::dataObjectsPrint() const
 
 void Application::count(Counter * counter)
 {
-	dataObjectsPrint();
+	string resultPath = "";
+	if (fileOutputMode) {
+		resultPath = createFloderForOutput();
+	}
 
 	double sum = 0;
 	double sumSquared = 0;
@@ -428,8 +459,12 @@ void Application::count(Counter * counter)
 		counter->recount();
 		counter->printJm();
 
-		const FuzzyData* best = counter->getBest();
-		saveArff(best);
+		FuzzyData* best = counter->getBest();
+		cvi.count(best);
+		
+		if (fileOutputMode) {
+			saveResultToFile(best, i + 1, resultPath);
+		}
 
 		sum += counter->getJm();
 		sumSquared += pow(counter->getJm(),2);
@@ -442,4 +477,18 @@ void Application::count(Counter * counter)
 		cout << counter->getAlgorithmName() << " - Interval spolahlivosti: " << average << " +- " << interval << endl;
 	}
 	cout << endl;
+}
+
+string Application::createFloderForOutput() const
+{
+	string titleString = title;
+	time_t now = time(0);
+	tm* date = localtime(&now);
+	char folderName[50];
+
+	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec);
+	string resultPath = resultFolderName + "/" + folderName;
+	mkdir(resultFolderName.c_str());
+	mkdir(resultPath.c_str());
+	return resultPath;
 }

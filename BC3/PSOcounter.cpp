@@ -208,7 +208,7 @@ bool PSOcounter::wasSignificantChange() const
 	return false;
 }
 
-const FuzzyData* PSOcounter::getBest() const
+FuzzyData* PSOcounter::getBest() const
 {
 	return gbest;
 }

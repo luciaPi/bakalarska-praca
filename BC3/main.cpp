@@ -11,15 +11,15 @@ int main() {
 	//const char* fileName = "vysky.txt";
 	//const char* fileName = "fcmexample.txt";
 	//const char* fileName = "iris.arff";
-	//const char* fileName = "iris.data";
+	const char* fileName = "iris.data";
 	//const char* fileName = "parkinsons.data";
 	//const char* fileName = "glass_csv.csv";
 	//const char* fileName = "fifa.csv";
-	const char* fileName = "wine.data";
+	//const char* fileName = "wine.data";
 
 	//string fileName = "";
 	//getline(cin, fileName);
-	int numberOfReplication = 1;
+	int numberOfReplication = 3;
 	//cin >> numberOfIteration;
 	
 	/*std::random_device rd;

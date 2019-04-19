@@ -80,7 +80,7 @@ bool FAcounter::wasSignificantChange() const
 	return false;
 }
 
-const FuzzyData * FAcounter::getBest() const
+FuzzyData * FAcounter::getBest() const
 {
 	return gbest;
 }

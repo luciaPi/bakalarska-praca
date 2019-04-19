@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Attribute.h"
 
 using namespace std;
 
@@ -7,7 +8,7 @@ class Object {
 private:
 	int numberOfCoordinates;
 	vector<double> values;
-	string name = "xx";
+	Attribute* objectClass = nullptr;
 
 public:
 	Object() : numberOfCoordinates(0) {};
@@ -25,6 +26,7 @@ public:
 
 	void addToValues(double number);
 
-	void setName(string pname);
-	string getName();	
+	void setObjectClass(Attribute* objectClas);
+	Attribute*getObjectClass() const;	
+	string getName() const;
 };

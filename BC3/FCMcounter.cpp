@@ -47,7 +47,7 @@ void FCMcounter::count(FuzzyData * other)
 	other->setMu(fuzzyData->getMu());
 }
 
-const FuzzyData * FCMcounter::getBest() const
+FuzzyData * FCMcounter::getBest() const
 {
 	return fuzzyData;
 }

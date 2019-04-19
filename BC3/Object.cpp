@@ -44,13 +44,18 @@ double *Object::getPointerValue(int which)
 }
 
 //nastavi  nazov zhluku
-void Object::setName(string pname) {
-	name = pname;
+void Object::setObjectClass(Attribute* pobjectClass) {
+	objectClass = pobjectClass;
 }
 
 //vrati nazov zhluku
-string Object::getName() {
-	return name;
+Attribute* Object::getObjectClass() const {
+	return objectClass;
+}
+
+string Object::getName() const
+{
+	return objectClass->getName();
 }
 
 int Object::getNumberOfCoordinates() const

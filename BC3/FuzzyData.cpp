@@ -481,7 +481,7 @@ double FuzzyData::getJm() const
 	double Jm = 0;
 	for (int i = 0; i < numberOfObjects; i++) {
 		for (int j = 0; j < numberOfClusters; j++) {
-			Jm += pow(mu[i][j], m) * pow(d[i][j], 1);
+			Jm += pow(mu[i][j], m) * pow(d[i][j], 2);
 		}
 	}
 	return Jm;
@@ -518,6 +518,16 @@ int FuzzyData::getM() const
 int FuzzyData::getNumberOfClusters() const
 {
 	return numberOfClusters;
+}
+
+int FuzzyData::getNumberOfObjects() const
+{
+	return numberOfObjects;
+}
+
+int FuzzyData::getNumberOfCoordinates() const
+{
+	return numberOfCoordinates;
 }
 
 const double ** FuzzyData::getMu() const

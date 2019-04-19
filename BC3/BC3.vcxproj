@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CVI.cpp" />
     <ClCompile Include="FuzzyData.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="FAcounter.cpp" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CVI.h" />
     <ClInclude Include="FuzzyData.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FAcounter.h" />
