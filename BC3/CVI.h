@@ -23,6 +23,16 @@ class CVI
 	bool* whichCount = nullptr;
 	FuzzyData *fuzzydata = nullptr;
 
+	int numberOfObjects = 0;
+	int numberOfClusters = 0;
+	int numberOfCoordinates = 0;
+
+	const Object** centers = nullptr;
+	const double** mu = nullptr;
+	Dataset data;
+
+	FCMcounter fcmCounter;
+
 	double countPC();
 	double countMPC();
 	double countPE();
@@ -35,9 +45,18 @@ class CVI
 	double countSILHOUETTE();
 
 	double getMinCentersDistance() const;
+	double getMaxCentersDistance() const;
+	double getJmDifferent() const;
+	Object** getMainCenter();
+	double getMinBeta(int which) const;
+	double getMuM() const;
+	double getBeta() const;
+	double getA(int which) const;
+	double getB(int which) const;
 		
 public:
 	CVI();
+	CVI(int seed1, int seed2);
 	~CVI();
 
 	bool count(FuzzyData* data);

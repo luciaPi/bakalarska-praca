@@ -29,7 +29,7 @@ FCMcounter::~FCMcounter() {
 }
 
 //kroky algoritmu
-void FCMcounter::count(const Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode)
+void FCMcounter::count(Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode)
 {	
 	if (data.getSize() > 0) {
 		setCounter(data, numberOfClusters, m, K, muInitMode);		

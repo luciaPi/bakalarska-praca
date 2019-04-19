@@ -9,6 +9,7 @@ private:
 	int numberOfCoordinates;
 	vector<double> values;
 	Attribute* objectClass = nullptr;
+	Attribute* objectAssignedClass = nullptr;
 
 public:
 	Object() : numberOfCoordinates(0) {};
@@ -29,4 +30,7 @@ public:
 	void setObjectClass(Attribute* objectClas);
 	Attribute*getObjectClass() const;	
 	string getName() const;
+	void setObjectAssignedClass(Attribute* objectClas);
+	Attribute*getObjectAssignedClass() const;
+	string getAssignedName() const;
 };

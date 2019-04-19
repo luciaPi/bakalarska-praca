@@ -40,7 +40,7 @@ public:
 
 	void setCounter(Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);
 	
-	void count(const Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);
+	void count(Dataset data, int numberOfClusters, int m, int K, MuInitializationMode muInitMode);
 	void count(FuzzyData* other);
 
 	FuzzyData* getBest() const override;

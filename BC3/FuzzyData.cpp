@@ -545,9 +545,14 @@ int FuzzyData::getK() const
 	return K;
 }
 
-const Object** FuzzyData::getCenters() const
+Object** FuzzyData::getCenters() const
 {
 	return (const Object**)centers;
+}
+
+double ** FuzzyData::getDistances() const
+{
+	return d;
 }
 
 //je zmena centier oproti centram v minulom kroku vyznamna

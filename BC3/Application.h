@@ -30,6 +30,7 @@ private:
 	bool fileOutputMode = true;
 
 	vector<Attribute*> objectClasses;
+	vector<Attribute*> clusters;
 
 	MuInitializationMode muInitMode = MuInitializationMode::random;
 
@@ -54,7 +55,9 @@ private:
 
 	void count(Counter* counter);
 
-	string createFloderForOutput() const;
+	string createFolderForOutput() const;
+	void resetClusterAttributes();
+	int whichCenter(int whichObject, FuzzyData* fuzzyData) const;
 	
 public:
 	Application();
@@ -88,6 +91,7 @@ public:
 	bool setMuInitializationMode(MuInitializationMode mode);
 	
 	bool setTypeOfOutput(OutputType type);
+	bool setClusterName(string name, int which);
 
 	void setCVI(Index index);
 	void unsetCVI(Index index);
@@ -97,5 +101,10 @@ public:
 
 	void saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const;
 	void saveResultToFile(const FuzzyData* fuzzyData, int which, string resultPath);
+
+	void assignClusters(FuzzyData* fuzzyData);
+
+	void clearObjectClasses();
+	void clearClusterAttributes();
 };
 

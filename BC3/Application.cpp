@@ -21,17 +21,16 @@ Application::Application()
 {
 	srand(time(0));
 	parameterGenerator = RandomGenerator(rd(), 0, 1);
+	cvi = CVI(rd(), rd());
 }
 
 Application::~Application()
 {
 	delete data;
 	data = nullptr;
-	while (objectClasses.size() > 0) {
-		Attribute* last = objectClasses.back();
-		delete last;
-		objectClasses.pop_back();
-	}
+	
+	clearObjectClasses();
+	clearClusterAttributes();
 }
 
 void Application::count(Algorithm alg, int numberOfItertion)
@@ -145,12 +144,7 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 		"@DATA"
 		};
 		char comment = '%';
-
-		vector<string> clusters;
-		for (int j = 0; j < numberOfClusters; j++) {
-			clusters.push_back("Zhluk"+to_string(j));
-		}
-
+		
 		//title
 		int which = 0;
 		fprintf(datafile, "%c %s: ", comment, titles[which++]);
@@ -177,11 +171,11 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 		}
 		//mu
 		fprintf(datafile, "%s MU \t FUZZY {", titles[which]);
-		for (string actual : clusters) {
+		for (Attribute* actual : clusters) {
 			if (actual != clusters[0]) {
 				fprintf(datafile, ", ");
 			}
-			fprintf(datafile, "%s", actual.c_str());
+			fprintf(datafile, "%s", (actual->getName).c_str());
 		}
 		fprintf(datafile, "}\n");
 		//class
@@ -230,8 +224,48 @@ void Application::saveResultToFile(const FuzzyData* fuzzyData, int which, string
 	}
 }
 
+void Application::assignClusters(FuzzyData* fuzzyData)
+{
+	for (int i = 0; i < data->getSize(); i++) {
+		int whichCluster = whichCenter(i,fuzzyData);
+		(*data)[i].setObjectAssignedClass(clusters[whichCluster]);
+	}
+}
+void Application::clearObjectClasses()
+{
+	while (objectClasses.size() > 0) {
+		Attribute* last = objectClasses.back();
+		delete last;
+		objectClasses.pop_back();
+	}
+}
+void Application::clearClusterAttributes()
+{
+	while (clusters.size() > 0) {
+		Attribute* last = clusters.back();
+		delete last;
+		clusters.pop_back();
+	}
+}
+int Application::whichCenter(int whichObject) const 
+{
+	double max = 0;
+	int maxCoordinate = -1;
+	if (whichObject >= 0) {
+		for (int j = 0; j < numberOfClusters; j++) {
+			if (mu[whichObject][j] > max) {
+				max = mu[whichObject][j];
+				maxCoordinate = j;
+			}
+		}
+	}
+	return maxCoordinate;
+}
+
 bool Application::setData(const char* fileName)
 {
+	clearObjectClasses();
+
 	ifstream myFile;
 	myFile.open(fileName);
 	if (!myFile.is_open()) {
@@ -450,7 +484,7 @@ void Application::count(Counter * counter)
 {
 	string resultPath = "";
 	if (fileOutputMode) {
-		resultPath = createFloderForOutput();
+		resultPath = createFolderForOutput();
 	}
 
 	double sum = 0;
@@ -458,6 +492,7 @@ void Application::count(Counter * counter)
 	for (int i = 0; i < numberOfReplications; i++) {
 		counter->recount();
 		counter->printJm();
+		assignClusters();
 
 		FuzzyData* best = counter->getBest();
 		cvi.count(best);
@@ -479,7 +514,7 @@ void Application::count(Counter * counter)
 	cout << endl;
 }
 
-string Application::createFloderForOutput() const
+string Application::createFolderForOutput() const
 {
 	string titleString = title;
 	time_t now = time(0);
@@ -491,4 +526,13 @@ string Application::createFloderForOutput() const
 	mkdir(resultFolderName.c_str());
 	mkdir(resultPath.c_str());
 	return resultPath;
+}
+
+void Application::resetClusterAttributes()
+{
+	clearClusterAttributes();
+	for (int j = 0; j < numberOfClusters; j++) {
+		Attribute* newAttr = new Attribute("Zhluk" + to_string(j));
+		clusters.push_back(newAttr);
+	}
 }

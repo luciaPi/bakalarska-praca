@@ -58,6 +58,21 @@ string Object::getName() const
 	return objectClass->getName();
 }
 
+void Object::setObjectAssignedClass(Attribute * pobjectClas)
+{
+	objectAssignedClass = pobjectClas;
+}
+
+Attribute * Object::getObjectAssignedClass() const
+{
+	return objectAssignedClass;
+}
+
+string Object::getAssignedName() const
+{
+	return objectAssignedClass->getName();
+}
+
 int Object::getNumberOfCoordinates() const
 {
 	return numberOfCoordinates;
