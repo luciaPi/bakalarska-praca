@@ -22,6 +22,7 @@ Application::Application()
 	srand(time(0));
 	parameterGenerator = RandomGenerator(rd(), 0, 1);
 	cvi = CVI(rd(), rd());
+	cout << endl;
 }
 
 Application::~Application()
@@ -152,7 +153,7 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 		//centers
 		fprintf(datafile, "%c %s:\n", comment, titles[which++]);
 
-		const Object** centers = fuzzyData->getCenters();
+		Object** centers = fuzzyData->getCenters();
 		for (int j = 0; j < numberOfClusters; j++) {
 			fprintf(datafile, "%c \t", comment);
 			for (int k = 0; k < (*data)[0].getNumberOfCoordinates(); k++) {
@@ -175,7 +176,8 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 			if (actual != clusters[0]) {
 				fprintf(datafile, ", ");
 			}
-			fprintf(datafile, "%s", (actual->getName).c_str());
+			string name = actual->getName();
+			fprintf(datafile, "%s", name.c_str());
 		}
 		fprintf(datafile, "}\n");
 		//class
@@ -184,7 +186,8 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 			if (actual != objectClasses[0]) {
 				fprintf(datafile, ", ");
 			}
-			fprintf(datafile, "%s", (actual->getName()).c_str());
+			string name = (actual->getName());
+			fprintf(datafile, "%s", name.c_str());
 		}
 		fprintf(datafile, "}\n");		
 		//data
@@ -197,7 +200,8 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 			for (int j = 0; j < numberOfClusters; j++) {
 				fprintf(datafile, "%f, ", mu[i][j]);
 			}
-			fprintf(datafile, "%s\n", ((*data)[i].getName()).c_str());
+			string name = (*data)[i].getName();
+			fprintf(datafile, "%s\n", name.c_str());
 		}
 
 		fclose(datafile);
@@ -247,10 +251,11 @@ void Application::clearClusterAttributes()
 		clusters.pop_back();
 	}
 }
-int Application::whichCenter(int whichObject) const 
+int Application::whichCenter(int whichObject, FuzzyData* fuzzyData) const
 {
 	double max = 0;
 	int maxCoordinate = -1;
+	const double** mu = fuzzyData->getMu();
 	if (whichObject >= 0) {
 		for (int j = 0; j < numberOfClusters; j++) {
 			if (mu[whichObject][j] > max) {
@@ -430,6 +435,7 @@ bool Application::setNumberOfClusters(int number)
 {
 	if (number > 0) {
 		numberOfClusters = number;
+		resetClusterAttributes();
 		return true;
 	}
 	return false;
@@ -492,9 +498,9 @@ void Application::count(Counter * counter)
 	for (int i = 0; i < numberOfReplications; i++) {
 		counter->recount();
 		counter->printJm();
-		assignClusters();
 
 		FuzzyData* best = counter->getBest();
+		assignClusters(best);
 		cvi.count(best);
 		
 		if (fileOutputMode) {

@@ -127,6 +127,7 @@ double CVI::getBeta() const
 double CVI::getA(int which) const
 {
 	double sum = 0;
+	double number = 0;
 	Attribute* objectAssignedClass = data[which].getObjectAssignedClass();
 	for (int i = 0; i < numberOfObjects; i++) {
 		if (i != which) {
@@ -137,10 +138,59 @@ double CVI::getA(int which) const
 					double coordinate2 = data[which].getValue(k);
 					distance += pow(coordinate1 - coordinate2, 2);
 				}
-				distance = sqrt(sum);
+				distance = sqrt(distance);
+				sum += distance;
+				number++;
 			}
 		}
 	}
+	return sum / number;
+}
+
+double CVI::getB(int which) const
+{
+	double min = INT_MAX;
+	Attribute* objectAssignedClass = data[which].getObjectAssignedClass();
+	for (Attribute* actual : clusters) {
+		if (actual != objectAssignedClass) {
+			double sum = 0;
+			double number = 0;			
+			for (int i = 0; i < numberOfObjects; i++) {
+				if (data[i].getObjectAssignedClass() == actual) {
+					double distance = 0;
+					for (int k = 0; k < numberOfCoordinates; k++) {
+						double coordinate1 = data[i].getValue(k);
+						double coordinate2 = data[which].getValue(k);
+						distance += pow(coordinate1 - coordinate2, 2);
+					}
+					distance = sqrt(distance);
+					sum += distance;
+					number++;					
+				}
+			}
+			double average = sum / number;
+			if (average < min) {
+				min = average;
+			}
+		}
+	}
+	return min;
+}
+
+double ** CVI::getF(double** F, int which)
+{
+	double sum1 = 0;
+	int m = fuzzydata->getM();
+	for (int i = 0; i < numberOfObjects; i++) {
+		sum1 += pow(mu[i][j], m);	
+		sum2
+	}
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		for (int l = 0; l < numberOfCoordinates; l++) {
+			F[k][l] = F[k][l] / sum1;
+		}
+	}
+	return F;
 }
 
 CVI::CVI()
@@ -158,6 +208,7 @@ CVI::CVI(int seed1, int seed2)
 		whichCount[i] = false;
 	}
 	fcmCounter = FCMcounter(seed1, seed2);
+	int x = 0;
 }
 
 
@@ -186,7 +237,7 @@ bool CVI::count(FuzzyData* pdata)
 		whichCount[i++] ? countFS() : -1;
 		whichCount[i++] ? countXIEBENI() : -1;
 		whichCount[i++] ? countKWON() : -1;
-		whichCount[i++] ? countFHV() : -1;
+		//whichCount[i++] ? countFHV() : -1;
 		whichCount[i++] ? countPBMF() : -1;
 		whichCount[i++] ? countPCAES() : -1;
 		whichCount[i++] ? countSILHOUETTE() : -1;
@@ -320,6 +371,33 @@ double CVI::countKWON()
 	return KWONvalue;
 }
 
+double CVI::countFHV()
+{
+	if (fuzzydata != nullptr) {
+		double** F = new double*[numberOfCoordinates];
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			F[k] = new double[numberOfCoordinates];
+		}
+
+		double sum = 0;
+		for (int j = 0; j < numberOfClusters; j++) {
+			F = getF(F,j);
+			double det = getDeterminant(F);
+			sum += sqrt(det);
+		}
+		FHVvalue = sum;
+
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			delete[] F[k];
+		}
+		delete[] F;
+	}
+	else {
+		FHVvalue = -1;
+	}
+	return FHVvalue;
+}
+
 double CVI::countPBMF()
 {
 	if (fuzzydata != nullptr) {
@@ -374,7 +452,7 @@ double CVI::countPCAES()
 
 double CVI::countSILHOUETTE()
 {
-	if (fuzzydata != nullptr) {
+	if (fuzzydata != nullptr && clusters.size() == numberOfClusters) {
 		double sum = 0;
 		for (int i = 0; i < numberOfObjects; i++) {
 			double a = getA(i);

@@ -20,6 +20,14 @@ public:
 		return name;
 	}
 
+	Attribute(const Attribute& other) {
+		name = other.name;
+	}
+
+	bool operator==(const Attribute& other) {
+		return name == other.name;
+	}
+
 	/*const char* getTypes() const {
 		return type;
 	}*/

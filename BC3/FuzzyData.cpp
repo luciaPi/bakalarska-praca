@@ -547,7 +547,7 @@ int FuzzyData::getK() const
 
 Object** FuzzyData::getCenters() const
 {
-	return (const Object**)centers;
+	return centers;
 }
 
 double ** FuzzyData::getDistances() const

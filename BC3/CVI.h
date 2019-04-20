@@ -1,5 +1,6 @@
 #pragma once
 #include "FuzzyData.h"
+#include "FCMcounter.h"
 
 enum class Index {
 	PC = 0, MPC = 1, PE = 2, FS = 3, XIEBENI = 4,
@@ -22,12 +23,13 @@ class CVI
 	int number = 10;
 	bool* whichCount = nullptr;
 	FuzzyData *fuzzydata = nullptr;
+	vector<Attribute*> clusters;
 
 	int numberOfObjects = 0;
 	int numberOfClusters = 0;
 	int numberOfCoordinates = 0;
 
-	const Object** centers = nullptr;
+	Object** centers = nullptr;
 	const double** mu = nullptr;
 	Dataset data;
 
@@ -53,6 +55,8 @@ class CVI
 	double getBeta() const;
 	double getA(int which) const;
 	double getB(int which) const;
+	double** getF(double** F,int which);
+	double getDeterminant(double** F);
 		
 public:
 	CVI();
