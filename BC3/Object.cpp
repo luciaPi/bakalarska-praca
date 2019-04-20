@@ -33,7 +33,7 @@ vector<double> Object::getValues() {
 double Object::getValue(int which) const {
 	if (which >= 0 && which < numberOfCoordinates) {
 		return values[which];
-	}
+	}	
 }
 
 double *Object::getPointerValue(int which)

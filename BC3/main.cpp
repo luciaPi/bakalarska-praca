@@ -8,10 +8,10 @@
 using namespace std;
 
 int main() {		
-	//const char* fileName = "vysky.txt";
+	const char* fileName = "vysky.txt";
 	//const char* fileName = "fcmexample.txt";
 	//const char* fileName = "iris.arff";
-	const char* fileName = "iris.data";
+	//const char* fileName = "iris.data";
 	//const char* fileName = "parkinsons.data";
 	//const char* fileName = "glass_csv.csv";
 	//const char* fileName = "fifa.csv";
@@ -19,7 +19,7 @@ int main() {
 
 	//string fileName = "";
 	//getline(cin, fileName);
-	int numberOfReplication = 40;
+	int numberOfReplication = 1;
 	//cin >> numberOfIteration;
 	
 	/*std::random_device rd;

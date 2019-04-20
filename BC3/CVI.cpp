@@ -11,7 +11,7 @@ double CVI::getMinCentersDistance() const
 {
 	double min = INT_MAX;
 	for (int i = 0; i < numberOfClusters; i++) {
-		for (int j = i; j < numberOfClusters; j++) {
+		for (int j = i+1; j < numberOfClusters; j++) {
 			double sum = 0;
 			for (int k = 0; k < numberOfCoordinates; k++) {
 				double coordinate1 = centers[i]->getValue(k);
@@ -19,6 +19,7 @@ double CVI::getMinCentersDistance() const
 				sum += pow(coordinate1 - coordinate2, 2);
 			}
 			double distance = sqrt(sum);
+			distance = pow(distance, 2);
 			if (distance < min) {
 				min = distance;
 			}
@@ -31,7 +32,7 @@ double CVI::getMaxCentersDistance() const
 {
 	double max = -1;
 	for (int i = 0; i < numberOfClusters; i++) {
-		for (int j = i; j < numberOfClusters; j++) {
+		for (int j = i+1; j < numberOfClusters; j++) {
 			double sum = 0;
 			for (int k = 0; k < numberOfCoordinates; k++) {
 				double coordinate1 = centers[i]->getValue(k);
@@ -91,11 +92,12 @@ double CVI::getMinBeta(int which) const
 double CVI::getMuM() const
 {
 	double min = INT_MAX;
-	for (int i = 0; i < numberOfClusters; i++) {
+	for (int j = 0; j < numberOfClusters; j++) {
 		double sum = 0;
-		for (int j = i; j < numberOfObjects; j++) {
-			sum += pow(mu[i][j], 2);
+		for (int i = 0; i < numberOfObjects; i++) {
+			sum = sum + pow(mu[i][j], 2);
 		}
+		//fuzzydata->muPrint();
 		if (sum < min) {
 			min = sum;
 		}
@@ -125,6 +127,7 @@ double CVI::getBeta() const
 		distance = sqrt(distance);
 		sum += pow(distance, 2);
 	}
+	delete[]meanCenters;
 	double beta = sum / numberOfClusters;
 	return beta;
 }
@@ -148,6 +151,9 @@ double CVI::getA(int which) const
 				number++;
 			}
 		}
+	}
+	if (number == 0) {
+		number++;
 	}
 	return sum / number;
 }
@@ -184,24 +190,259 @@ double CVI::getB(int which) const
 
 double ** CVI::getF(double** F, int which)
 {
+	/*numberOfCoordinates = 3;
+	numberOfObjects = 2;
+	centers[0] = new Object();
+	vector<double> ccc;
+	ccc.push_back(1);
+	ccc.push_back(0);
+	ccc.push_back(3);
+	centers[0]->setValues(ccc);
+	Dataset data;
+	Object *c = new Object();
+	ccc.clear();
+	ccc.push_back(3);
+	ccc.push_back(4);
+	ccc.push_back(5);
+	c->setValues(ccc);
+	data.add(c);
+	c = new Object();
+	ccc.clear();
+	ccc.push_back(2);
+	ccc.push_back(1);
+	ccc.push_back(3);
+	c->setValues(ccc);
+	data.add(c);*/
+
 	double sum1 = 0;
 	int m = fuzzydata->getM();
 	for (int i = 0; i < numberOfObjects; i++) {
-		//sum1 += pow(mu[i][j], m);	
-		//sum2
+		sum1 += pow(mu[i][which], m);
 	}
+
 	for (int k = 0; k < numberOfCoordinates; k++) {
-		for (int l = 0; l < numberOfCoordinates; l++) {
-			F[k][l] = F[k][l] / sum1;
+		for (int kk = 0; kk < numberOfCoordinates; kk++) {
+			F[k][kk] = 0;
 		}
 	}
+	
+	for (int i = 0; i < numberOfObjects; i++) {
+		vector<double> distance;
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			distance.push_back(data[i].getValue(k)- centers[which]->getValue(k));
+		}
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			double coordinate1 = distance[k];
+			for (int kk = 0; kk < numberOfCoordinates; kk++) {
+				double coordinate2 = distance[kk];
+				F[k][kk] += coordinate1 * coordinate2*pow(mu[i][which],m);
+			}
+		}
+	}
+	
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		for (int kk = 0; kk < numberOfCoordinates; kk++) {
+			F[k][kk] = F[k][kk] / sum1;
+		}
+	}
+	//vypis
+	/*for (int k = 0; k < numberOfCoordinates; k++) {
+		for (int kk = 0; kk < numberOfCoordinates; kk++) {
+			cout << F[k][kk] << " ";
+		}
+		cout << endl;
+	}*/
 	return F;
 }
 
 double CVI::getDeterminant(double ** F)
 {
-	//TO DO
-	return 0.0;
+	numberOfCoordinates = 4;
+	double x[] = {1,3,5,9,1,3,18,7,4,3,9,7,5,2,0,9};
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++)
+		{
+			F[i][j]= x[i*4+j];
+		}
+	}
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		for (int j = 0; j < numberOfCoordinates; j++) {
+			cout << F[i][j] << " ";
+		}
+		cout << endl;
+	}cout << endl;
+	//init U
+	double** U = new double*[numberOfCoordinates];
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		U[k] = new double[numberOfCoordinates];
+		for (int i = 0; i < numberOfCoordinates; i++)
+		{
+			U[k][i] = F[k][i];
+		}
+	}
+	//init L
+	/*double** L = new double*[numberOfCoordinates];
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		L[k] = new double[numberOfCoordinates];
+		for (int i = 0; i < numberOfCoordinates; i++)
+		{
+			L[k][i] = F[k][i];
+		}
+	}
+
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		for (int j = 0; j < numberOfCoordinates; j++) {
+			cout << L[i][j] << " ";
+		}
+		cout << endl;
+	}*/
+	//count U
+	int signum = 1;
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		double max = F[i][i];
+		int index = i;
+		for (int x = i; x < numberOfCoordinates; x++) {
+			if (F[x][i] > max) {
+				max = F[x][i];
+				index = x;
+			}
+		}
+		for (int i = 0; i < numberOfCoordinates; i++) {
+			for (int j = 0; j < numberOfCoordinates; j++) {
+				cout << F[i][j] << " ";
+			}
+			cout << endl;
+		}cout << endl;
+		for (int x = 0; x < numberOfCoordinates; x++) {
+			double pom = F[index][x];
+			F[index][x] = F[i][x];
+			F[i][x] = pom;
+		}
+		for (int j = i+1; j < numberOfCoordinates; j++) {
+			double xx = F[j][i]/F[i][i];
+			for (int k = 0; k < numberOfCoordinates; k++) {
+				F[j][k] = F[j][k]-(xx*F[i][k]);
+			}
+		}
+	}
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		for (int j = 0; j < numberOfCoordinates; j++) {
+			cout << U[i][j] << " ";
+		}
+		cout << endl;
+	}/*
+	//count L
+	for (int i = numberOfCoordinates-1; i >= 0; i--) {
+		for (int k = 0; k < numberOfCoordinates; k++) {
+			L[i][k] = L[i][k] / L[i][i];
+		}
+		for (int j = 0; j < i; j++) {			
+			double xx = L[j][i] / L[i][i];
+			for (int k = 0; k < numberOfCoordinates; k++) {
+				L[j][k] = L[j][k] - (xx*L[i][k]);
+			}
+			for (int i = 0; i < numberOfCoordinates; i++) {
+				for (int j = 0; j < numberOfCoordinates; j++) {
+					cout << L[i][j] << " ";
+				}
+				cout << endl;
+			}cout << endl;
+		}
+	}*/
+
+	/*double** U = new double*[numberOfCoordinates];
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		U[k] = new double[numberOfCoordinates];
+		for (int i = 0; i < numberOfCoordinates; i++)
+		{
+			U[k][i] = 0;
+		}
+	}
+	//init L
+	double** L = new double*[numberOfCoordinates];
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		L[k] = new double[numberOfCoordinates];
+		for (int i = 0; i < numberOfCoordinates; i++)
+		{
+			L[k][i] = 0;
+		}
+	}*/
+	/*
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		for (int j = 0; j < numberOfCoordinates; j++) {
+			cout << L[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;*/
+	//count U
+	//int signum = 1;
+	/*for (int i = 0; i < numberOfCoordinates; i++) {	
+		double max = F[i][i];
+		int index = i;
+		for (int x = i; x < numberOfCoordinates; x++) {
+			if (F[x][i] > max) {
+				max = F[x][i];
+				index = x;
+			}
+		}
+		for (int x = 0; x < numberOfCoordinates; x++) {
+			double pom = F[index][x];
+			F[index][x] = F[i][x];
+			F[i][x] = pom;
+		}
+		for (int k = i; k < numberOfCoordinates; k++) {
+			double sum = 0;
+			for (int j = 0; j < i; j++) {
+				sum += L[i][j] * U[j][k];
+			}
+			U[i][k] = F[i][k] - sum;
+		}
+		
+		for (int i = 0; i < numberOfCoordinates; i++) {
+			for (int j = 0; j < numberOfCoordinates; j++) {
+				cout << U[i][j] << " ";
+			}
+			cout << endl;
+		}cout << endl;
+		
+		for (int k = i; k < numberOfCoordinates; k++) {
+			if (i == k)
+				L[i][i] = 1; 
+			else {
+				int sum = 0;
+				for (int j = 0; j < i; j++)
+					sum += (L[k][j] * U[j][i]);
+				L[k][i] = (F[k][i] - sum) / U[i][i];
+			}
+		}
+	}*/
+	/*for (int i = 0; i < numberOfCoordinates; i++) {
+		for (int j = 0; j < numberOfCoordinates; j++) {
+			cout << L[i][j] << " ";
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		for (int j = 0; j < numberOfCoordinates; j++) {
+			cout << U[i][j] << " ";
+		}
+		cout << endl;
+	}cout << endl;*/
+	double det = signum;
+	for (int i = 0; i < numberOfCoordinates; i++) {
+		det *= F[i][i];
+	}
+	cout << det << endl;
+	for (int k = 0; k < numberOfCoordinates; k++) {
+		delete[] U[k];
+	}
+	delete[] U;
+	/*for (int k = 0; k < numberOfCoordinates; k++) {
+		delete[] L[k];
+	}
+	delete[] L;*/
+	return det;
 }
 
 CVI::CVI()
@@ -215,7 +456,7 @@ CVI::CVI(int seed1, int seed2)
 	fcmCounter = FCMcounter(seed1, seed2);
 }
 
-bool CVI::count(FuzzyData* pdata)
+bool CVI::count(FuzzyData* pdata, Dataset pdataset)
 {
 	if (pdata != nullptr) {
 		fuzzydata = pdata;
@@ -225,19 +466,19 @@ bool CVI::count(FuzzyData* pdata)
 		numberOfCoordinates = fuzzydata->getNumberOfCoordinates();
 		centers = fuzzydata->getCenters();
 		mu = fuzzydata->getMu();
-		data = fuzzydata->getData();
+		data = pdataset;
 
 		int i = 0;
 		indices[i++] ? countPC() : -1;
-		/*indices[i++] ? countMPC() : -1;
+		indices[i++] ? countMPC() : -1;
 		indices[i++] ? countPE() : -1;
 		indices[i++] ? countFS() : -1;
 		indices[i++] ? countXIEBENI() : -1;
 		indices[i++] ? countKWON() : -1;
-		//indices[i++] ? countFHV() : -1;
+		indices[i++] ? countFHV() : -1;
 		indices[i++] ? countPBMF() : -1;
 		indices[i++] ? countPCAES() : -1;
-		indices[i++] ? countSILHOUETTE() : -1;*/
+		indices[i++] ? countSILHOUETTE() : -1;
 		return true;
 	}
 	return false;
@@ -310,6 +551,11 @@ void CVI::printResults(ostream & output, string title, double t) const
 	output <<  endl;
 }
 
+void CVI::setAssignedClusters(vector<Attribute*> pclusters)
+{
+	clusters = pclusters;
+}
+
 void CVI::setIndexNames()
 {
 	indices.clear();
@@ -347,9 +593,8 @@ double CVI::countPE()
 {
 	if (fuzzydata != nullptr) {
 		double sum = 0;
-		const double** mu = fuzzydata->getMu();
 		for (int i = 0; i < numberOfObjects; i++) {
-			for (int j = 0; j < numberOfObjects; j++) {
+			for (int j = 0; j < numberOfClusters; j++) {
 				sum += mu[i][j] * log(mu[i][j]);
 			}
 		}
@@ -415,17 +660,23 @@ double CVI::countXIEBENI()
 double CVI::countKWON()
 {
 	if (fuzzydata != nullptr) {
-		double Jm = fuzzydata->getJm();
+		double Jm = 0;
+		double** d = fuzzydata->getDistances();
+		for (int i = 0; i < numberOfObjects; i++) {
+			for (int j = 0; j < numberOfClusters; j++) {
+				Jm += pow(mu[i][j], 2) * pow(d[i][j], 2);
+			}
+		}
 		
 		double min = getMinCentersDistance();
 
 		double* meanObjects = new double[numberOfCoordinates];
 		for (int k = 0; k < numberOfCoordinates; k++) {
 			double sum = 0;
-			for (int i = 0; i < numberOfObjects; i++) {
+			for (int i = 0; i < numberOfClusters; i++) {
 				sum += centers[i]->getValue(k);
 			}
-			meanObjects[k] = sum / numberOfObjects;
+			meanObjects[k] = sum / numberOfClusters;
 		}
 
 		double sum = 0;
@@ -439,7 +690,7 @@ double CVI::countKWON()
 			distance = sqrt(distance);
 			sum += pow(distance, 2);
 		}
-		double xx = (1 / numberOfClusters)*sum;
+		double xx = sum / numberOfClusters;
 		delete[] meanObjects;
 
 		indices[KWON] = (Jm + xx) / min;
@@ -453,6 +704,7 @@ double CVI::countKWON()
 double CVI::countFHV()
 {
 	if (fuzzydata != nullptr) {
+		numberOfCoordinates = 4;	//PREC
 		double** F = new double*[numberOfCoordinates];
 		for (int k = 0; k < numberOfCoordinates; k++) {
 			F[k] = new double[numberOfCoordinates];
@@ -460,7 +712,7 @@ double CVI::countFHV()
 
 		double sum = 0;
 		for (int j = 0; j < numberOfClusters; j++) {
-			F = getF(F,j);
+			//F = getF(F,j);
 			double det = getDeterminant(F);
 			sum += sqrt(det);
 		}
@@ -481,7 +733,6 @@ double CVI::countPBMF()
 {
 	if (fuzzydata != nullptr) {
 		double Jm = fuzzydata->getJm();
-		double min = getMinCentersDistance();
 
 		Object** mainCenter = getMainCenter();
 		double E1 = 0;
@@ -496,9 +747,9 @@ double CVI::countPBMF()
 			E1 += distance;
 		}
 		double Dc = getMaxCentersDistance();
-		double JmDif = getJmDifferent();
+		//double JmDif = getJmDifferent();
 
-		indices[PBMF] = pow((1/numberOfClusters)*(E1/JmDif)*Dc,2);
+		indices[PBMF] = pow((E1*Dc)/(Jm* numberOfClusters),2);
 	}
 	else {
 		indices[PBMF] = -1;
@@ -539,7 +790,7 @@ double CVI::countSILHOUETTE()
 			double max = a > b ? a : b;
 			sum += (b-a) / max;
 		}
-		indices[SILHOUETTE] = sum / numberOfClusters;
+		indices[SILHOUETTE] = sum / numberOfObjects;
 	}
 	else {
 		indices[SILHOUETTE] = -1;
@@ -550,8 +801,12 @@ double CVI::countSILHOUETTE()
 double CVI::countMPC()
 {
 	if (fuzzydata != nullptr) {
-		double PC = countPC();
-		indices[MPC] = 1-(numberOfClusters/(numberOfClusters-1))*(1-PC);
+		double PCval = indices[PC];
+		if (PCval == -1) {
+			PCval = countPC();
+		}
+		double xx = numberOfClusters - 1;
+		indices[MPC] = 1-((numberOfClusters/(xx))*(1-PCval));
 	}
 	else {
 		indices[MPC] = -1;

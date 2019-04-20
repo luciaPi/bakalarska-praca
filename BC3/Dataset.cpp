@@ -20,6 +20,7 @@ Dataset::~Dataset()
 Dataset & Dataset::operator=(const Dataset & other)
 {
 	numberOfObjects = other.numberOfObjects;
+	all.clear();
 	for (Object* cur : other.all) {
 		all.push_back(new Object(*cur));
 	}

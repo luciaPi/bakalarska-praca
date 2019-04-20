@@ -511,6 +511,11 @@ void Application::count(Counter * counter)
 	}
 	cvi->setAllIndecesToCount();
 	cvi->printResultsHeader(cout);
+	cvi->setAssignedClusters(clusters);
+
+	//test
+	counter->setMaxIterations(1);
+	counter->setFinalCriterion(FinalCriterion::maxIteration);
 
 	double sum = 0;
 	double sumSquared = 0;
@@ -518,8 +523,14 @@ void Application::count(Counter * counter)
 		counter->recount();
 
 		FuzzyData* best = counter->getBest();
+
+		//test
+		/*best->muPrint();
+		best->centersPrint();
+		best->dPrint();*/
+
 		assignClusters(best);
-		cvi->count(best);
+		cvi->count(best,*data);
 				
 		//dataObjectsPrintWithClass();
 		

@@ -5,7 +5,7 @@
 
 enum IndexEnum {
 	PC = 0, MPC = 1, PE = 2, FS = 3, XIEBENI = 4,
-	KWON = 5, FHV = 6, PBMF = 7, PCAES = 8, SILHOUETTE = 10
+	KWON = 5, FHV = 6, PBMF = 7, PCAES = 8, SILHOUETTE = 9
 };
 
 class CVI
@@ -60,13 +60,13 @@ class CVI
 			string result = "";
 			if (numberOfReplication > 0) {
 				double average = sum / numberOfReplication;
-				char averageString[10];
-				sprintf(averageString,"%.03f",average);
+				char averageString[20];
+				sprintf(averageString,"%.06f",average);
 				result += averageString;
 				if (numberOfReplication >= 30) {
 					double s = sqrt(abs((sumSquared / (numberOfReplication - 1)) - pow(sum / (numberOfReplication - 1), 2)));
 					double interval = (s * t) / sqrt(numberOfReplication);
-					sprintf(averageString, "+-%.05f", interval);
+					sprintf(averageString, "+-%.02f", interval);
 					result += averageString;
 				}
 			}
@@ -76,6 +76,9 @@ class CVI
 			return count;
 		}
 		operator int() const {
+			return value;
+		}
+		operator double() const {
 			return value;
 		}
 		operator std::string() const {
@@ -143,7 +146,7 @@ public:
 	CVI(int seed1, int seed2);
 	~CVI() {};
 
-	bool count(FuzzyData* data);
+	bool count(FuzzyData* data, Dataset dataset);
 	
 	void setIndexToCount(IndexEnum index);
 	void unsetIndexToCount(IndexEnum index);
@@ -151,5 +154,7 @@ public:
 
 	void printResultsHeader(ostream& output) const;
 	void printResults(ostream& output, string title, double t) const;
+
+	void setAssignedClusters(vector<Attribute*> clusters);
 };
 
