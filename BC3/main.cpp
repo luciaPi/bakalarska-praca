@@ -19,7 +19,7 @@ int main() {
 
 	//string fileName = "";
 	//getline(cin, fileName);
-	int numberOfReplication = 3;
+	int numberOfReplication = 40;
 	//cin >> numberOfIteration;
 	
 	/*std::random_device rd;

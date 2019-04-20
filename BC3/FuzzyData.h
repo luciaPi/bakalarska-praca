@@ -99,5 +99,7 @@ public:
 	double** getDistances() const;
 
 	bool wasSignificantChange(double minchange) const;
+	
+	string getAlgorithmName() const;
 };
 

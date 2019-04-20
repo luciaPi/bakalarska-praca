@@ -1,6 +1,11 @@
 #include "CVI.h"
 #include "FCMcounter.h"
 #include <math.h>  
+#include <iostream>
+
+using namespace std;
+
+auto delimit = [](ostream& output) { output << "|"; };
 
 double CVI::getMinCentersDistance() const
 {
@@ -182,8 +187,8 @@ double ** CVI::getF(double** F, int which)
 	double sum1 = 0;
 	int m = fuzzydata->getM();
 	for (int i = 0; i < numberOfObjects; i++) {
-		sum1 += pow(mu[i][j], m);	
-		sum2
+		//sum1 += pow(mu[i][j], m);	
+		//sum2
 	}
 	for (int k = 0; k < numberOfCoordinates; k++) {
 		for (int l = 0; l < numberOfCoordinates; l++) {
@@ -193,29 +198,21 @@ double ** CVI::getF(double** F, int which)
 	return F;
 }
 
-CVI::CVI()
+double CVI::getDeterminant(double ** F)
 {
-	whichCount = new bool[number];
-	for (int i = 0; i < number; i++) {
-		whichCount[i] = false;
-	}
+	//TO DO
+	return 0.0;
+}
+
+CVI::CVI()
+{	
+	setIndexNames();
 }
 
 CVI::CVI(int seed1, int seed2)
 {
-	whichCount = new bool[number];
-	for (int i = 0; i < number; i++) {
-		whichCount[i] = false;
-	}
+	setIndexNames();
 	fcmCounter = FCMcounter(seed1, seed2);
-	int x = 0;
-}
-
-
-CVI::~CVI()
-{
-	delete whichCount;
-	whichCount = nullptr;
 }
 
 bool CVI::count(FuzzyData* pdata)
@@ -231,19 +228,101 @@ bool CVI::count(FuzzyData* pdata)
 		data = fuzzydata->getData();
 
 		int i = 0;
-		whichCount[i++] ? countPC() : -1;
-		whichCount[i++] ? countMPC() : -1;
-		whichCount[i++] ? countPE() : -1;
-		whichCount[i++] ? countFS() : -1;
-		whichCount[i++] ? countXIEBENI() : -1;
-		whichCount[i++] ? countKWON() : -1;
-		//whichCount[i++] ? countFHV() : -1;
-		whichCount[i++] ? countPBMF() : -1;
-		whichCount[i++] ? countPCAES() : -1;
-		whichCount[i++] ? countSILHOUETTE() : -1;
+		indices[i++] ? countPC() : -1;
+		/*indices[i++] ? countMPC() : -1;
+		indices[i++] ? countPE() : -1;
+		indices[i++] ? countFS() : -1;
+		indices[i++] ? countXIEBENI() : -1;
+		indices[i++] ? countKWON() : -1;
+		//indices[i++] ? countFHV() : -1;
+		indices[i++] ? countPBMF() : -1;
+		indices[i++] ? countPCAES() : -1;
+		indices[i++] ? countSILHOUETTE() : -1;*/
 		return true;
 	}
 	return false;
+}
+
+void CVI::setIndexToCount(IndexEnum index)
+{
+	indices[index] = true;
+}
+
+void CVI::unsetIndexToCount(IndexEnum index)
+{
+	indices[index] = false;
+}
+
+void CVI::setAllIndecesToCount()
+{
+	for (int i = 0; i < number; i++) {
+		indices[i] = true;
+	}
+}
+
+//header
+void CVI::printResultsHeader(ostream& output) const
+{	
+	output << internal << "   Dataset   ";
+	delimit(output);
+	output << internal << "Pocet zhlukov";
+	delimit(output);
+	output << internal << "Algoritmus";
+	delimit(output);
+	delimit(output);
+	for (int i = 0; i < number; i++) {
+		if (indices[i]) {
+			output.width(widthCVI);
+			string name = indices[i];
+			output << name;
+			delimit(output);
+		}
+	}
+	delimit(output);
+	//output << "  Zhluk" << endl;
+	output << endl;
+}
+
+//data
+void CVI::printResults(ostream & output, string title, double t) const
+{
+	output.width(titleSize);
+	output << title;
+	delimit(output);
+
+	output.width(titleSize);
+	output << numberOfClusters;
+	delimit(output);
+
+	output.width(algoritmusSize);
+	output << fuzzydata->getAlgorithmName();
+	delimit(output);
+	delimit(output);
+
+	for (int i = 0; i < number; i++) {
+		if (indices[i]) {			
+			output.width(widthCVI);
+			output << indices[i].getResult(t);
+			delimit(output);
+		}
+	}
+	delimit(output);
+	output <<  endl;
+}
+
+void CVI::setIndexNames()
+{
+	indices.clear();
+	indices.push_back(Index("PC"));
+	indices.push_back(Index("MPC"));
+	indices.push_back(Index("PE"));
+	indices.push_back(Index("FS"));
+	indices.push_back(Index("XIEBENI"));
+	indices.push_back(Index("KWON"));
+	indices.push_back(Index("FHV"));
+	indices.push_back(Index("PBMF"));
+	indices.push_back(Index("PCAES"));
+	indices.push_back(Index("SILHOUETTE"));
 }
 
 double CVI::countPC()
@@ -252,16 +331,16 @@ double CVI::countPC()
 		double sum = 0;
 		const double** mu = fuzzydata->getMu();
 		for (int i = 0; i < numberOfObjects; i++) {
-			for (int j = 0; j < numberOfObjects; j++) {
+			for (int j = 0; j < numberOfClusters; j++) {
 				sum += pow(mu[i][j], 2);
 			}
 		}
-		PCvalue = sum / numberOfObjects;
+		indices[PC] = sum / numberOfObjects;		
 	}
 	else {
-		PCvalue = -1;
+		indices[PC] = -1;
 	}
-	return PCvalue;
+	return indices[PC];
 }
 
 double CVI::countPE()
@@ -274,12 +353,12 @@ double CVI::countPE()
 				sum += mu[i][j] * log(mu[i][j]);
 			}
 		}
-		PEvalue = (-sum) / numberOfObjects;
+		indices[PE] = (-sum) / numberOfObjects;
 	}
 	else {
-		PEvalue = -1;
+		indices[PE] = -1;
 	}
-	return PEvalue;
+	return indices[PE];
 }
 
 double CVI::countFS()
@@ -311,12 +390,12 @@ double CVI::countFS()
 			}
 		}
 		delete[] meanCenters;
-		FSvalue = Jm - Km;
+		indices[FS] = Jm - Km;
 	}
 	else {
-		FSvalue = -1;
+		indices[FS] = -1;
 	}
-	return FSvalue;
+	return indices[FS];
 }
 
 double CVI::countXIEBENI()
@@ -325,12 +404,12 @@ double CVI::countXIEBENI()
 		double Jm = fuzzydata->getJm();		
 		double min = getMinCentersDistance();
 
-		XIEBENIvalue = Jm/(numberOfObjects*min);
+		indices[XIEBENI] = Jm/(numberOfObjects*min);
 	}
 	else {
-		XIEBENIvalue = -1;
+		indices[XIEBENI] = -1;
 	}
-	return XIEBENIvalue;
+	return indices[XIEBENI];
 }
 
 double CVI::countKWON()
@@ -363,12 +442,12 @@ double CVI::countKWON()
 		double xx = (1 / numberOfClusters)*sum;
 		delete[] meanObjects;
 
-		KWONvalue = (Jm + xx) / min;
+		indices[KWON] = (Jm + xx) / min;
 	}
 	else {
-		KWONvalue = -1;
+		indices[KWON] = -1;
 	}
-	return KWONvalue;
+	return indices[KWON];
 }
 
 double CVI::countFHV()
@@ -385,7 +464,7 @@ double CVI::countFHV()
 			double det = getDeterminant(F);
 			sum += sqrt(det);
 		}
-		FHVvalue = sum;
+		indices[FHV] = sum;
 
 		for (int k = 0; k < numberOfCoordinates; k++) {
 			delete[] F[k];
@@ -393,9 +472,9 @@ double CVI::countFHV()
 		delete[] F;
 	}
 	else {
-		FHVvalue = -1;
+		indices[FHV] = -1;
 	}
-	return FHVvalue;
+	return indices[FHV];
 }
 
 double CVI::countPBMF()
@@ -419,12 +498,12 @@ double CVI::countPBMF()
 		double Dc = getMaxCentersDistance();
 		double JmDif = getJmDifferent();
 
-		PBMFvalue = pow((1/numberOfClusters)*(E1/JmDif)*Dc,2);
+		indices[PBMF] = pow((1/numberOfClusters)*(E1/JmDif)*Dc,2);
 	}
 	else {
-		PBMFvalue = -1;
+		indices[PBMF] = -1;
 	}
-	return PBMFvalue;
+	return indices[PBMF];
 }
 
 double CVI::countPCAES()
@@ -442,12 +521,12 @@ double CVI::countPCAES()
 			double min = getMinBeta(j);
 			sum2 += exp(-min);
 		}
-		PCAESvalue = sum1 - sum2;;
+		indices[PCAES] = sum1 - sum2;;
 	}
 	else {
-		PCAESvalue = -1;
+		indices[PCAES] = -1;
 	}
-	return PCAESvalue;
+	return indices[PCAES];
 }
 
 double CVI::countSILHOUETTE()
@@ -460,23 +539,23 @@ double CVI::countSILHOUETTE()
 			double max = a > b ? a : b;
 			sum += (b-a) / max;
 		}
-		SILHOUETTEvalue = sum / numberOfClusters;
+		indices[SILHOUETTE] = sum / numberOfClusters;
 	}
 	else {
-		SILHOUETTEvalue = -1;
+		indices[SILHOUETTE] = -1;
 	}
-	return SILHOUETTEvalue;
+	return indices[SILHOUETTE];
 }
 
 double CVI::countMPC()
 {
 	if (fuzzydata != nullptr) {
 		double PC = countPC();
-		MPCvalue = 1-(numberOfClusters/(numberOfClusters-1))*(1-PC);
+		indices[MPC] = 1-(numberOfClusters/(numberOfClusters-1))*(1-PC);
 	}
 	else {
-		MPCvalue = -1;
+		indices[MPC] = -1;
 	}
-	return MPCvalue;
+	return indices[MPC];
 }
 

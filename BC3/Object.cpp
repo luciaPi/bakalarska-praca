@@ -55,7 +55,10 @@ Attribute* Object::getObjectClass() const {
 
 string Object::getName() const
 {
-	return objectClass->getName();
+	if (objectClass != nullptr) {
+		return objectClass->getName();
+	} 
+	return "";
 }
 
 void Object::setObjectAssignedClass(Attribute * pobjectClas)
@@ -70,7 +73,10 @@ Attribute * Object::getObjectAssignedClass() const
 
 string Object::getAssignedName() const
 {
-	return objectAssignedClass->getName();
+	if (objectClass != nullptr) {
+		return objectAssignedClass->getName();
+	}
+	return "";
 }
 
 int Object::getNumberOfCoordinates() const

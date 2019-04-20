@@ -22,7 +22,7 @@ private:
 	int numberOfReplications = 1;
 	int m = 2;
 	int K = 1;
-	CVI cvi;
+	CVI* cvi;
 
 	string resultFolderName = "Results"; 
 	string outputExtesion = "txt";
@@ -42,17 +42,15 @@ private:
 	int Ppso = 10;
 	int Pfa = 20;
 
-	int t90 = 1.645;
-	int t95 = 1.96;
-	int t99 = 2.576;
-	int actualT = t95;
+	double t90 = 1.645;
+	double t95 = 1.96;
+	double t99 = 2.576;
+	double actualT = t95;
 
 	double alpha = -1;
 	double beta = 1;
 	double gamma = 1;
-
-	void dataObjectsPrint() const;
-
+	
 	void count(Counter* counter);
 
 	string createFolderForOutput() const;
@@ -93,8 +91,8 @@ public:
 	bool setTypeOfOutput(OutputType type);
 	bool setClusterName(string name, int which);
 
-	void setCVI(Index index);
-	void unsetCVI(Index index);
+	void setCVI(IndexEnum index);
+	void unsetCVI(IndexEnum index);
 
 	void setFileOutputMode();
 	void unsetFileOutputMode();
@@ -106,5 +104,8 @@ public:
 
 	void clearObjectClasses();
 	void clearClusterAttributes();
+
+	void dataObjectsPrint() const;
+	void dataObjectsPrintWithClass() const;
 };
 

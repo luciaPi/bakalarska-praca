@@ -570,3 +570,8 @@ bool FuzzyData::wasSignificantChange(double pminchange) const
 	}
 	return false;
 }
+
+string FuzzyData::getAlgorithmName() const
+{
+	return nameAlg;
+}

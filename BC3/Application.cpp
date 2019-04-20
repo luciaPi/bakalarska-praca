@@ -21,14 +21,15 @@ Application::Application()
 {
 	srand(time(0));
 	parameterGenerator = RandomGenerator(rd(), 0, 1);
-	cvi = CVI(rd(), rd());
-	cout << endl;
+	cvi = new CVI(rd(), rd());
 }
 
 Application::~Application()
 {
 	delete data;
 	data = nullptr;
+
+	delete cvi;
 	
 	clearObjectClasses();
 	clearClusterAttributes();
@@ -486,30 +487,51 @@ void Application::dataObjectsPrint() const
 	}
 }
 
+void Application::dataObjectsPrintWithClass() const
+{
+	cout << "Data objects:" << endl;
+	int numberOfCoordiantes;
+	int numberOfObjects;
+	if ((numberOfObjects = data->getSize()) > 0) {
+		numberOfCoordiantes = (*data)[0].getNumberOfCoordinates();
+		for (int i = 0; i < numberOfObjects; i++) {
+			for (int k = 0; k < numberOfCoordiantes; k++) {
+				cout << (*data)[i].getValue(k) << (k < numberOfCoordiantes - 1 ? "," : " ");
+			}
+			cout << (*data)[i].getAssignedName() << endl;
+		}
+	}
+}
+
 void Application::count(Counter * counter)
 {
 	string resultPath = "";
 	if (fileOutputMode) {
 		resultPath = createFolderForOutput();
 	}
+	cvi->setAllIndecesToCount();
+	cvi->printResultsHeader(cout);
 
 	double sum = 0;
 	double sumSquared = 0;
 	for (int i = 0; i < numberOfReplications; i++) {
 		counter->recount();
-		counter->printJm();
 
 		FuzzyData* best = counter->getBest();
 		assignClusters(best);
-		cvi.count(best);
+		cvi->count(best);
+				
+		//dataObjectsPrintWithClass();
 		
 		if (fileOutputMode) {
 			saveResultToFile(best, i + 1, resultPath);
 		}
-
+		//counter->printJm();
 		sum += counter->getJm();
 		sumSquared += pow(counter->getJm(),2);
 	}
+	string titleString = title;
+	cvi->printResults(cout, titleString, actualT);
 	double average = sum / numberOfReplications;
 	cout << counter->getAlgorithmName() << " - Stredna hodnota: " << average << endl;
 	if (numberOfReplications >= 30) {
