@@ -61,7 +61,7 @@ class CVI
 			if (numberOfReplication > 0) {
 				double average = sum / numberOfReplication;
 				char averageString[20];
-				sprintf(averageString,"%.06f",average);
+				sprintf(averageString,"%.03f",average);
 				result += averageString;
 				if (numberOfReplication >= 30) {
 					double s = sqrt(abs((sumSquared / (numberOfReplication - 1)) - pow(sum / (numberOfReplication - 1), 2)));
@@ -130,7 +130,7 @@ class CVI
 	double getMinCentersDistance() const;
 	double getMaxCentersDistance() const;
 	double getJmDifferent() const;
-	Object** getMainCenter();
+	Object* getMainCenter();
 	double getMinBeta(int which) const;
 	double getMuM() const;
 	double getBeta() const;

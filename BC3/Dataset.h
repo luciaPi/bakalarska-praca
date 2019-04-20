@@ -8,6 +8,7 @@ class Dataset
 private:	
 	int numberOfObjects = 0;
 	vector<Object*> all;
+	void clear();
 
 public:
 	Dataset() {};

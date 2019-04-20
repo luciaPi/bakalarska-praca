@@ -142,7 +142,7 @@ void FuzzyData::clear()
 //inicializacia matice mu
 void FuzzyData::muInit()
 {	
-	/*mu = new double*[numberOfObjects];
+	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
 		mu[i] = new double[numberOfClusters];
 	}
@@ -151,7 +151,7 @@ void FuzzyData::muInit()
 	}
 	else {
 		randomMuInit();
-	}*/
+	}
 	/*int which = 0;
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -166,7 +166,7 @@ void FuzzyData::muInit()
 		which++;
 	}*/
 	//test
-	double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
+	/*double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
 	int which = 0;
 	mu = new double*[numberOfObjects];
 	for (int i = 0; i < numberOfObjects; i++) {
@@ -175,7 +175,7 @@ void FuzzyData::muInit()
 			mu[i][j] = values[which];
 			which++;
 		}
-	}
+	}*/
 	/*double values[] = { 0.8, 0.2, 0.9, 0.1,0.7,0.3,0.3,0.7,0.5,0.5,0.2,0.8 };
 	int which = 0;
 	mu = new double*[numberOfObjects];

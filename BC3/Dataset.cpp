@@ -1,12 +1,7 @@
 #include "Dataset.h"
 #include <vector>
 
-Dataset::Dataset(const Dataset & other)
-{
-	*this = other;
-}
-
-Dataset::~Dataset()
+void Dataset::clear()
 {
 	if (numberOfObjects > 0) {
 		while (all.size() > 0) {
@@ -17,10 +12,20 @@ Dataset::~Dataset()
 	}
 }
 
+Dataset::Dataset(const Dataset & other)
+{
+	*this = other;
+}
+
+Dataset::~Dataset()
+{
+	clear();
+}
+
 Dataset & Dataset::operator=(const Dataset & other)
 {
 	numberOfObjects = other.numberOfObjects;
-	all.clear();
+	clear();
 	for (Object* cur : other.all) {
 		all.push_back(new Object(*cur));
 	}

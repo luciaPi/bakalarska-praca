@@ -514,8 +514,8 @@ void Application::count(Counter * counter)
 	cvi->setAssignedClusters(clusters);
 
 	//test
-	counter->setMaxIterations(1);
-	counter->setFinalCriterion(FinalCriterion::maxIteration);
+	//counter->setMaxIterations(1);
+	//counter->setFinalCriterion(FinalCriterion::maxIteration);
 
 	double sum = 0;
 	double sumSquared = 0;
@@ -540,6 +540,8 @@ void Application::count(Counter * counter)
 		//counter->printJm();
 		sum += counter->getJm();
 		sumSquared += pow(counter->getJm(),2);
+		string titleString = title;
+		cvi->printResults(cout, titleString, actualT);
 	}
 	string titleString = title;
 	cvi->printResults(cout, titleString, actualT);
