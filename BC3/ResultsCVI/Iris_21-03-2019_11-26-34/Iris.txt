@@ -1,2 +1,0 @@
-   Dataset   |Pocet zhlukov|Algoritmus||                    PC|                   MPC|                    PE|                    FS|               XIEBENI|                  KWON|                   FHV|                  PBMF|                 PCAES|            SILHOUETTE||
-         Iris|            3|       FCM||                 0.818|                 0.727|                 0.333|              -950.179|                 0.092|                11.507|                 7.348|               110.530|                 2.826|                 0.549||

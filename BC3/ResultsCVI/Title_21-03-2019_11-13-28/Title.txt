@@ -1,3 +1,0 @@
-   Dataset   |Pocet zhlukov|Algoritmus|||
-        Title|            3|       FCM|||
-        Title|            3|       FCM|||

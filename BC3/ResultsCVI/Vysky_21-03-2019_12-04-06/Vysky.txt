@@ -1,2 +1,0 @@
-   Dataset   |Pocet zhlukov|Algoritmus||                    PC|                   MPC|                    PE|                    FS|               XIEBENI|                  KWON|                   FHV|                  PBMF|                 PCAES|            SILHOUETTE||
-        Vysky|            3|   FCM-PSO||                 0.700|                 0.550|                 0.517|              -842.407|                 0.457|                 3.104|                25.932|               106.890|                 3.348|                 0.406||

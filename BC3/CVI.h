@@ -147,6 +147,8 @@ public:
 	~CVI() {};
 
 	bool count(FuzzyData* data, Dataset dataset);
+
+	void resetCVI();
 	
 	void setIndexToCount(IndexEnum index);
 	void unsetIndexToCount(IndexEnum index);

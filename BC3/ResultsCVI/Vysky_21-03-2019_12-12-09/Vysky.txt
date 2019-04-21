@@ -1,2 +1,0 @@
-   Dataset   |Pocet zhlukov|Algoritmus|||
-        Vysky|            3|     FAFCM|||

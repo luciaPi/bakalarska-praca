@@ -32,6 +32,7 @@ void FAFCMcounter::setAlgorithmName(string name)
 {
 	FAcounter::setAlgorithmName(name);
 	FCMcounter::setAlgorithmName(name);
+	Counter::setAlgorithmName(name);
 }
 
 bool FAFCMcounter::wasSignificantChange() const

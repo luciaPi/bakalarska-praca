@@ -304,6 +304,13 @@ bool CVI::count(FuzzyData* pdata, Dataset pdataset)
 	return false;
 }
 
+void CVI::resetCVI()
+{
+	for (Index& actual : indices) {
+		actual.setToCount();
+	}
+}
+
 void CVI::setIndexToCount(IndexEnum index)
 {
 	indices[index] = true;

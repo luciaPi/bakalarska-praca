@@ -306,6 +306,10 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 		"@DATA"
 		};
 		char comment = '%';
+
+		if (muInitMode == MuInitializationMode::fcmPlusPlus) {
+			titles[1] = "Centers++";
+		}
 		
 		//title
 		int which = 0;
@@ -688,20 +692,21 @@ void Application::dataObjectsPrintWithClass() const
 
 void Application::count(Counter * counter)
 {
-	cvi->printResultsHeader(cout);
+	//cvi->printResultsHeader(cout);
 	cvi->setAssignedClusters(clusters);
+	cvi->resetCVI();
 
 	string resultPath = "";
 	string resultCVIPath = "";
 	string titleString = title;
-	if (fileOutputMode) {
-		resultPath = createFolderForOutput();
+	if (fileOutputMode) {		
+		resultPath = createFolderForOutput(counter->getAlgorithmName());
 	}
 	FILE* datafile = nullptr;
 	
 	fstream fileStream(datafile);
 	if (fileCVIOutputMode) {
-		resultCVIPath = createFolderForCVIOutput();
+		resultCVIPath = createFolderForCVIOutput(counter->getAlgorithmName());
 		datafile = openCVIFile(resultCVIPath);
 		fileStream = fstream(datafile);
 		cvi->printResultsHeader(fileStream);
@@ -737,7 +742,7 @@ void Application::count(Counter * counter)
 		//counter->printJm();
 		sum += counter->getJm();
 		sumSquared += pow(counter->getJm(),2);		
-		cvi->printResults(cout, titleString, actualT);
+		//cvi->printResults(cout, titleString, actualT);
 	}
 	//cvi->printResults(cout, titleString, actualT);
 
@@ -756,28 +761,28 @@ FILE* Application::openCVIFile(string resultCVIpath)
 	return datafile;
 }
 
-string Application::createFolderForOutput() const
+string Application::createFolderForOutput(string algName) const
 {
 	string titleString = title;
 	time_t now = time(0);
 	tm* date = localtime(&now);
 	char folderName[50];
 
-	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec);
+	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d_%s", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec, algName.c_str());
 	string resultPath = resultFolderName + "/" + folderName;
 	mkdir(resultFolderName.c_str());
 	mkdir(resultPath.c_str());
 	return resultPath;
 }
 
-string Application::createFolderForCVIOutput() const
+string Application::createFolderForCVIOutput(string algName) const
 {
 	string titleString = title;
 	time_t now = time(0);
 	tm* date = localtime(&now);
 	char folderName[50];
 
-	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec);
+	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d_%s", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec, algName.c_str());
 	string resultPath = resultCVIFolderName + "/" + folderName;
 	mkdir(resultCVIFolderName.c_str());
 	mkdir(resultPath.c_str());

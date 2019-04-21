@@ -8,7 +8,7 @@
 using namespace std;
 
 int main() {		
-	const char* fileName = "vysky.txt";
+	//const char* fileName = "vysky.txt";
 	//const char* fileName = "fcmexample.txt";
 	//const char* fileName = "iris.arff";
 	//const char* fileName = "iris.data";
@@ -16,9 +16,11 @@ int main() {
 	//const char* fileName = "glass_csv.csv";
 	//const char* fileName = "wine.data";
 
+	const char* fileName;
 	//string fileName = "";
 	//getline(cin, fileName);
-	int numberOfReplication = 1;
+	
+	int numberOfReplication = 1000;
 	//cin >> numberOfIteration;
 	
 	/*std::random_device rd;
@@ -31,27 +33,116 @@ int main() {
 		std::cout << rn2.nextRandom() << ' ';
 	} cout << endl;*/
 
-	Application counter;
-	
-	counter.setNumberOfClusters(3);
-	//counter.setData(fileName.c_str());
-	counter.setData(fileName);
+	Application counter;	
+	//counter.setData(fileName.c_str());	
 	counter.setAllCVI();
+	counter.setFileOutputMode();	
+	counter.setCVIFileOutputMode();
+	counter.setNumberOfReplications(numberOfReplication);
 		 
 	//counter.setMuInitializationMode(MuInitializationMode::fcmPlusPlus);
 
-	counter.setTitle("Vysky");
+	/*counter.setTitle("Wine");
+	fileName = "wine.data";
+	counter.setData(fileName);
+	counter.setNumberOfClusters(3);
 	counter.setNumberOfReplications(numberOfReplication);
+
 	counter.count(Algorithm::fcm,100);
 	counter.count(Algorithm::pso,100);
 	counter.count(Algorithm::fcmpso,3);
 	counter.count(Algorithm::fa,20);
-	counter.count(Algorithm::fafcm,1);
+	counter.count(Algorithm::fafcm,1);*/
 
-	/*fileName = "iris.data";
-	counter.setTitle("Iris");
-	counter.setData(fileName);
-	counter.count(Algorithm::fcm, 100);*/
+	
+	for (int i = 1; i < 10; i++)
+	{
+		fileName = "iris.data";
+		counter.setTitle("Iris");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+		fileName = "parkinsons.data";
+		counter.setTitle("Parkinson");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+		fileName = "glass_csv.csv";
+		counter.setTitle("Glass");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+		fileName = "wine.data";
+		counter.setTitle("Wine");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+	}
+
+	counter.setMuInitializationMode(MuInitializationMode::fcmPlusPlus);
+	for (int i = 1; i < 10; i++)
+	{
+		fileName = "iris.data";
+		counter.setTitle("Iris");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+		fileName = "parkinsons.data";
+		counter.setTitle("Parkinson");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+		fileName = "glass_csv.csv";
+		counter.setTitle("Glass");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+		fileName = "wine.data";
+		counter.setTitle("Wine");
+		counter.setNumberOfClusters(i);
+		counter.setData(fileName);
+		counter.count(Algorithm::fcm, 1000);
+		counter.count(Algorithm::pso, 10000);
+		counter.count(Algorithm::fcmpso, 50);
+		counter.count(Algorithm::fa, 500);
+		counter.count(Algorithm::fafcm, 1);
+
+	}
 
  	return 0;
 }

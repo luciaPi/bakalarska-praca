@@ -63,8 +63,8 @@ private:
 	void count(Counter* counter);
 	FILE* openCVIFile(string resultCVIpath);
 
-	string createFolderForOutput() const;
-	string createFolderForCVIOutput() const;
+	string createFolderForOutput(string algName) const;
+	string createFolderForCVIOutput(string algName) const;
 	void resetClusterAttributes();
 	int whichCenter(int whichObject, FuzzyData* fuzzyData) const;
 	
