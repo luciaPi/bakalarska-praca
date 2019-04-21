@@ -197,6 +197,11 @@ void Particle::setSize(int psize)
 	}
 }
 
+void Particle::setMaxV(double parmaxV)
+{
+	maxV = parmaxV;
+}
+
 void Particle::Vprint() const
 {
 	cout << getName() << " - V " << getAlgorithmName() << ": " << endl;

@@ -12,7 +12,7 @@ private:
 	double r2 = 0.5;
 	double w = 1;
 
-	const double maxV = 0.0001; //0.0001 10000iteracii
+	double maxV = 0.0001; //0.0001 10000iteracii
 
 	RandomGenerator* Vgenerator = nullptr;
 	
@@ -62,6 +62,7 @@ public:
 	void setr1r2(double r1, double r2);
 	void setw(double w);
 	void setSize(int size);
+	void setMaxV(double maxV);
 		
 	void setV(double par[]);	//dat prec
 

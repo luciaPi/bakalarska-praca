@@ -175,7 +175,7 @@ void FuzzyData::muInit()
 			mu[i][j] = values[which];
 			which++;
 		}
-	}*/
+	}
 	/*double values[] = { 0.8, 0.2, 0.9, 0.1,0.7,0.3,0.3,0.7,0.5,0.5,0.2,0.8 };
 	int which = 0;
 	mu = new double*[numberOfObjects];

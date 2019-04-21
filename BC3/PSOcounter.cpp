@@ -14,6 +14,9 @@ void PSOcounter::setCounter(Dataset pdata, int numberOfClusters, int m, double c
 	if (P > 0) {
 		gbest = particles[0];
 	}
+	if (maxV > 0) {
+		setMaxV();
+	}
 }
 
 PSOcounter::PSOcounter()
@@ -195,6 +198,18 @@ void PSOcounter::setK(int K)
 {
 	for (int l = 0; l < P; l++) {
 		particles[l]->setK(K);
+	}
+}
+
+void PSOcounter::setMaxV(double pmaxV)
+{
+	maxV = pmaxV;
+}
+
+void PSOcounter::setMaxV()
+{
+	for (int l = 0; l < P; l++) {
+		particles[l]->setMaxV(maxV);
 	}
 }
 

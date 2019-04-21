@@ -53,7 +53,6 @@ class CVI
 		}
 		Index& operator=(bool pvalue) {
 			count = pvalue;
-			setToCount();
 			return *this;
 		}
 		string getResult(double t) const {
@@ -88,7 +87,8 @@ class CVI
 
 	int titleSize = 13;
 	int algoritmusSize = 10;
-	int widthCVI = 15;
+	int widthCVIConsole = 15;
+	int widthCVIFile = 22;
 
 	/*double PCvalue = -1;
 	double MPCvalue = -1;
@@ -151,6 +151,7 @@ public:
 	void setIndexToCount(IndexEnum index);
 	void unsetIndexToCount(IndexEnum index);
 	void setAllIndecesToCount();
+	void unsetAllIndecesToCount();
 
 	void printResultsHeader(ostream& output) const;
 	void printResults(ostream& output, string title, double t) const;

@@ -321,9 +321,19 @@ void CVI::setAllIndecesToCount()
 	}
 }
 
+void CVI::unsetAllIndecesToCount()
+{
+	for (int i = 0; i < number; i++) {
+		indices[i] = false;
+	}
+}
+
 //header
 void CVI::printResultsHeader(ostream& output) const
 {	
+	bool isConsole = &output == &cout ? true : false;
+	int widthCVIactual = isConsole ? widthCVIConsole : widthCVIFile;
+
 	output << internal << "   Dataset   ";
 	delimit(output);
 	output << internal << "Pocet zhlukov";
@@ -333,7 +343,7 @@ void CVI::printResultsHeader(ostream& output) const
 	delimit(output);
 	for (int i = 0; i < number; i++) {
 		if (indices[i]) {
-			output.width(widthCVI);
+			output.width(widthCVIactual);
 			string name = indices[i];
 			output << name;
 			delimit(output);
@@ -347,6 +357,9 @@ void CVI::printResultsHeader(ostream& output) const
 //data
 void CVI::printResults(ostream & output, string title, double t) const
 {
+	bool isConsole = &output == &cout ? true : false; 
+	int widthCVIactual = isConsole ? widthCVIConsole : widthCVIFile;
+
 	output.width(titleSize);
 	output << title;
 	delimit(output);
@@ -362,7 +375,7 @@ void CVI::printResults(ostream & output, string title, double t) const
 
 	for (int i = 0; i < number; i++) {
 		if (indices[i]) {			
-			output.width(widthCVI);
+			output.width(widthCVIactual);
 			output << indices[i].getResult(t);
 			delimit(output);
 		}

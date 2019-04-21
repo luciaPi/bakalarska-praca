@@ -24,13 +24,21 @@ private:
 	int K = 1;
 	CVI* cvi;
 
+	bool isSetMinCHange = false;
+	double minChange;
+
 	string resultFolderName = "Results"; 
+	string resultCVIFolderName = "ResultsCVI"; 
 	string outputExtesion = "txt";
 	char* title = "Title";
 	bool fileOutputMode = true;
+	bool fileCVIOutputMode = true;
 
 	vector<Attribute*> objectClasses;
 	vector<Attribute*> clusters;
+
+	bool isSetFinalCriterion = false;
+	FinalCriterion finalCriterion = FinalCriterion::maxIteration;
 
 	MuInitializationMode muInitMode = MuInitializationMode::random;
 
@@ -38,6 +46,7 @@ private:
 	double c2 = 2;
 	double r1 = -1;
 	double r2 = -1;
+	double maxV = -1;
 	int w = 2;
 	int Ppso = 10;
 	int Pfa = 20;
@@ -52,8 +61,10 @@ private:
 	double gamma = 1;
 	
 	void count(Counter* counter);
+	FILE* openCVIFile(string resultCVIpath);
 
 	string createFolderForOutput() const;
+	string createFolderForCVIOutput() const;
 	void resetClusterAttributes();
 	int whichCenter(int whichObject, FuzzyData* fuzzyData) const;
 	
@@ -75,27 +86,33 @@ public:
 	bool setBeta(double beta);
 	bool setGamma(double gamma);
 	bool setK(int K);
-	double setMaxV(double maxV);
+	bool setMaxV(double maxV);
 
 	bool setData(const char* name);
 	bool setNumberOfClusters(int number);
 	bool setNumberOfReplications(int number);
 	bool setConfidenceInterval(int value);
 
-	bool setTitle(const char* title);
+	bool setTitle(char* title);
 
 	bool setFinalCriterion(FinalCriterion criterion);
+	bool unsetFinalCriterion();
 	bool setMinChange(double minCHange);
+	bool unsetMinChange();
 	bool setMuInitializationMode(MuInitializationMode mode);
 	
 	bool setTypeOfOutput(OutputType type);
 	bool setClusterName(string name, int which);
-
+	
 	void setCVI(IndexEnum index);
+	void setAllCVI();
 	void unsetCVI(IndexEnum index);
+	void unsetAllCVI();
 
 	void setFileOutputMode();
 	void unsetFileOutputMode();
+	void setCVIFileOutputMode();
+	void unsetCVIFileOutputMode();
 
 	void saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const;
 	void saveResultToFile(const FuzzyData* fuzzyData, int which, string resultPath);

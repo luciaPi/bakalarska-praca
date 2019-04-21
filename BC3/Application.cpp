@@ -51,7 +51,15 @@ void Application::count(Algorithm alg, int numberOfItertion)
 		switch (alg) {
 			case Algorithm::fcm: {
 				FCMcounter fcmCounter(rd(),rd());
-				fcmCounter.setFinalCriterion(FinalCriterion::minChange);
+				if (isSetFinalCriterion) {
+					fcmCounter.setFinalCriterion(finalCriterion);
+				}
+				else {
+					fcmCounter.setFinalCriterion(FinalCriterion::minChange);
+				}
+				if (isSetMinCHange) {
+					fcmCounter.setMinChange(minChange);
+				}
 				fcmCounter.setAlgorithmName("FCM");
 				fcmCounter.setMaxIterations(numberOfItertion);
 
@@ -62,8 +70,19 @@ void Application::count(Algorithm alg, int numberOfItertion)
 			case Algorithm::pso: {
 				PSOcounter psoCounter(rd(), rd(), rd());
 				psoCounter.setAlgorithmName("PSO");
-				psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
-				psoCounter.setMaxIterations(numberOfItertion);				
+				if (isSetFinalCriterion) {
+					psoCounter.setFinalCriterion(finalCriterion);
+				}
+				else {
+					psoCounter.setFinalCriterion(FinalCriterion::maxIteration);
+				}	
+				if (isSetMinCHange) {
+					psoCounter.setMinChange(minChange);
+				}
+				psoCounter.setMaxIterations(numberOfItertion);		
+				if (maxV > 0) {
+					psoCounter.setMaxV(maxV);
+				}
 
 				psoCounter.setCounter(*data, numberOfClusters, m,c1, c2, r1, r2, w, Ppso, K, muInitMode);
 				count(&psoCounter);
@@ -71,8 +90,11 @@ void Application::count(Algorithm alg, int numberOfItertion)
 			}	
 			case Algorithm::fcmpso: {
 				FCMPSOcounter fcmpsoCounter(rd(), rd(), rd(),rd(), rd());
-				fcmpsoCounter.setAlgorithmName("FCM-PSO");
+				fcmpsoCounter.setAlgorithmName("FCM-PSO");				
 				fcmpsoCounter.setNumberOfIterations(numberOfItertion);
+				if (maxV > 0) {
+					fcmpsoCounter.setMaxV(maxV);
+				}
 
 				fcmpsoCounter.setCounter(*data, numberOfClusters, m, c1, c2, r1, r2, w, Ppso, K, muInitMode);
 				count(&fcmpsoCounter);
@@ -82,7 +104,15 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				FAcounter faCounter(rd(), rd(), rd(), rd());
 				faCounter.setAlgorithmName("FA");
 				faCounter.setMaxIterations(numberOfItertion);
-				faCounter.setFinalCriterion(FinalCriterion::maxIteration);
+				if (isSetFinalCriterion) {
+					faCounter.setFinalCriterion(finalCriterion);
+				}
+				else {
+					faCounter.setFinalCriterion(FinalCriterion::maxIteration);
+				}		
+				if (isSetMinCHange) {
+					faCounter.setMinChange(minChange);
+				}
 
 				faCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa, K, muInitMode);
 				count(&faCounter);
@@ -98,6 +128,97 @@ void Application::count(Algorithm alg, int numberOfItertion)
 			}
 		}	
 	}
+}
+
+bool Application::setM(int parm)
+{
+	m = parm;
+	return true;
+}
+
+bool Application::setC1(double parc1)
+{
+	c1 = parc1;
+	return true;
+}
+
+bool Application::setC2(double parc2)
+{
+	c2 = parc2;
+	return true;
+}
+
+bool Application::setR1(double parr1)
+{
+	r1 = parr1;
+	return r1;
+}
+
+bool Application::setR2(double parr2)
+{
+	r2 = parr2;
+	return true;
+}
+
+bool Application::setW(double parw)
+{
+	w = parw;
+	return true;
+}
+
+bool Application::setSizeOfPopulationPSO(int size)
+{
+	Ppso = size;
+	return true;
+}
+
+bool Application::setSizeOfPopulationFA(int size)
+{
+	Pfa = size;
+	return true;
+}
+
+bool Application::setAlpha(double palpha)
+{
+	alpha = palpha;
+	return true;
+}
+
+bool Application::setBeta(double pbeta)
+{
+	beta = pbeta;
+	return true;
+}
+
+bool Application::setGamma(double pgamma)
+{
+	gamma = pgamma;
+	return true;
+}
+
+bool Application::setK(int parK)
+{
+	K = parK;
+	return true;
+}
+
+bool Application::setMaxV(double parmaxV)
+{
+	maxV = parmaxV;
+	return true;
+}
+
+bool Application::setMinChange(double pminCHange)
+{
+	minChange = pminCHange;
+	isSetMinCHange = true;
+	return true;
+}
+
+bool Application::unsetMinChange()
+{
+	isSetMinCHange = false;
+	return true;
 }
 
 bool Application::setMuInitializationMode(MuInitializationMode mode)
@@ -121,6 +242,35 @@ bool Application::setTypeOfOutput(OutputType type)
 	return false;
 }
 
+bool Application::setClusterName(string name, int which)
+{
+	if (which >= 0 && which < numberOfClusters) {
+		clusters[which]->setValues(name);
+		return true;
+	}
+	return true;
+}
+
+void Application::setCVI(IndexEnum index)
+{
+	cvi->setIndexToCount(index);
+}
+
+void Application::setAllCVI()
+{
+	cvi->setAllIndecesToCount();
+}
+
+void Application::unsetCVI(IndexEnum index)
+{
+	cvi->unsetIndexToCount(index);
+}
+
+void Application::unsetAllCVI()
+{
+	cvi->unsetAllIndecesToCount();
+}
+
 void Application::setFileOutputMode()
 {
 	fileOutputMode = true;
@@ -129,6 +279,16 @@ void Application::setFileOutputMode()
 void Application::unsetFileOutputMode()
 {
 	fileOutputMode = false;
+}
+
+void Application::setCVIFileOutputMode()
+{
+	fileCVIOutputMode = true;
+}
+
+void Application::unsetCVIFileOutputMode()
+{
+	fileCVIOutputMode = false;
 }
 
 void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const
@@ -236,6 +396,7 @@ void Application::assignClusters(FuzzyData* fuzzyData)
 		(*data)[i].setObjectAssignedClass(clusters[whichCluster]);
 	}
 }
+
 void Application::clearObjectClasses()
 {
 	while (objectClasses.size() > 0) {
@@ -244,6 +405,7 @@ void Application::clearObjectClasses()
 		objectClasses.pop_back();
 	}
 }
+
 void Application::clearClusterAttributes()
 {
 	while (clusters.size() > 0) {
@@ -252,6 +414,7 @@ void Application::clearClusterAttributes()
 		clusters.pop_back();
 	}
 }
+
 int Application::whichCenter(int whichObject, FuzzyData* fuzzyData) const
 {
 	double max = 0;
@@ -271,6 +434,7 @@ int Application::whichCenter(int whichObject, FuzzyData* fuzzyData) const
 bool Application::setData(const char* fileName)
 {
 	clearObjectClasses();
+	delete data;
 
 	ifstream myFile;
 	myFile.open(fileName);
@@ -470,6 +634,25 @@ bool Application::setConfidenceInterval(int value)
 	return false;
 }
 
+bool Application::setTitle(char * ptitle)
+{
+	title = ptitle;
+	return true;
+}
+
+bool Application::setFinalCriterion(FinalCriterion criterion)
+{
+	finalCriterion = criterion;
+	isSetFinalCriterion = true;
+	return true;
+}
+
+bool Application::unsetFinalCriterion()
+{
+	isSetFinalCriterion = false;
+	return true;
+}
+
 //vypis vstupnych dat
 void Application::dataObjectsPrint() const
 {
@@ -505,13 +688,24 @@ void Application::dataObjectsPrintWithClass() const
 
 void Application::count(Counter * counter)
 {
+	cvi->printResultsHeader(cout);
+	cvi->setAssignedClusters(clusters);
+
 	string resultPath = "";
+	string resultCVIPath = "";
+	string titleString = title;
 	if (fileOutputMode) {
 		resultPath = createFolderForOutput();
 	}
-	cvi->setAllIndecesToCount();
-	cvi->printResultsHeader(cout);
-	cvi->setAssignedClusters(clusters);
+	FILE* datafile = nullptr;
+	
+	fstream fileStream(datafile);
+	if (fileCVIOutputMode) {
+		resultCVIPath = createFolderForCVIOutput();
+		datafile = openCVIFile(resultCVIPath);
+		fileStream = fstream(datafile);
+		cvi->printResultsHeader(fileStream);
+	}
 
 	//test
 	//counter->setMaxIterations(1);
@@ -537,22 +731,29 @@ void Application::count(Counter * counter)
 		if (fileOutputMode) {
 			saveResultToFile(best, i + 1, resultPath);
 		}
+		if (fileCVIOutputMode && datafile != nullptr) {
+			cvi->printResults(fileStream, titleString, actualT);
+		}
 		//counter->printJm();
 		sum += counter->getJm();
-		sumSquared += pow(counter->getJm(),2);
-		string titleString = title;
+		sumSquared += pow(counter->getJm(),2);		
 		cvi->printResults(cout, titleString, actualT);
 	}
-	string titleString = title;
-	cvi->printResults(cout, titleString, actualT);
-	double average = sum / numberOfReplications;
-	cout << counter->getAlgorithmName() << " - Stredna hodnota: " << average << endl;
-	if (numberOfReplications >= 30) {
-		double s = sqrt(abs((sumSquared / (numberOfReplications - 1)) - pow(sum / (numberOfReplications - 1), 2)));
-		double interval = (s * actualT) / sqrt(numberOfReplications);
-		cout << counter->getAlgorithmName() << " - Interval spolahlivosti: " << average << " +- " << interval << endl;
+	//cvi->printResults(cout, titleString, actualT);
+
+	if (datafile != nullptr) {
+		fclose(datafile);
 	}
-	cout << endl;
+}
+
+FILE* Application::openCVIFile(string resultCVIpath)
+{
+	string titleString = title;
+	string filename = titleString + "." + outputExtesion;
+	string filenameWithPath = resultCVIpath + "/" + filename;
+	FILE* datafile = nullptr;
+	datafile = fopen(filenameWithPath.c_str(), "w");
+	return datafile;
 }
 
 string Application::createFolderForOutput() const
@@ -565,6 +766,20 @@ string Application::createFolderForOutput() const
 	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec);
 	string resultPath = resultFolderName + "/" + folderName;
 	mkdir(resultFolderName.c_str());
+	mkdir(resultPath.c_str());
+	return resultPath;
+}
+
+string Application::createFolderForCVIOutput() const
+{
+	string titleString = title;
+	time_t now = time(0);
+	tm* date = localtime(&now);
+	char folderName[50];
+
+	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec);
+	string resultPath = resultCVIFolderName + "/" + folderName;
+	mkdir(resultCVIFolderName.c_str());
 	mkdir(resultPath.c_str());
 	return resultPath;
 }

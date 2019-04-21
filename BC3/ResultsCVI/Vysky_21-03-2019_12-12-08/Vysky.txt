@@ -1,0 +1,2 @@
+   Dataset   |Pocet zhlukov|Algoritmus|||
+        Vysky|            3|   FCM-PSO|||

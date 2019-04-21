@@ -23,6 +23,7 @@ protected:
 	ParticleFuzzyData** particles = nullptr;
 	ParticleFuzzyData* gbest = nullptr;
 	int P;
+	double maxV = -1;
 
 	void count();
 
@@ -36,6 +37,8 @@ protected:
 	void gbestPrint() const;
 	void particlesJmPrint() const;
 	void particlesPbestJmPrint() const;
+
+	void setMaxV();
 
 public:
 	PSOcounter();
@@ -53,5 +56,6 @@ public:
 	void printJm() const override;
 
 	void setK(int K);
+	void setMaxV(double maxV);
 };
 
