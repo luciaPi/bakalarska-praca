@@ -3,7 +3,7 @@
 #include "FCMcounter.h"
 #include <string>
 
-enum IndexEnum {
+enum IndexEnum : int{
 	PC = 0, MPC = 1, PE = 2, FS = 3, XIEBENI = 4,
 	KWON = 5, FHV = 6, PBMF = 7, PCAES = 8, SILHOUETTE = 9
 };

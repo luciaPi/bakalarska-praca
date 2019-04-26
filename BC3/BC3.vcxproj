@@ -139,8 +139,8 @@
     <ClCompile Include="CVI.cpp" />
     <ClCompile Include="FuzzyData.cpp" />
     <ClCompile Include="Dataset.cpp" />
-    <ClCompile Include="FAcounter.cpp" />
     <ClCompile Include="FAFCMcounter.cpp" />
+    <ClCompile Include="HFAFCMcounter.cpp" />
     <ClCompile Include="FCMcounter.cpp" />
     <ClCompile Include="FCMPSOcounter.cpp" />
     <ClCompile Include="Firefly.cpp" />
@@ -159,8 +159,8 @@
     <ClInclude Include="CVI.h" />
     <ClInclude Include="FuzzyData.h" />
     <ClInclude Include="Dataset.h" />
-    <ClInclude Include="FAcounter.h" />
     <ClInclude Include="FAFCMcounter.h" />
+    <ClInclude Include="HFAFCMcounter.h" />
     <ClInclude Include="FCMcounter.h" />
     <ClInclude Include="FCMPSOcounter.h" />
     <ClInclude Include="Firefly.h" />

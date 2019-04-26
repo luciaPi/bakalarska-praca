@@ -1,5 +1,4 @@
 #include "CVI.h"
-#include "FCMcounter.h"
 #include <math.h>  
 #include <iostream>
 

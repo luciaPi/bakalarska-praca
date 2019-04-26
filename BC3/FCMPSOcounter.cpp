@@ -1,5 +1,4 @@
 #include "FCMPSOcounter.h"
-#include "PSOcounter.h"
 #include <iostream>
 
 using namespace std;

@@ -1,28 +1,50 @@
 #pragma once
-#include "FCMcounter.h"
-#include "FAcounter.h"
+#include "Dataset.h"
+#include "FireflyFuzzyData.h"
+#include "Counter.h"
+#include "RandomGenerator.h"
 
-class FAFCMcounter : public FCMcounter, public FAcounter, public Counter
+class FAFCMcounter : public Counter
 {
 private:
-	void count();
+	RandomGenerator muGenerator;
+	RandomGenerator randMovementGenerator;
+	RandomGenerator randMovementFirstGenerator;
+	RandomGenerator centersGenerator;
+
+	FireflyFuzzyData** fireflies = nullptr;
+	
+	void removeFireflies();
+	void firefliesInit(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int K, MuInitializationMode muInitMode);
+	
+	void muPrint() const;
+	void XPrint() const;
+	void dPrint() const;
+	void firefliesJmPrint() const;
+	void gbestPrint() const;
+
+	void compute();
+	void rankFireflies();
+
+protected:
+	int P;
+	bool wasSignificantChange() const override;
 
 public:
-	FAFCMcounter() {};
-	FAFCMcounter(int seed1, int seed2, int seed3, int seed4, int seed5,int seed6) :
-		FAcounter(seed2, seed3, seed4,seed6),
-		FCMcounter(seed1,seed5) {};
-	~FAFCMcounter() {};
+	FAFCMcounter();
+	FAFCMcounter(int seed1, int seed2, int seed3, int seed4);
+	~FAFCMcounter();
+
+	FireflyFuzzyData* gbest = nullptr;
 
 	void setCounter(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P, int K, MuInitializationMode muInitMode);
-		
-	void recount();
 
-	void setAlgorithmName(string name);
+	void count(Dataset data, int numberOfClusters, int m, double alpha, double beta, double gamma, int P, int K, MuInitializationMode muInitMode);
 
-	bool wasSignificantChange() const override;
+	FuzzyData* getBest() const override;
+
 	double getJm() const override;
 	void printJm() const override;
-	FuzzyData* getBest() const override;
+	void recount() override;
 };
 

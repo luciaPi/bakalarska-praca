@@ -39,9 +39,6 @@
     <ClCompile Include="Firefly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FAcounter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
     <ClCompile Include="ParticleFuzzyData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FAFCMcounter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Counter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,6 +58,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CVI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HFAFCMcounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FAFCMcounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,9 +92,6 @@
     <ClInclude Include="Firefly.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FAcounter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -110,13 +107,16 @@
     <ClInclude Include="Counter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FAFCMcounter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RandomGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CVI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HFAFCMcounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FAFCMcounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,14 +6,13 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <direct.h>
 #include "Object.h"
-#include "Attribute.h"
 #include "FCMcounter.h"
 #include "PSOcounter.h"
 #include "FCMPSOcounter.h"
-#include "FAcounter.h"
 #include "FAFCMcounter.h"
-#include <direct.h>
+#include "HFAFCMcounter.h"
 
 using namespace std;
 
@@ -101,7 +100,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				break;
 			}
 			case Algorithm::fa: {
-				FAcounter faCounter(rd(), rd(), rd(), rd());
+				FAFCMcounter faCounter(rd(), rd(), rd(), rd());
 				faCounter.setAlgorithmName("FA");
 				faCounter.setMaxIterations(numberOfItertion);
 				if (isSetFinalCriterion) {
@@ -119,7 +118,7 @@ void Application::count(Algorithm alg, int numberOfItertion)
 				break;
 			}
 			case Algorithm::fafcm: {
-				FAFCMcounter fafcmCounter(rd(), rd(), rd(), rd(),rd(), rd());
+				HFAFCMcounter fafcmCounter(rd(), rd(), rd(), rd(),rd(), rd());
 				fafcmCounter.setAlgorithmName("FAFCM");
 
 				fafcmCounter.setCounter(*data, numberOfClusters, m, alpha, beta, gamma, Pfa, K, muInitMode);
@@ -409,6 +408,7 @@ void Application::clearObjectClasses()
 		objectClasses.pop_back();
 	}
 }
+
 
 void Application::clearClusterAttributes()
 {

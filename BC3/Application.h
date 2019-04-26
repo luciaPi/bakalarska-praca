@@ -5,11 +5,10 @@
 #include <random>
 #include <string>
 #include "RandomGenerator.h"
-#include "FCMcounter.h"
 #include "CVI.h"
 
-enum class Algorithm { fcm, pso, fa, fcmpso, fafcm };
-enum class OutputType  { txt, arff };
+enum Algorithm : int { fcm = 0, pso = 1, fa = 2, fcmpso = 3, fafcm = 4};
+enum class OutputType  { txt = 0, arff = 1 };
 
 class Application
 {
@@ -67,6 +66,10 @@ private:
 	string createFolderForCVIOutput(string algName) const;
 	void resetClusterAttributes();
 	int whichCenter(int whichObject, FuzzyData* fuzzyData) const;
+
+	void clearObjectClasses();
+
+	void clearClusterAttributes();
 	
 public:
 	Application();
@@ -117,10 +120,7 @@ public:
 	void saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const;
 	void saveResultToFile(const FuzzyData* fuzzyData, int which, string resultPath);
 
-	void assignClusters(FuzzyData* fuzzyData);
-
-	void clearObjectClasses();
-	void clearClusterAttributes();
+	void assignClusters(FuzzyData* fuzzyData);	
 
 	void dataObjectsPrint() const;
 	void dataObjectsPrintWithClass() const;
