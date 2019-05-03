@@ -64,7 +64,5 @@ public:
 	double getAlpha() const;
 	double getBeta() const;
 	double getGamma() const;
-
-	//void setCenters(vector<Object> newCenters);
 };
 

@@ -18,9 +18,6 @@ class CVI
 		double sum = 0;
 		double sumSquared = 0;
 
-		/*bool countIndex() {
-			return count;
-		}*/
 		Index(string pname) {
 			name = pname;
 		}
@@ -89,17 +86,6 @@ class CVI
 	int algoritmusSize = 10;
 	int widthCVIConsole = 15;
 	int widthCVIFile = 22;
-
-	/*double PCvalue = -1;
-	double MPCvalue = -1;
-	double PEvalue = -1;
-	double FSvalue = -1;
-	double XIEBENIvalue = -1;
-	double KWONvalue = -1;
-	double FHVvalue = -1;
-	double PBMFvalue = -1;
-	double PCAESvalue = -1;
-	double SILHOUETTEvalue = -1;*/
 
 	int number = 10;
 	FuzzyData *fuzzydata = nullptr;

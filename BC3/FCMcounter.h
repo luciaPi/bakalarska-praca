@@ -27,12 +27,6 @@ protected:
 
 	bool wasSignificantChange() const override;
 
-	//void computeD();	
-	//void computeCenters();
-	//void objectsPrintWithType() const;	
-	//int whichCenter(const Object &object) const;
-	//int whichNumberOfObject(const Object &object) const;
-
 public:
 	FCMcounter();
 	FCMcounter(int seed1, int seed2);

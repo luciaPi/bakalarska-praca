@@ -90,8 +90,7 @@ bool Firefly::move(const Firefly* other)
 {
 	try {
 		double r = computeOverallDistance(other);
-		double betaMove = beta * exp(-gamma * pow(r, 2));	//dat na druhu
-		//cout << getName() << " to " << other->getName() << endl;
+		double betaMove = beta * exp(-gamma * pow(r, 2));	
 		if (betaMove > 0) {
 			for (int i = 0; i < size; i++) {
 				double randNumber = randMovementGenerator->nextRandom();
@@ -103,10 +102,8 @@ bool Firefly::move(const Firefly* other)
 				if (newValue > maxValues[i]) {
 					newValue = maxValues[i];
 				}
-				//cout << **(X + i) << " : " << newValue << endl;
 				**(X + i) = newValue;
 			}
-			//cout << endl;
 			normalize();
 			fitness = setFitness();
 		}

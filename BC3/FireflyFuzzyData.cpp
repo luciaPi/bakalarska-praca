@@ -56,11 +56,6 @@ void FireflyFuzzyData::setX(const FireflyFuzzyData & other)
 	}
 	recalculateFromMu();
 	fitness = setFitness();
-
-	/*muPrint();
-	other.muPrint();
-	centersPrint();
-	other.centersPrint();*/
 }
 
 void FireflyFuzzyData::Xprint() const

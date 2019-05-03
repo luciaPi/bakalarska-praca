@@ -12,8 +12,6 @@ private:
 	void particlesInit(Dataset data, int numberOfClusters, int m, double c1, double c2, double r1, double r2, double w, int K, MuInitializationMode muInitMode);
 	
 	void compute();
-				
-	void setV(); //dat prec potom
 
 	RandomGenerator Vgenerator;
 	RandomGenerator muGenerator;

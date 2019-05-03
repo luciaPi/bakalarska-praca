@@ -51,19 +51,11 @@ void FCMPSOcounter::count()
 			if (hybridGbest->getFitness() < particles[l]->getFitness()) {
 				hybridGbest->setMu(particles[l]->getMu());
 			}
-			//particles[l]->printJm();
-
-			//PSOcounter::printJm();
 		}
 		PSOcounter::count();
 		if (hybridGbest->getFitness() < gbest->getFitness()) {
 			hybridGbest->setMu(gbest->getMu());
 		}
-		/*
-		PSOcounter::gbestPrint();
-		PSOcounter::printJm();
-		PSOcounter::pbestsPrint();
-		PSOcounter::particlesPbestJmPrint();*/
 	}
 	for (int l = 0; l < P; l++) {
 		FCMcounter::count(particles[l]);
@@ -74,18 +66,7 @@ void FCMPSOcounter::count()
 		if (hybridGbest->getFitness() < particles[l]->getFitness()) {
 			hybridGbest->setMu(particles[l]->getMu());
 		}
-		/*particles[l]->printJm();
-
-		PSOcounter::printJm();
-		printJm();*/
 	}
-	/*PSOcounter::gbestPrint();
-	PSOcounter::printJm();
-	PSOcounter::pbestsPrint();
-	PSOcounter::particlesPbestJmPrint();*/
-	
-	/*hybridGbest->printJm();
-	hybridGbest->centersPrint();*/
 }
 
 void FCMPSOcounter::setAlgorithmName(string name)

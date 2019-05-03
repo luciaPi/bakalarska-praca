@@ -24,7 +24,5 @@ public:
 
 	double getMinCoordinate(int which) const;
 	double getMaxCoordinate(int which) const;
-
-	//int whichNumberOfObject(const Object & object) const;
 };
 

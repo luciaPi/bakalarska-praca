@@ -54,23 +54,10 @@ FuzzyData * FCMcounter::getBest() const
 
 void FCMcounter::count()
 {
-	/*muPrint();
-	centersPrint();
-	dPrint();*/
-
 	int i = 0;
 	do {
-		//cout << "Round" << i << endl;
 		computeMu();
-
-		/*muPrint();
-		centersPrint();
-		dPrint();*/
-		//FCMcounter::printJm();
 	} while (!isMetFinalCriterion(i++));
-	//muPrint();
-	//centersPrint();
-	//printJm();
 }
 
 void FCMcounter::clear()
@@ -133,14 +120,6 @@ void FCMcounter::centersPrint() const
 	}
 }
 
-/*//vypocet centier
-void FCMcounter::computeCenters()
-{
-	if (counterData) {
-		counterData->computeCenters();
-	}
-}*/
-
 //vypis matice euklidovskej vzdialenosti
 void FCMcounter::dPrint() const
 {
@@ -148,47 +127,3 @@ void FCMcounter::dPrint() const
 		fuzzyData->dPrint();
 	}
 }
-
-/*void FCMcounter::computeD()
-{
-	if (counterData) {
-		counterData->computeD();
-	}
-}*/
-
-/*
-//vypis dat spolu s priradenym zhlukom
-void FCMcounter::objectsPrintWithType() const
-{
-	cout << "Vysledok:" << endl;
-	for (int i = 0; i < data->getSize();i++) {
-		for (int k = 0; k < numberOfCoordinates; k++) {
-			cout << (*data)[i].getValue(k) << (k == numberOfCoordinates - 1 ? " Zhluk: " : ",");
-		}
-		cout << whichCenter((*data)[i]) << endl;
-	}
-}*/
-
-/*//ku ktoremu centru ma objekt najvyssiu prislusnost
-int FCMcounter::whichCenter(const Object &flower) const
-{
-	int whichObject = whichNumberOfObject(flower);
-
-	double max = 0;
-	int maxCoordinate = -1;
-	if (whichObject >= 0) {
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (mu[whichObject][j] > max) {
-				max = mu[whichObject][j];
-				maxCoordinate = j;
-			}
-		}
-	}
-	return maxCoordinate;
-}*/
-
-/*//zisti poradie daneho objektu v ramci vsetkych objektov
-int FCMcounter::whichNumberOfObject(const Object & flower) const
-{
-	return data->whichNumberOfObject(flower);
-}*/

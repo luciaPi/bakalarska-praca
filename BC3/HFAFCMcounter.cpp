@@ -16,9 +16,6 @@ void HFAFCMcounter::count()
 {
 	FAFCMcounter::recount();
 	FCMcounter::count(gbest);
-
-	//gbest->centersPrint();
-	//gbest->printJm();
 }
 
 void HFAFCMcounter::recount()

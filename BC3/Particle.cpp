@@ -121,15 +121,8 @@ void Particle::reinit()
 
 void Particle::computeV(const Particle* gbest)
 {
-	/*if (gbest == nullptr || pbest == nullptr) {
-		throw new exception();
-	}	
-	if (gbest->getSize() != size) {
-		throw new exception();
-	}*/
 	for (int i = 0; i < size; i++) {
 		*(V+i) = w * (*(V + i)) + c1 * r1*(*(pbest + i) - **(X + i)) + c2 * r2*(gbest->getXValue(i) - **(X + i));
-		//double xx = *(V + i);
 		if (*(V + i) > maxV) {
 			*(V + i) = maxV;
 		}
@@ -265,13 +258,6 @@ int Particle::getSize() const
 double Particle::getXValue(int i) const
 {
 	return **(X+i);
-}
-
-void Particle::setV(double par[])
-{
-	for (int i = 0; i < size; i++) {
-		*(V+i) = par[i];
-	}
 }
 
 double Particle::getC1() const

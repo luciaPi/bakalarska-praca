@@ -96,7 +96,6 @@ double CVI::getMuM() const
 		for (int i = 0; i < numberOfObjects; i++) {
 			sum = sum + pow(mu[i][j], 2);
 		}
-		//fuzzydata->muPrint();
 		if (sum < min) {
 			min = sum;
 		}
@@ -220,13 +219,6 @@ double ** CVI::getF(double** F, int which)
 			F[k][kk] = F[k][kk] / sum1;
 		}
 	}
-	//vypis
-	/*for (int k = 0; k < numberOfCoordinates; k++) {
-		for (int kk = 0; kk < numberOfCoordinates; kk++) {
-			cout << F[k][kk] << " ";
-		}
-		cout << endl;
-	}*/
 	return F;
 }
 
@@ -356,7 +348,6 @@ void CVI::printResultsHeader(ostream& output) const
 		}
 	}
 	delimit(output);
-	//output << "  Zhluk" << endl;
 	output << endl;
 }
 
@@ -585,7 +576,6 @@ double CVI::countPBMF()
 			E1 += distance;
 		}
 		double Dc = getMaxCentersDistance();
-		//double JmDif = getJmDifferent();
 
 		indices[PBMF] = pow((E1*Dc)/(Jm* numberOfClusters),2);
 	}

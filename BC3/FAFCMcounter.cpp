@@ -39,34 +39,13 @@ void FAFCMcounter::count(Dataset pdata, int numberOfClusters, int m, double alph
 	if (pdata.getSize() > 0) {
 		setCounter(pdata, numberOfClusters, m, alpha, beta, gamma, parP, K, muInitMode);
 		
-		//fireflies[0]->printMinMax();
-
 		rankFireflies();
-
-		/*muPrint();
-		dPrint();*/
-		//firefliesJmPrint();
-		/*gbestPrint();
-		XPrint();
-		printJm();*/
 
 		int i = 1;
 		do {
-			//cout << "Round" << i << endl;
 			compute();
 			rankFireflies();
-
-			//muPrint();
-			//dPrint();
-			//XPrint();
-			//firefliesJmPrint();
-			//gbestPrint();
-			//printJm();
 		} while (!isMetFinalCriterion(i++));
-		/*firefliesJmPrint();
-		gbestPrint();
-		XPrint();
-		muPrint();*/
 	}
 }
 
@@ -127,7 +106,6 @@ void FAFCMcounter::firefliesJmPrint() const
 void FAFCMcounter::gbestPrint() const
 {
 	cout << gbest->getAlgorithmName() << " - Gbest " << gbest->getName() << ":" << endl;
-	//gbest->muPrint();
 	gbest->Xprint();	
 }
 

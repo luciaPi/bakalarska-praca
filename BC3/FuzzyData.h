@@ -75,7 +75,6 @@ public:
 	void setAlgorithmName(string name);
 
 	void computeFromMu();
-	//void computeFromCenters();
 
 	void muPrint() const;
 	void centersPrint() const;

@@ -326,7 +326,7 @@ void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, 
 			}
 			fprintf(datafile, "\n", comment);
 		}		
-		//fprintf(datafile, "%c\t%s: %d\-%d-%d\n", comment, titles[which++], date->tm_mday, date->tm_mon, date->tm_year + 1900);
+		
 		fprintf(datafile, "%c\n\n", comment);
 		fprintf(datafile, "%s\n\n", titles[which++]);
 
@@ -440,6 +440,7 @@ bool Application::setData(const char* fileName)
 {
 	clearObjectClasses();
 	delete data;
+	data = nullptr;
 
 	ifstream myFile;
 	myFile.open(fileName);
@@ -453,7 +454,6 @@ bool Application::setData(const char* fileName)
 	char nextChar;
 	float value;
 	int countChars = 0;
-	//string objectClass = "";
 	string line = "";
 
 	int next = myFile.peek();
@@ -494,31 +494,7 @@ bool Application::setData(const char* fileName)
 			values.clear();
 		}
 
-		next = myFile.peek();
-
-		/*if (isdigit(next)) {
-			myFile >> value;
-			values.push_back(value);
-		}
-		else {
-			myFile >> nextChar;
-			if (nextChar == '\n') {
-				flower->setValues(values);
-				flower->setName(objectClass);
-				data->add(flower);
-				flower = new Object();
-				values.clear();
-			}
-			if (next == '%') {
-				getline(myFile,objectClass);
-				//string line;
-				//myFile >> line;
-				/*while (nextChar != '\0') {
-					myFile >> nextChar;
-				}
-
-			}*/
-		
+		next = myFile.peek();		
 	}
 	delete flower;
 
@@ -526,80 +502,6 @@ bool Application::setData(const char* fileName)
 
 	return true;
 }
-
-//nacitanie vstupnych dat
-/*bool Application::setData(const char* fileName)
-{
-	FILE* datafile;
-	if ((datafile = fopen(fileName, "r")) == NULL) {
-		cout << "CHYBA" << endl;
-		return false;
-	}
-	else {
-		data = new Dataset();
-
-		vector<double> values;
-		float value;
-		int returnVal;
-		Object *flower = new Object();
-		int lastPosition;
-		char oneChar[1];
-		string objectClass = "";
-		int countChars = 0;
-		int countNumbers = 0;
-		int numAttributes = 0;
-
-		do {
-			//lastPosition = ftell(datafile);
-			if ((returnVal = fscanf(datafile, "%f", &value)) == EOF) {
-				break;
-			}
-			if (returnVal == 0) {
-				//fseek(datafile, lastPosition, SEEK_SET);				
-				/*fscanf(datafile, "%s", &objectClass);
-				flower->setName(objectClass);
-				flower->setValues(values);
-				numberOfCoordinates = values.size();
-				all.push_back(flower);
-				flower = new Object();
-				values.clear();*//*
-				objectClass = "";
-				do {
-					fscanf(datafile, "%c", &oneChar);
-					objectClass += oneChar[0];
-					countChars++;
-					countNumbers = 0;
-				} while (*oneChar != ',' && *oneChar != '\n');
-			}
-			else {
-				//fscanf(datafile, "%c",&objectClass);
-				if ((countChars > 2 && values.size() > 0) || countNumbers == 1) {
-					flower->setValues(values);
-					objectClass = objectClass.substr(0, objectClass.size() - 1);
-					flower->setName(objectClass);
-					data->add(flower);
-					flower = new Object();
-					values.clear();
-					countNumbers = 0;
-					numAttributes = 0;
-				}
-				//if (numAttributes > 0) {
-					values.push_back(value);
-				//}
-				numAttributes++;
-				countChars = 0;
-				countNumbers = 1;
-			}
-		} while (true);
-		objectClass = objectClass.substr(0, objectClass.size() - 1);
-		flower->setName(objectClass);
-		flower->setValues(values);
-		data->add(flower);
-
-		fclose(datafile);
-	}
-	return true;
-}*/
 
 bool Application::setNumberOfClusters(int number)
 {
@@ -693,7 +595,6 @@ void Application::dataObjectsPrintWithClass() const
 
 void Application::count(Counter * counter)
 {
-	//cvi->printResultsHeader(cout);
 	cvi->setAssignedClusters(clusters);
 
 	string resultPath = "";
@@ -712,10 +613,6 @@ void Application::count(Counter * counter)
 		cvi->printResultsHeader(fileStream);
 	}
 
-	//test
-	//counter->setMaxIterations(1);
-	//counter->setFinalCriterion(FinalCriterion::maxIteration);
-
 	double sum = 0;
 	double sumSquared = 0;
 	for (int i = 0; i < numberOfReplications; i++) {
@@ -723,15 +620,8 @@ void Application::count(Counter * counter)
 
 		FuzzyData* best = counter->getBest();
 
-		//test
-		/*best->muPrint();
-		best->centersPrint();
-		best->dPrint();*/
-
 		assignClusters(best);
 		cvi->count(best,*data);
-				
-		//dataObjectsPrintWithClass();
 		
 		if (fileOutputMode) {
 			saveResultToFile(best, i + 1, resultPath);
@@ -748,11 +638,8 @@ void Application::count(Counter * counter)
 			(counter->getBest())->muPrint();
 			cout << "----------------------------------------------------------" << endl;
 		}
-		//counter->printJm();		
-		//cvi->printResults(cout, titleString, actualT);
 	}
-	//cvi->printResults(cout, titleString, actualT);
-
+	
 	if (datafile != nullptr) {
 		fclose(datafile);
 	}

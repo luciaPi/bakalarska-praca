@@ -10,7 +10,6 @@ void ParticleFuzzyData::Vprint() const
 
 void ParticleFuzzyData::pbestPrint() const
 {
-	//printAsMatrix(pbest, "PBest");
 	pbestCentersPrint();
 }
 
@@ -104,7 +103,6 @@ void ParticleFuzzyData::setData(Dataset pardata)
 	setSize(data.getSize()*numberOfObjects);
 }
 
-//nie nula!!!
 void ParticleFuzzyData::normalize()
 {
 	for (int i = 0; i < numberOfObjects; i++) {

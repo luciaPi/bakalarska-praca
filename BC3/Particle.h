@@ -1,5 +1,4 @@
 #pragma once
-//#include "ParticleCounterData.h"
 #include <string>
 #include "RandomGenerator.h"
 
@@ -12,7 +11,7 @@ private:
 	double r2 = 0.5;
 	double w = 1;
 
-	double maxV = 0.0001; //0.0001 10000iteracii
+	double maxV = 0.0001;
 
 	RandomGenerator* Vgenerator = nullptr;
 	
@@ -63,8 +62,6 @@ public:
 	void setw(double w);
 	void setSize(int size);
 	void setMaxV(double maxV);
-		
-	void setV(double par[]);	//dat prec
 
 	virtual std::string getName() const = 0;
 	virtual std::string getAlgorithmName() const = 0;

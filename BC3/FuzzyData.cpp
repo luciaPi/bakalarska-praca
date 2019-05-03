@@ -152,40 +152,6 @@ void FuzzyData::muInit()
 	else {
 		randomMuInit();
 	}
-	/*int which = 0;
-	mu = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		mu[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			if (which%numberOfClusters == 0)
-				mu[i][j] = 1;
-			else
-				mu[i][j] = 0;
-			which++;
-		}
-		which++;
-	}*/
-	//test
-	/*double values[] = { 0.15, 0.45, 0.4, 0,0.5,0.5,0.25,0.75,0,1,0,0 ,0.25,0.75,0 };
-	int which = 0;
-	mu = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		mu[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = values[which];
-			which++;
-		}
-	}
-	/*double values[] = { 0.8, 0.2, 0.9, 0.1,0.7,0.3,0.3,0.7,0.5,0.5,0.2,0.8 };
-	int which = 0;
-	mu = new double*[numberOfObjects];
-	for (int i = 0; i < numberOfObjects; i++) {
-		mu[i] = new double[numberOfClusters];
-		for (int j = 0; j < numberOfClusters; j++) {
-			mu[i][j] = values[which];
-			which++;
-		}
-	}*/
 }
 
 void FuzzyData::muPrint() const
@@ -245,12 +211,9 @@ void FuzzyData::plusplusInit()
 		int i = 0;
 		computeDFor(initCenters - 1, initCenters);
 		double sum = sumDFor(initCenters);
-		//centersPrint();
 		while (initCenters < numberOfClusters) {	
-			//dPrint();
 			double prob = pow(getLowestDistance(i++ % numberOfObjects,initCenters),p)/sum;
 			double randomProb = ((centersGenerator->nextRandom() / centersGenerator->getMax()));
-			//cout << randomProb << "prob randomprob " << prob << endl;
 			if (randomProb < prob) {
 				centers[initCenters]->setValues(data[(i - 1) % numberOfObjects].getValues());
 				centers[initCenters]->addToValues(minChange*0.1);
@@ -258,12 +221,9 @@ void FuzzyData::plusplusInit()
 				computeDFor(initCenters - 1, initCenters);
 				sum = sumDFor(initCenters);				
 			}
-			//centersPrint();
-			//dPrint();
 		}
 		computeD();
 		computeMu();
-		//dPrint();
 	}
 }
 
@@ -271,8 +231,6 @@ void FuzzyData::recalculateFromMu()
 {
 	computeCenters();
 	computeD();
-	//centersPrint();
-	//dPrint();
 }
 
 void FuzzyData::recalculateFromCenters()
@@ -356,7 +314,6 @@ void FuzzyData::computeCenters()
 	for (int j = 0; j < numberOfClusters; j++) {
 		values.clear();
 		for (int k = 0; k < numberOfCoordinates; k++) {
-		//for (int k = 0; k < 1; k++) {
 			double sum1 = 0;
 			double sum2 = 0;
 			for (int i = 0; i < numberOfObjects; i++) {
@@ -472,7 +429,6 @@ double FuzzyData::getLowestDistance(int whichObject, int whichMax) const
 			min = d[whichObject][j];
 		}
 	}
-	//cout << min << endl;
 	return min;
 }
 
