@@ -1,0 +1,2 @@
+   Dataset   |Pocet zhlukov|Algoritmus||                    PC|                    PE|               XIEBENI|                   FHV|                 PCAES||
+        Title|            5|       FCM||                 0.495|                 0.955|              1887.517|                 0.072|                 8.793||

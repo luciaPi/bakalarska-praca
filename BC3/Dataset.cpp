@@ -80,15 +80,3 @@ Object& Dataset::operator[](const int index)
 	Object* object = all[index];
 	return *object;
 }
-
-/*int Dataset::whichNumberOfObject(const Object& object) const
-{
-	int which = 0;
-	for (Object *actual : all) {
-		if (actual == &object) {
-			return which;
-		}
-		which++;
-	}
-	return which;
-}*/

@@ -21,6 +21,7 @@ Application::Application()
 	srand(time(0));
 	parameterGenerator = RandomGenerator(rd(), 0, 1);
 	cvi = new CVI(rd(), rd());
+	cvi->resetCVI();
 }
 
 Application::~Application()
@@ -694,7 +695,6 @@ void Application::count(Counter * counter)
 {
 	//cvi->printResultsHeader(cout);
 	cvi->setAssignedClusters(clusters);
-	cvi->resetCVI();
 
 	string resultPath = "";
 	string resultCVIPath = "";
@@ -739,9 +739,16 @@ void Application::count(Counter * counter)
 		if (fileCVIOutputMode && datafile != nullptr) {
 			cvi->printResults(fileStream, titleString, actualT);
 		}
-		//counter->printJm();
-		sum += counter->getJm();
-		sumSquared += pow(counter->getJm(),2);		
+		if (numberOfReplications == 1) {
+			cout << "----------------------------------------------------------" << endl;
+			cout << "Vysledky algoritmu " << counter->getAlgorithmName() << endl;
+			cvi->printResultsHeader(cout);
+			cvi->printResults(cout, titleString, actualT);
+			(counter->getBest())->centersPrint();
+			(counter->getBest())->muPrint();
+			cout << "----------------------------------------------------------" << endl;
+		}
+		//counter->printJm();		
 		//cvi->printResults(cout, titleString, actualT);
 	}
 	//cvi->printResults(cout, titleString, actualT);
@@ -754,7 +761,7 @@ void Application::count(Counter * counter)
 FILE* Application::openCVIFile(string resultCVIpath)
 {
 	string titleString = title;
-	string filename = titleString + "." + outputExtesion;
+	string filename = titleString + ".txt";
 	string filenameWithPath = resultCVIpath + "/" + filename;
 	FILE* datafile = nullptr;
 	datafile = fopen(filenameWithPath.c_str(), "w");
@@ -768,7 +775,7 @@ string Application::createFolderForOutput(string algName) const
 	tm* date = localtime(&now);
 	char folderName[50];
 
-	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d_%s", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec, algName.c_str());
+	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d_%s(%d)", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec, algName.c_str(),numberOfClusters);
 	string resultPath = resultFolderName + "/" + folderName;
 	mkdir(resultFolderName.c_str());
 	mkdir(resultPath.c_str());
@@ -782,7 +789,7 @@ string Application::createFolderForCVIOutput(string algName) const
 	tm* date = localtime(&now);
 	char folderName[50];
 
-	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d_%s", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec, algName.c_str());
+	sprintf(folderName, "%s_%02d-%02d-%4d_%02d-%02d-%02d_%s(%d)", titleString.c_str(), date->tm_mday, date->tm_mon, date->tm_year + 1900, date->tm_hour, date->tm_min, date->tm_sec, algName.c_str(),numberOfClusters);
 	string resultPath = resultCVIFolderName + "/" + folderName;
 	mkdir(resultCVIFolderName.c_str());
 	mkdir(resultPath.c_str());

@@ -7,7 +7,7 @@
 #include "RandomGenerator.h"
 #include "CVI.h"
 
-enum Algorithm : int { fcm = 0, pso = 1, fa = 2, fcmpso = 3, fafcm = 4};
+enum Algorithm : int { fcm = 0, pso = 1, fcmpso = 2, fa = 3, fafcm = 4};
 enum class OutputType  { txt = 0, arff = 1 };
 
 class Application
