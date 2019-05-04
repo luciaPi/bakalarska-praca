@@ -32,6 +32,8 @@ private:
 	char* title = "Title";
 	bool fileOutputMode = true;
 	bool fileCVIOutputMode = true;
+	bool consoleCVIOutputMode = true;
+	bool eachCVI = true;
 
 	vector<Attribute*> objectClasses;
 	vector<Attribute*> clusters;
@@ -116,6 +118,11 @@ public:
 	void unsetFileOutputMode();
 	void setCVIFileOutputMode();
 	void unsetCVIFileOutputMode();
+
+	void setCVIConsoleOutputMode();
+	void unsetCVIConsoleOutputMode();
+	void setEachCVI();
+	void unsetEachCVI();
 
 	void saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const;
 	void saveResultToFile(const FuzzyData* fuzzyData, int which, string resultPath);

@@ -291,6 +291,26 @@ void Application::unsetCVIFileOutputMode()
 	fileCVIOutputMode = false;
 }
 
+void Application::setCVIConsoleOutputMode()
+{
+	consoleCVIOutputMode = true;
+}
+
+void Application::unsetCVIConsoleOutputMode()
+{
+	consoleCVIOutputMode = false;
+}
+
+void Application::setEachCVI()
+{
+	eachCVI = true;
+}
+
+void Application::unsetEachCVI()
+{
+	eachCVI = false;
+}
+
 void Application::saveToArff(const FuzzyData* fuzzyData, const char * filename, vector<Attribute*> attributes) const
 {
 	FILE* datafile;
@@ -612,6 +632,9 @@ void Application::count(Counter * counter)
 		fileStream = fstream(datafile);
 		cvi->printResultsHeader(fileStream);
 	}
+	if (consoleCVIOutputMode) {
+		cvi->printResultsHeader(cout);
+	}
 
 	double sum = 0;
 	double sumSquared = 0;
@@ -629,15 +652,28 @@ void Application::count(Counter * counter)
 		if (fileCVIOutputMode && datafile != nullptr) {
 			cvi->printResults(fileStream, titleString, actualT);
 		}
+		
 		if (numberOfReplications == 1) {
 			cout << "----------------------------------------------------------" << endl;
-			cout << "Vysledky algoritmu " << counter->getAlgorithmName() << endl;
-			cvi->printResultsHeader(cout);
-			cvi->printResults(cout, titleString, actualT);
+			cout << "Vysledky algoritmu " << counter->getAlgorithmName() << endl;	
+			if (consoleCVIOutputMode) {
+				cvi->printResultsHeader(cout);
+				cvi->printResults(cout, titleString, actualT);
+			}
 			(counter->getBest())->centersPrint();
 			(counter->getBest())->muPrint();
 			cout << "----------------------------------------------------------" << endl;
 		}
+		else {
+			if (consoleCVIOutputMode && eachCVI) {
+				cvi->printResultsHeader(cout);
+				cvi->printResults(cout, titleString, actualT);
+			}
+		}
+	}
+	if (consoleCVIOutputMode && !eachCVI && numberOfReplications != 1) {
+		cvi->printResultsHeader(cout);
+		cvi->printResults(cout, titleString, actualT);
 	}
 	
 	if (datafile != nullptr) {
