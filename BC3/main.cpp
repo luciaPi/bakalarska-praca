@@ -1,4 +1,3 @@
-#include <vld.h>
 #include <vector>
 #include "Application.h"
 #include <iostream>
