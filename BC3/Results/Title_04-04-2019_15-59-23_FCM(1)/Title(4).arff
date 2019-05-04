@@ -1,0 +1,18 @@
+% Title: Title
+%
+% Centers:
+% 	163.000000 
+%
+
+@RELATION
+
+@ATTRIBUTE Attribute0 	 REAL
+@ATTRIBUTE MU 	 FUZZY {Zhluk0}
+@ATTRIBUTE class 	 {}
+
+@DATA
+165.00, 1.000000, 
+135.00, 1.000000, 
+150.00, 1.000000, 
+185.00, 1.000000, 
+180.00, 1.000000, 

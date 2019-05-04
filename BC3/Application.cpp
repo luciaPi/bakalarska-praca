@@ -632,7 +632,7 @@ void Application::count(Counter * counter)
 		fileStream = fstream(datafile);
 		cvi->printResultsHeader(fileStream);
 	}
-	if (consoleCVIOutputMode) {
+	if (consoleCVIOutputMode && numberOfReplications != 1) {
 		cvi->printResultsHeader(cout);
 	}
 
@@ -649,7 +649,7 @@ void Application::count(Counter * counter)
 		if (fileOutputMode) {
 			saveResultToFile(best, i + 1, resultPath);
 		}
-		if (fileCVIOutputMode && datafile != nullptr) {
+		if (fileCVIOutputMode && datafile != nullptr && eachCVI) {
 			cvi->printResults(fileStream, titleString, actualT);
 		}
 		
@@ -666,14 +666,15 @@ void Application::count(Counter * counter)
 		}
 		else {
 			if (consoleCVIOutputMode && eachCVI) {
-				cvi->printResultsHeader(cout);
 				cvi->printResults(cout, titleString, actualT);
 			}
 		}
 	}
 	if (consoleCVIOutputMode && !eachCVI && numberOfReplications != 1) {
-		cvi->printResultsHeader(cout);
 		cvi->printResults(cout, titleString, actualT);
+	}
+	if (fileCVIOutputMode && datafile != nullptr && !eachCVI) {
+		cvi->printResults(fileStream, titleString, actualT);
 	}
 	
 	if (datafile != nullptr) {

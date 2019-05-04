@@ -85,6 +85,8 @@ int main() {
 			} while (nastavitNazov != 1 && nastavitNazov != 0);
 
 			if (nastavitNazov == 1) {
+				cin.clear();
+				cin.ignore(10000, '\n');
 				cout << "Nazov datasetu: ";
 				cin >> title;
 				counter.setTitle((char*)title.c_str());
@@ -419,7 +421,7 @@ int main() {
 			do {
 				cin.clear();
 				cin.ignore(10000, '\n');
-				cout << "Zaznamenat vysledky CVI pre kazdu replikaciu (1-ano, 0-nie, iba raz): ";
+				cout << "Zaznamenat vysledky CVI pre kazdu replikaciu (1-ano, 0-nie): ";
 				cin >> vysledkyCVIeach;
 			} while (vysledkyCVIeach != 1 && vysledkyCVIeach != 0);
 			if (vysledkyCVIeach == 1) {
@@ -458,6 +460,7 @@ int main() {
 			cout << "Pokracovat v dalsom skumani alebo skoncit? (1-pokracovat, 0-skoncit) : ";
 			cin >> koniec;
 		} while (koniec != 1 && koniec != 0);
+		prvy = false;
 	} while (koniec == 1);
 	cout << "KONIEC" << endl;
 	cout << "Dovidenia!" << endl;
